@@ -14,48 +14,33 @@
     <title>To Do List</title>
 </head>
 <body>
-    <div id="main-container">
-		<div class="header">
-			<div id="title">To Do List</div>
-			<div id="task-count">0/0</div>
-		</div>
-		<div class="task-wrapper">
-			<div class="task-container primary">
-				<!-- TASK TEMPLATE -->
-				<!-- <div class="task-div">
-                        <div class="checkbox">
-                            <input
-                                type="checkbox"
-                                checked
-                            /><label></label>
-                        </div>
-						<div class="task">
-							Lorem ipsum dolor sit amet consectetur
-						</div>
-					</div> -->
+    <div class="main-content">
+        <div class="header">
+            <div class="title">To Do List</div>
+            <div class="tasks-count">0/0</div>
+        </div>
+        <div class="task-wrapper">
+            <div class="task-list primary">
 
-				<!-- <div class="task-div">
-						<div class="username-div">
-							<div class="checkbox">
-								<input
-									type="checkbox"
-									checked
-								/><label></label>
-							</div>
+            </div>
+            <div class="task-list secondary">
 
-							<div class="username">RyanPython first</div>
-							<div class="colon">:</div>
-						</div>
-						<div class="task">
-							Lorem ipsum dolor sit amet consectetur
-						</div>
-					</div> -->
-				<!-- END TASK TEMPLATE -->
-			</div>
-			<div class="task-container secondary">
-
-			</div>
-		</div>
-	</div>
+            </div>
+        </div>
+    </div>
+    
+    <template id="task-template">
+        <div class="task-item">
+            <div class="checkbox">
+                <input type="checkbox" class="task-checkbox"><label></label>
+            </div>
+            <div class="task-index">
+                0.
+            </div>
+            <div class="task-text">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti, neque!
+            </div>
+        </div>
+    </template>
 </body>
 </html>

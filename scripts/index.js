@@ -1,3 +1,10 @@
+let tasks = [];
+let scrolling = false;
+
+let primaryAnim = null;
+let secondaryAnim = null;
+
+// FONTS
 function loadGoogleFont(font) {
 	WebFont.load({
 		google: {
@@ -6,350 +13,270 @@ function loadGoogleFont(font) {
 	});
 }
 
-function importStyles() {
-	loadGoogleFont("Fredoka One");
-	loadGoogleFont("Nunito");
+function loadFonts() {
+    let root = document.querySelector(":root");
+    let root_styles = getComputedStyle(root);
+
+    let header_font = root_styles.getPropertyValue("--header-font");
+    let body_font = root_styles.getPropertyValue("--body-font");
+    loadGoogleFont(header_font);
+    loadGoogleFont(body_font);
 }
 
-function setupDB() {
-	if (!localStorage.tasks) {
-		localStorage.setItem(`tasks`, "{}");
-	}
+// LOCAL STORAGE DB
+function saveTasksDB() {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
 }
 
-function resetDB() {
-	localStorage.clear();
-	setupDB();
+function loadTasksDB(){
+    if (localStorage.tasks) {
+        tasks = JSON.parse(localStorage.tasks);
+    } else {
+        tasks = [];
+    }
 }
 
-function clearAllTasks() {
-	resetDB();
-	cancelAnimation();
-	renderTaskList();
+function clearTasksDB(){
+    localStorage.clear();
+    tasks = [];
+    saveTasksDB();
 }
 
-function getTasks() {
-	return JSON.parse(localStorage.tasks);
-}
-
-function saveTasks(tasks) {
-	localStorage.setItem(`tasks`, JSON.stringify(tasks));
-}
-
-function renderTaskCount() {
-	let tasks = getTasks();
-
-	let totalTasksCount = 0;
-	let completedTasksCount = 0;
-
-	for (let task in tasks) {
-		let taskData = tasks[task];
-		if (taskData.done) {
-			completedTasksCount++;
-		}
-		totalTasksCount++;
-	}
-
-	let taskCount = document.getElementById("task-count");
-	taskCount.innerText = `${completedTasksCount}/${totalTasksCount}`;
-}
-
-function renderTaskList() {
-	let tasks = getTasks();
-
-	let taskContainers = document.querySelectorAll(".task-container");
-
-	taskContainers.forEach(function (taskList) {
-		taskList.innerHTML = "";
-	});
-
-	for (let task in tasks) {
-		let taskData = tasks[task];
-
-		addTasksToDom(
-			taskData.task,
-			taskData.done
-		);
-	}
-
-	renderTaskCount();
-	animate();
-}
-
-function addTasksToDom(task, completed) {
-	let taskContainers = document.querySelectorAll(".task-container");
-
-	taskContainers.forEach(function (taskList) {
-		let newTask = document.createElement("div");
-		newTask.className = "task-div";
-
-		let checkbox = document.createElement("div");
-		checkbox.className = "checkbox";
-
-		let checkboxInput = document.createElement("input");
-		checkboxInput.type = "checkbox";
-
-		// if completed is true, check the checkbox
-		if (completed) {
-			checkboxInput.checked = true;
-		}
-
-		checkbox.appendChild(checkboxInput);
-
-		let checkboxLabel = document.createElement("label");
-		checkbox.appendChild(checkboxLabel);
-
-		newTask.appendChild(checkbox);
-
-		// <div class="task">task</div>
-		let taskDiv = document.createElement("div");
-		taskDiv.className = "task";
-		taskDiv.innerText = task;
-
-		if (completed) {
-			taskDiv.classList.add("crossed");
-		}
-
-		newTask.appendChild(taskDiv);
-
-		// append to task list
-		taskList.appendChild(newTask);
-	});
-}
-
+// TASK MANAGEMENT
 function addTask(task) {
-	let tasks = getTasks();
+    tasks.push({
+        task: task,
+        completed: false
+    });
+    saveTasksDB();
 
-	tasks[task.toLowerCase().replace(" ", "-")] = {
-		task: task,
-		done: false,
-	};
-
-	saveTasks(tasks);
-
-	if (!scrolling) {
-		renderTaskList();
-	}
+    return task
 }
 
-function doneTask(task) {
-	let tasks = getTasks();
+function finishTask(index) {
+    if (index < 0 || index >= tasks.length) return null;
 
-	let finishedTask = tasks[task.toLowerCase().replace(" ", "-")].task;
+    tasks[index].completed = true;
+    saveTasksDB();
 
-	tasks[task.toLowerCase().replace(" ", "-")].done = true;
-
-	saveTasks(tasks);
-
-	if (!scrolling) {
-		renderTaskList();
-	}
-
-	return finishedTask;
+    return tasks[index].task;
 }
 
-function removeTask(task) {
-	let tasks = getTasks();
+function removeTask(index){
+    if (index < 0 || index >= tasks.length) return null;
 
-	let removedTask = userTasks.task;
+    let removed = tasks.splice(index, 1);
+    saveTasksDB();
 
-	delete tasks[task.toLowerCase().replace(" ", "-")];
-
-	saveTasks(tasks);
-
-	if (!scrolling) {
-		renderTaskList();
-	}
-
-	return removedTask;
+    return removed[0].task;
 }
 
-function cleardone() {
-	let tasks = getTasks();
-
-	for (let task in tasks) {
-		if (tasks[task].done) {
-			delete tasks[task];
-		}
-	}
-
-	saveTasks(tasks);
-	renderTaskList();
-	cancelAnimation();
+function clearAllTasks(){
+    clearTasksDB();
+    saveTasksDB();
 }
 
-function sleep(ms) {
-	return new Promise((resolve) => setTimeout(resolve, ms));
+function clearDoneTasks() {
+    tasks = tasks.filter((value) => !value.completed);
+    saveTasksDB();
 }
 
-async function animate() {
-	// task container height
-	let taskContainer = document.querySelector(".task-container");
-	let taskContainerHeight = taskContainer.scrollHeight;
+// RENDERING & ANIMATION
+function renderDOM() {
+    const template = document.getElementById("task-template");
+    const taskLists = Array.from(document.getElementsByClassName("task-list"));
 
-	let taskWrapper = document.querySelector(".task-wrapper");
+    taskLists.forEach(taskList => {
+        taskList.innerHTML = ""; 
+    });
+
+    tasks.forEach((task, index) => {
+        const taskElement = template.content.cloneNode(true);
+            
+        taskElement.querySelector(".task-index").textContent = `${index + 1}.`;
+        taskElement.querySelector(".task-text").textContent = task.task;
+        taskElement.querySelector(".task-checkbox").checked = task.completed;
+        taskElement.querySelector(".task-text").classList.toggle("crossed", task.completed);
+        
+        taskLists.forEach(taskList => {
+            taskList.appendChild(taskElement.cloneNode(true)); 
+        });
+    });
+
+    infScrollAnim();
+}
+
+async function infScrollAnim() {
+    const taskList = document.querySelector(".task-list");
+	let taskListHeight = taskList.scrollHeight;
+
+	const taskWrapper = document.querySelector(".task-wrapper");
 	let taskWrapperHeight = taskWrapper.clientHeight;
 
-	// scroll task wrapper up and down once
-	if (taskContainerHeight > taskWrapperHeight && !scrolling) {
-		let secondaryElement = document.querySelector(".secondary");
-		secondaryElement.style.display = "flex";
+    if (taskListHeight > taskWrapperHeight && !scrolling) {
+        const primaryTaskList = document.querySelector(".primary");
+        const secondaryTaskList = document.querySelector(".secondary");
+        secondaryTaskList.style.display = "flex";
 
-		let finalHeight =
-			taskContainerHeight + configs.styles.gapBetweenScrolls;
-		let duration = (finalHeight / configs.styles.pixelsPerSecond) * 1000;
+        let finalHeight = taskListHeight + 100;
+        let duration = (finalHeight / 70) * 1000;
 
-		// keyframes object in css scroll
-		let primaryKeyFrames = [
-			{ transform: `translateY(0)` },
-			{ transform: `translateY(-${finalHeight}px)` },
-		];
+        let primaryListKeyframes = [
+            {transform: `translateY(0)`},
+            {transform: `translateY(-${finalHeight}px)`},
+        ];
+        let secondaryListKeyframes = [
+            {transform: `translateY(${finalHeight}px)`},
+            {transform: `translateY(0)`},
+        ];
+        let options = {
+            duration: duration,
+            iterations: 1,
+            easing: "linear"
+        };
 
-		let secondaryKeyFrames = [
-			{ transform: `translateY(${finalHeight}px)` },
-			{ transform: `translateY(0)` },
-		];
+        primaryAnim = primaryTaskList.animate(primaryListKeyframes, options);
+        secondaryAnim = secondaryTaskList.animate(secondaryListKeyframes, options);
+        
+        primaryAnim.play();
+        secondaryAnim.play();
 
-		let options = {
-			duration: duration,
-			iterations: 1,
-			easing: "linear",
-		};
+        scrolling = true;
 
-		// create animation object and play it
-		primaryAnimation = document
-			.querySelector(".primary")
-			.animate(primaryKeyFrames, options);
+        primaryAnim.addEventListener("finish", animationFinished);
+        primaryAnim.addEventListener("cancel", animationFinished);
+    } else if (!scrolling) {
+        const secondaryTaskList = document.querySelector(".secondary");
+        secondaryTaskList.style.display = "none";
 
-		secondaryAnimation = document
-			.querySelector(".secondary")
-			.animate(secondaryKeyFrames, options);
-
-		primaryAnimation.play();
-		secondaryAnimation.play();
-
-		// wait for animation to finish
-		scrolling = true;
-
-		addAnimationListeners();
-	} else if (!scrolling) {
-		document.querySelector(".secondary").style.display = "none";
-
-		// cancel animations
-		cancelAnimation();
-	}
-}
-
-function addAnimationListeners() {
-	if (primaryAnimation) {
-		primaryAnimation.addEventListener("finish", animationFinished);
-		primaryAnimation.addEventListener("cancel", animationFinished);
-	}
+        cancelAnim();
+    }
 }
 
 function animationFinished() {
 	scrolling = false;
-	renderTaskList();
-	animate();
+	renderDOM();
+    infScrollAnim();
 }
 
-function cancelAnimation() {
-	console.log("Animation should be cancelled");
-	if (primaryAnimation) {
-		primaryAnimation.cancel();
+function cancelAnim() {
+	if (primaryAnim) {
+		primaryAnim.cancel();
 	}
-	if (secondaryAnimation) {
-		secondaryAnimation.cancel();
+	if (secondaryAnim) {
+		secondaryAnim.cancel();
 	}
 	scrolling = false;
 }
 
-window.onload = function () {
-	importStyles();
-	setupDB();
-	renderTaskList();
-};
-
-
-
-function respond(template, user = "", message = "") {
-	ComfyJS.Say(template.replace("{user}", user).replace("{task}", message));
-}
-
+// TWITCH CHAT BOT
 function isMod(flags) {
 	return flags.broadcaster || flags.mod;
 }
 
+function commandAdd(user, command, message, flags, extra){
+    if (message == "") {
+        return ComfyJS.Say(`${user} Usage: !${command} <task-to-add>`);
+    }
+
+    let task = addTask(message);
+    return ComfyJS.Say(`${user} Added task: ${task}`);
+}
+
+function commandDone(user, command, message, flags, extra){
+    if (!isMod(user)) {
+        return ComfyJS.Say(`${user} Only mods can use this command!`)
+    }
+
+    if (message == "") {
+        return ComfyJS.Say(`${user} Usage: !${command} <index>`);
+    }
+
+    index = parseInt(message);
+    if (isNaN(index)) {
+        return ComfyJS.Say(`${user} ${index} is not a number!`);
+    }
+
+    let task = finishTask(index - 1);
+    if (task == null){
+        return ComfyJS.Say(`${user} Task ${index} does not exist!`);
+    }
+
+    return ComfyJS.Say(`${user} Finshed task: ${task}`);
+}
+
+function commandRemove(user, command, message, flags, extra){
+    if (!isMod(user)) {
+        return ComfyJS.Say(`${user} Only mods can use this command!`)
+    }
+
+    if (message == "") {
+        return ComfyJS.Say(`${user} Usage: !${command} <index>`);
+    }
+
+    index = parseInt(message);
+    if (index == null) {
+        return ComfyJS.Say(`${user} ${index} is not a number!`);
+    }
+
+    let task = removeTask(index - 1);
+    if (task == null){
+        return ComfyJS.Say(`${user} Task ${index} does not exist!`);
+    }
+    
+    return ComfyJS.Say(`${user} Removed task: ${task}`);
+}
+
+function commandClear(user, command, message, flags, extra){
+    if (!isMod(user)) {
+        return ComfyJS.Say(`${user} Only mods can use this command!`)
+    }
+
+    if (message == "done"){
+        clearDoneTasks();
+
+        return ComfyJS.Say(`${user} Cleared completed tasks!`);
+    } else if (message == "all") {
+        clearAllTasks();
+
+        return ComfyJS.Say(`${user} Cleared all tasks!`);
+    } else {
+        return ComfyJS.Say(`${user} Usage: !${command} <done|all>`);
+    }
+}
+
+function commandHelp(user, command, message, flags, extra) {
+    if (isMod(user)){
+        return ComfyJS.Say("Commands: !tasks:add <task>, !tasks:done <index>, !tasks:remove <index>, !tasks:clear <all|done>, !tasks:help, !tasks:credits")
+    }
+    return ComfyJS.Say("Commands: !tasks:add <task>, !tasks:help, !tasks:credits")
+}
+
+function commandCredits(user, command, message, flags, extra) {
+    return ComfyJS.Say("Bot made by DamienPup for LadyWynter_FantasyWriter's stream. Inspired by https://github.com/liyunze-coding/Chat-Task-Tic-Overlay-Infinity")
+}
+
+const commands = {
+    "tasks:add": commandAdd,
+    "tasks:done": commandDone,
+    "tasks:remove": commandRemove,
+    "tasks:clear": commandClear,
+    "tasks:help": commandHelp,
+    "tasks:credits": commandCredits,
+}
+
 ComfyJS.onCommand = (user, command, message, flags, extra) => {
-	// check if command is in the list of commands
-	command = command.toLowerCase();
+    let cmd_func = commands[command];
+    if (cmd_func){
+        return cmd_func(user, command, message, flags, extra);
+    }
+}
 
-	if (
-		comand == "task:clear" && message == "done"
-	) {
-		if (!isMod(flags)) {
-			// user is not a mod or broadcaster
-			return respond("This command is only avaliable to mods.");
-		}
-		cleardone();
-		respond(responseTemplates.clearedDone, user);
-	} else if (command == "task:add") {
-		// ADD TASK
-
-		if (message === "") {
-			// check if message is empty
-			return respond("{user} You need to provide a task", user);
-		}
-
-		addTask(message);
-
-		respond("{user} Added task {task}!", user, message);
-	} else if (comand == "task:done") {
-		// FINISH TASK
-		if (!isMod(flags)) {
-			// user is not a mod or broadcaster
-			return respond("This command is only avaliable to mods.");
-		}
-
-		let finishedTask = "";
-
-		if (message === "") {
-			// check if message is empty
-			return respond("{user} You need to provide a task", user);
-		}
-
-		if (settings.showDoneTasks) {
-			finishedTask = doneTask(message);
-		} else {
-			finishedTask = removeTask(message);
-		}
-
-		respond("{user} Completed task: {task}", user, finishedTask);
-	} else if (commands.deleteTaskCommands.includes(command)) {
-		// DELETE TASK
-		if (!isMod(flags)) {
-			// user is not a mod or broadcaster
-			return respond("This command is only avaliable to mods.");
-		}
-
-		let removedTask = removeTask(message);
-
-		respond("Removed {task} message (if it exists)", user, removedTask);
-	} else if (command == "clear") {
-		if (!isMod(flags)) {
-			// user is not a mod or broadcaster
-			return respond(responseTemplates.notMod, user);
-		}
-		clearAllTasks();
-
-		respond("{user} Cleared all tasks!", user);
-	} else if (command == "help") {
-		respond("Commands", user); // TODO
-	} else if (comamand == "credits") {
-		respond("Bot written by DamienPup. Inspried by https://github.com/liyunze-coding/Chat-Task-Tic-Overlay-Infinity", user);
-	} else {
-		// command not found
-	}
-};
+// STARTUP CODE
+window.onload = function() {
+    loadFonts();
+    loadTasksDB();
+    renderDOM();
+}
 
 ComfyJS.Init(auth.username, `oauth:${auth.oauth}`, [auth.channel]);
