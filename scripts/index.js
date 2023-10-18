@@ -85,6 +85,7 @@ function clearDoneTasks() {
 function renderDOM() {
     const template = document.getElementById("task-template");
     const taskLists = Array.from(document.getElementsByClassName("task-list"));
+    const taskCount = document.querySelector(".tasks-count");
 
     taskLists.forEach(taskList => {
         taskList.innerHTML = ""; 
@@ -102,6 +103,10 @@ function renderDOM() {
             taskList.appendChild(taskElement.cloneNode(true)); 
         });
     });
+
+    let totalTasks = tasks.length;
+    let completedTasks = tasks.filter((value) => value.completed).length;
+    taskCount.textContent = `${completedTasks}/${totalTasks}`;
 
     infScrollAnim();
 }
@@ -180,11 +185,12 @@ function commandAdd(user, command, message, flags, extra){
     }
 
     let task = addTask(message);
+    renderDOM();
     return ComfyJS.Say(`${user} Added task: ${task}`);
 }
 
 function commandDone(user, command, message, flags, extra){
-    if (!isMod(user)) {
+    if (!isMod(flags)) {
         return ComfyJS.Say(`${user} Only mods can use this command!`)
     }
 
@@ -201,12 +207,13 @@ function commandDone(user, command, message, flags, extra){
     if (task == null){
         return ComfyJS.Say(`${user} Task ${index} does not exist!`);
     }
+    renderDOM();
 
     return ComfyJS.Say(`${user} Finshed task: ${task}`);
 }
 
 function commandRemove(user, command, message, flags, extra){
-    if (!isMod(user)) {
+    if (!isMod(flags)) {
         return ComfyJS.Say(`${user} Only mods can use this command!`)
     }
 
@@ -223,21 +230,24 @@ function commandRemove(user, command, message, flags, extra){
     if (task == null){
         return ComfyJS.Say(`${user} Task ${index} does not exist!`);
     }
+    renderDOM();
     
     return ComfyJS.Say(`${user} Removed task: ${task}`);
 }
 
 function commandClear(user, command, message, flags, extra){
-    if (!isMod(user)) {
+    if (!isMod(flags)) {
         return ComfyJS.Say(`${user} Only mods can use this command!`)
     }
 
     if (message == "done"){
         clearDoneTasks();
+        renderDOM();
 
         return ComfyJS.Say(`${user} Cleared completed tasks!`);
     } else if (message == "all") {
         clearAllTasks();
+        renderDOM();
 
         return ComfyJS.Say(`${user} Cleared all tasks!`);
     } else {
@@ -246,7 +256,7 @@ function commandClear(user, command, message, flags, extra){
 }
 
 function commandHelp(user, command, message, flags, extra) {
-    if (isMod(user)){
+    if (isMod(flags)){
         return ComfyJS.Say("Commands: !tasks:add <task>, !tasks:done <index>, !tasks:remove <index>, !tasks:clear <all|done>, !tasks:help, !tasks:credits")
     }
     return ComfyJS.Say("Commands: !tasks:add <task>, !tasks:help, !tasks:credits")
