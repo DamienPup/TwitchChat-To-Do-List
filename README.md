@@ -7,7 +7,7 @@ Inspired by [kennyjacobson/Chat-Task-Tic-Overlay](https://github.com/kennyjacobs
 
 ## Install Instructions
 
-> **Warning**
+> [!WARNING]
 > The source code for this repo does not include the source (nor release bundle) of a small used to generate the OAUTH token.
 > See below for manaul generation instruction, or download the lastest release (even if it's just for the .exe)
 
