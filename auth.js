@@ -1,4 +1,4 @@
-const OAUTH_TOKEN = ""; // Use generate_token.exe to fill this out!
+const OAUTH_TOKEN = ""; // Use generate_token.py to fill this out!
 
 const auth = (function () {
 	// Authentication and channels - required

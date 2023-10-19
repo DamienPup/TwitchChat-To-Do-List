@@ -5,6 +5,21 @@ A chat controlled to do overlay for twitch.
 Created by DamienPup for [LadyWynter FantasyWriter](https://www.twitch.tv/ladywynter_fantasywriter).
 Inspired by [kennyjacobson/Chat-Task-Tic-Overlay](https://github.com/kennyjacobson/Chat-Task-Tic-Overlay).
 
+## List of commands
+
+### Public Commands
+
+- `task:help`: List commands.
+- `task:credits`: List bot credits.
+- `task:add <task>`: Add a task to the list. Task can contain spaces.
+
+### Mod Only Commands
+
+- `task:done <number>`: Finish a task
+- `task:remove <number>`: Delete a task
+- `task:clear all`: Clear all tasks
+- `task:clear done`: Clear only fishised tasks.
+
 ## Install Instructions
 
 1. Login to the Twitch Dev Console (https://dev.twitch.tv/console/apps) with your main or dedicated bot account.
