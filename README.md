@@ -19,6 +19,17 @@ Inspired by [kennyjacobson/Chat-Task-Tic-Overlay](https://github.com/kennyjacobs
 - `task:remove <number>`: Delete a task
 - `task:clear all`: Clear all tasks
 - `task:clear done`: Clear only fishised tasks.
+- `task:reload`: Reload bot and overlay.
+
+## Files
+
+> [!WARNING]
+> Modifing `taskList.css` or `index.js` can break things. Be careful and take a backup before doing so.
+
+- `CLIENT_ID.txt`: Used by `generate_token.py` to generate an oauth token.
+- `auth.js`: Holds bot username, channel to join, and oauth token.
+- `styles/taskList.css`: Holds styles for the overlay, see top of file for easy to change options.
+- `scripts/index.js`: The code. Options for scrolling located at top of file. Scroll down to the bottom and you can edit the names of the commands (make to change both the commands dict and help command text!)
 
 ## Install Instructions
 
@@ -27,12 +38,12 @@ Inspired by [kennyjacobson/Chat-Task-Tic-Overlay](https://github.com/kennyjacobs
    - Set the redirect URL to `http://localhost:5000/auth`
    - Set the type to `Chat Bot`
 2. Paste the app's `Client ID` into `CLIENT_ID.txt`.
-3. Run `generate_token.py` to genereate an OAUTH token. (See below for manual token generation instuctions)
+3. Run `generate_token.py` to genereate an oauth token. (See below for manual token generation instuctions)
    - You will need Python install for this step. While this file was written with 3.12, older versions may work.
 5. Open `auth.js`. Fill out the target channel and bot username. Don't touch the `OAUTH_TOKEN`.
 6. Add a `Browser Source` to OBS or Streamlabs (or whatever your using), check `Local File` and select `index.html`.
 
-### Manually generating an OAUTH token
+### Manually generating an oauth token
 
 1. Copy this URL:
 ```

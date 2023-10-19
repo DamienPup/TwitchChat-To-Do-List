@@ -4,6 +4,9 @@ let scrolling = false;
 let primaryAnim = null;
 let secondaryAnim = null;
 
+const scrollPxPerSecond = 25;
+const scrollGap = 25;
+
 // FONTS
 function loadGoogleFont(font) {
 	WebFont.load({
@@ -17,8 +20,8 @@ function loadFonts() {
     let root = document.querySelector(":root");
     let root_styles = getComputedStyle(root);
 
-    let header_font = root_styles.getPropertyValue("--header-font");
-    let body_font = root_styles.getPropertyValue("--body-font");
+    let header_font = root_styles.getPropertyValue("--header-font").slice(1, -1);
+    let body_font = root_styles.getPropertyValue("--body-font").slice(1, -1);
     loadGoogleFont(header_font);
     loadGoogleFont(body_font);
 }
@@ -123,8 +126,8 @@ async function infScrollAnim() {
         const secondaryTaskList = document.querySelector(".secondary");
         secondaryTaskList.style.display = "flex";
 
-        let finalHeight = taskListHeight + 100;
-        let duration = (finalHeight / 70) * 1000;
+        let finalHeight = taskListHeight + scrollGap;
+        let duration = (finalHeight / scrollPxPerSecond) * 1000;
 
         let primaryListKeyframes = [
             {transform: `translateY(0)`},
@@ -257,13 +260,23 @@ function commandClear(user, command, message, flags, extra){
 
 function commandHelp(user, command, message, flags, extra) {
     if (isMod(flags)){
-        return ComfyJS.Say("Commands: !tasks:add <task>, !tasks:done <index>, !tasks:remove <index>, !tasks:clear <all|done>, !tasks:help, !tasks:credits")
+        return ComfyJS.Say("Commands: !tasks:add <task>, !tasks:done <index>, !tasks:remove <index>, !tasks:clear <all|done>, !tasks:help, !tasks:credits, !tasks:reload")
     }
     return ComfyJS.Say("Commands: !tasks:add <task>, !tasks:help, !tasks:credits")
 }
 
 function commandCredits(user, command, message, flags, extra) {
     return ComfyJS.Say("Bot made by DamienPup for LadyWynter_FantasyWriter's stream. Inspired by https://github.com/liyunze-coding/Chat-Task-Tic-Overlay-Infinity")
+}
+
+function commandReload(user, command, message, flags, extra) {
+    if (!isMod(flags)) {
+        return ComfyJS.Say(`${user} Only mods can use this command!`)
+    }
+
+    ComfyJS.Say("Reloading bot and overlay.")
+
+    location.reload();
 }
 
 const commands = {
@@ -273,6 +286,7 @@ const commands = {
     "tasks:clear": commandClear,
     "tasks:help": commandHelp,
     "tasks:credits": commandCredits,
+    "tasks:reload": commandReload,
 }
 
 ComfyJS.onCommand = (user, command, message, flags, extra) => {
