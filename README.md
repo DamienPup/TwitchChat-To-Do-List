@@ -33,6 +33,11 @@ Inspired by [kennyjacobson/Chat-Task-Tic-Overlay](https://github.com/kennyjacobs
 
 ## Install Instructions
 
+> [!WARNING]
+> If you are updating from previous versions, backup `scripts/index.js` and `styles/taskList.css`!
+> These files, being code files, are updated often but currently also include (most) of the settings.
+> You may want to backup (or just not update) `auth.js` and `CLIENT_ID.txt` as well.
+
 1. Login to the Twitch Dev Console (https://dev.twitch.tv/console/apps) with your main or dedicated bot account.
 1. Create an app.
    - Set the redirect URL to `http://localhost:5000/auth`
