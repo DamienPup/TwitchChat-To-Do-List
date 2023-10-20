@@ -29,7 +29,7 @@ Inspired by [kennyjacobson/Chat-Task-Tic-Overlay](https://github.com/kennyjacobs
 - `CLIENT_ID.txt`: Used by `generate_token.py` to generate an oauth token.
 - `auth.js`: Holds bot username, channel to join, and oauth token.
 - `styles/taskList.css`: Holds styles for the overlay, see top of file for easy to change options.
-- `scripts/index.js`: The code. Options for scrolling located at top of file. Scroll down to the bottom and you can edit the names of the commands (make to change both the commands dict and help command text!)
+- `scripts/index.js`: The code. Some options located at top of file. Scroll down to the bottom and you can edit the names of the commands (make to change both the commands dict and help command text!)
 
 ## Install Instructions
 

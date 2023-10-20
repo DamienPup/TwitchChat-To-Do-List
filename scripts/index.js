@@ -1,11 +1,18 @@
+// DON'T TOUCH THESE. IMPORTANT STATE VARAIBLES
 let tasks = [];
 let scrolling = false;
 
 let primaryAnim = null;
 let secondaryAnim = null;
+// =====
 
-const scrollPxPerSecond = 25;
-const scrollGap = 25;
+// Settings
+const taskLimit = null; // null or undefined to disable, any postive whole number to enable. Limit's the total number of tasks.
+
+const scrollingEnabled = true; // true or false. Toggles scrolling.
+const scrollPxPerSecond = 25; // Speed of scrolling. Any number. (Untested with negatives!)
+const scrollPxGap = 0; // Gap between last and first list item. Any positive whole number.
+const scrollLoopDelaySec = 2.5; // Pause between loops in seconds. Any (positive) number.
 
 // FONTS
 function loadGoogleFont(font) {
@@ -47,6 +54,10 @@ function clearTasksDB(){
 
 // TASK MANAGEMENT
 function addTask(task) {
+    if (taskLimit && tasks.length >= taskLimit) {
+        return null;
+    }
+
     tasks.push({
         task: task,
         completed: false
@@ -115,6 +126,13 @@ function renderDOM() {
 }
 
 async function infScrollAnim() {
+    if (!scrollingEnabled){
+        const secondaryTaskList = document.querySelector(".secondary");
+        secondaryTaskList.style.display = "none";
+        cancelAnim();
+        return;
+    }
+
     const taskList = document.querySelector(".task-list");
 	let taskListHeight = taskList.scrollHeight;
 
@@ -122,11 +140,13 @@ async function infScrollAnim() {
 	let taskWrapperHeight = taskWrapper.clientHeight;
 
     if (taskListHeight > taskWrapperHeight && !scrolling) {
+        await new Promise((resolve) => {setTimeout(resolve, scrollLoopDelaySec * 1000)});
+
         const primaryTaskList = document.querySelector(".primary");
         const secondaryTaskList = document.querySelector(".secondary");
         secondaryTaskList.style.display = "flex";
 
-        let finalHeight = taskListHeight + scrollGap;
+        let finalHeight = taskListHeight + scrollPxGap;
         let duration = (finalHeight / scrollPxPerSecond) * 1000;
 
         let primaryListKeyframes = [
@@ -188,7 +208,11 @@ function commandAdd(user, command, message, flags, extra){
     }
 
     let task = addTask(message);
+    if (!task) {
+        return ComfyJS.Say(`${user} At most ${taskLimit} tasks may be active at once!`)
+    }
     renderDOM();
+
     return ComfyJS.Say(`${user} Added task: ${task}`);
 }
 
@@ -207,7 +231,7 @@ function commandDone(user, command, message, flags, extra){
     }
 
     let task = finishTask(index - 1);
-    if (task == null){
+    if (!task){
         return ComfyJS.Say(`${user} Task ${index} does not exist!`);
     }
     renderDOM();
@@ -230,7 +254,7 @@ function commandRemove(user, command, message, flags, extra){
     }
 
     let task = removeTask(index - 1);
-    if (task == null){
+    if (!task){
         return ComfyJS.Say(`${user} Task ${index} does not exist!`);
     }
     renderDOM();
@@ -300,6 +324,12 @@ ComfyJS.onCommand = (user, command, message, flags, extra) => {
 window.onload = function() {
     loadFonts();
     loadTasksDB();
+
+    if (taskLimit && tasks.length > taskLimit) {
+        tasks = tasks.slice(0, taskLimit);
+        saveTasksDB();
+    }
+
     renderDOM();
 }
 

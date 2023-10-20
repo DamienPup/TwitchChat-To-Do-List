@@ -1,9 +1,13 @@
 :root {
 	/* https://fonts.google.com/  */
-	
 	--header-font: "Fredoka One";
 	--body-font: "Nunito";
 
+	/*
+	 Style 
+	 Must be a color name, hex code (with #) or rgba(0-255, 0-255, 0-255, 0-1) color.
+	 Examples: white, black, #f3b403, rgba(0, 0, 0, 0.5), rgba(244, 120, 0, 0.2)
+	*/
 	--overlay-background: rgba(0, 0, 0, 0.5);
 	--header-text-color: white;
 	--header-background-color: rgba(0, 0, 0, 0.9);
