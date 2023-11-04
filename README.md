@@ -34,9 +34,14 @@ Inspired by [kennyjacobson/Chat-Task-Tic-Overlay](https://github.com/kennyjacobs
 ## Install Instructions
 
 > [!WARNING]
-> If you are updating from previous versions, backup `scripts/index.js` and `styles/taskList.css`!
-> These files, being code files, are updated often but currently also include (most) of the settings.
+> If you are updating from commit https://github.com/DamienPup/TwitchChat-To-Do-List/commit/79914d095bb6cbd005ce9bcfe85ca8c0982162cd or before, your settings are stored in `scripts/index.js` and `styles/taskList.css`.
+> BACKUP THE SETTINGS SECTIONS IN THESE FILES. ENSURE THE NEW VERSIONS ARE USED.
+> The new settings files are in `settings.js` and `style_settings.css`. You can import your settings there.
 > You may want to backup (or just not update) `auth.js` and `CLIENT_ID.txt` as well.
+
+> [!NOTE]
+> When updating, make sure to not overwrite `settings.js` or `style_settings.css`. These contain your settings.
+> Make sure to read over the new versions however, just in case new settings were added. Any missing settings can and will break the code.
 
 1. Login to the Twitch Dev Console (https://dev.twitch.tv/console/apps) with your main or dedicated bot account.
 1. Create an app.

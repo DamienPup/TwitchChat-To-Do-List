@@ -6,13 +6,13 @@ let primaryAnim = null;
 let secondaryAnim = null;
 // =====
 
-// Settings
-const taskLimit = null; // null or undefined to disable, any postive whole number to enable. Limit's the total number of tasks.
+// Settings (DO NOT CHANGE THESE, USE `settings.js` INSTEAD!!!)
+const taskLimit = config.taskLimit; // null or undefined to disable, any postive whole number to enable. Limit's the total number of tasks.
 
-const scrollingEnabled = true; // true or false. Toggles scrolling.
-const scrollPxPerSecond = 25; // Speed of scrolling. Any number. (Untested with negatives!)
-const scrollPxGap = 0; // Gap between last and first list item. Any positive whole number.
-const scrollLoopDelaySec = 2.5; // Pause between loops in seconds. Any (positive) number.
+const scrollingEnabled = config.scrollingEnabled; // true or false. Toggles scrolling.
+const scrollPxPerSecond = config.scrollPxPerSecond; // Speed of scrolling. Any number. (Untested with negatives!)
+const scrollPxGap = config.scrollPxGap; // Gap between last and first list item. Any positive whole number.
+const scrollLoopDelaySec = config.scrollLoopDelaySec; // Pause between loops in seconds. Any (positive) number.
 
 // FONTS
 function loadGoogleFont(font) {
@@ -83,6 +83,15 @@ function removeTask(index){
     saveTasksDB();
 
     return removed[0].task;
+}
+
+function replaceTask(index, task) {
+    if (index < 0 || index >= tasks.length) return null;
+
+    tasks[index].task = task;
+    saveTasksDB();
+
+    return tasks[index].task;
 }
 
 function clearAllTasks(){
@@ -282,9 +291,40 @@ function commandClear(user, command, message, flags, extra){
     }
 }
 
+function commandEdit(user, command, message, flags, extra) {
+    if (!isMod(flags)) {
+        return ComfyJS.Say(`${user} Only mods can use this command!`)
+    }
+
+    const segments = message.split(' ');
+    if (segments.length < 2) {
+        return ComfyJS.Say(`${user} Usage: !${command} <index> <new-content>`);
+    }
+
+    index = segments[0];
+    new_content = segments.slice(1).join(' ');
+
+    if (new_content == "") {
+        return ComfyJS.Say(`${user} Usage: !${command} <index> <new-content>`);
+    }
+
+    index = parseInt(index);
+    if (index == null) {
+        return ComfyJS.Say(`${user} ${index} is not a number!`);
+    }
+
+    task = replaceTask(index - 1, new_content);
+    if (!task){
+        return ComfyJS.Say(`${user} Task ${index} does not exist!`);
+    }
+    renderDOM();
+
+    return ComfyJS.Say(`Task ${index} is now: ${task}`);
+}
+
 function commandHelp(user, command, message, flags, extra) {
     if (isMod(flags)){
-        return ComfyJS.Say("Commands: !tasks:add <task>, !tasks:done <index>, !tasks:remove <index>, !tasks:clear <all|done>, !tasks:help, !tasks:credits, !tasks:reload")
+        return ComfyJS.Say("Commands: !tasks:add <task>, !tasks:done <index>, !tasks:remove <index>, !tasks:edit <index> <new-content>, !tasks:clear <all|done>, !tasks:help, !tasks:credits, !tasks:reload")
     }
     return ComfyJS.Say("Commands: !tasks:add <task>, !tasks:help, !tasks:credits")
 }
@@ -307,6 +347,7 @@ const commands = {
     "tasks:add": commandAdd,
     "tasks:done": commandDone,
     "tasks:remove": commandRemove,
+    "tasks:edit": commandEdit,
     "tasks:clear": commandClear,
     "tasks:help": commandHelp,
     "tasks:credits": commandCredits,
