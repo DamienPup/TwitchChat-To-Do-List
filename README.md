@@ -29,8 +29,11 @@ Inspired by [liyunze-coding/Chat-Task-Tic-Overlay](https://github.com/liyunze-co
 
 - `CLIENT_ID.txt`: Used by `generate_token.py` to generate an oauth token.
 - `auth.js`: Holds bot username, channel to join, and oauth token.
-- `styles/taskList.css`: Holds styles for the overlay, see top of file for easy to change options.
-- `scripts/index.js`: The code. Some options located at top of file. Scroll down to the bottom and you can edit the names of the commands (make to change both the commands dict and help command text!)
+- `settings.js`: Holds the main settings for the overlay.
+- `style_settings.css`: Holds the styling settings for the overlay.
+
+- `styles/taskList.css`: The code for the styles.
+- `scripts/index.js`: The main code. Scroll down to the bottom and you can edit the names of the commands (make to change both the commands dict and help command text if you do so)
 
 ## Install Instructions
 
