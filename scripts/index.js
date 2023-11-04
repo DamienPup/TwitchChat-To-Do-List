@@ -191,7 +191,8 @@ async function infScrollAnim() {
 }
 
 function animationFinished() {
-	scrolling = false;
+    scrolling = false;
+    cancelAnim();
 	renderDOM();
     infScrollAnim();
 }
