@@ -17,6 +17,7 @@ Inspired by [kennyjacobson/Chat-Task-Tic-Overlay](https://github.com/kennyjacobs
 
 - `task:done <number>`: Finish a task
 - `task:remove <number>`: Delete a task
+- `task:edit <number> <new-content>`: Edit a task to contain different text.
 - `task:clear all`: Clear all tasks
 - `task:clear done`: Clear only fishised tasks.
 - `task:reload`: Reload bot and overlay.
@@ -34,14 +35,19 @@ Inspired by [kennyjacobson/Chat-Task-Tic-Overlay](https://github.com/kennyjacobs
 ## Install Instructions
 
 > [!WARNING]
-> If you are updating from commit https://github.com/DamienPup/TwitchChat-To-Do-List/commit/79914d095bb6cbd005ce9bcfe85ca8c0982162cd or before, your settings are stored in `scripts/index.js` and `styles/taskList.css`.
-> BACKUP THE SETTINGS SECTIONS IN THESE FILES. ENSURE THE NEW VERSIONS ARE USED.
-> The new settings files are in `settings.js` and `style_settings.css`. You can import your settings there.
-> You may want to backup (or just not update) `auth.js` and `CLIENT_ID.txt` as well.
+> If you are updating from [commit #79914d0](https://github.com/DamienPup/TwitchChat-To-Do-List/commit/79914d095bb6cbd005ce9bcfe85ca8c0982162cd) or before, your settings are stored in `scripts/index.js` and `styles/taskList.css`.
+>
+> BACKUP THE SETTINGS SECTIONS IN THESE FILES. Please update to the new versions of those files.
+>
+> The new settings files are `settings.js` and `style_settings.css`. You can import your settings there.
+
 
 > [!NOTE]
 > When updating, make sure to not overwrite `settings.js` or `style_settings.css`. These contain your settings.
+>
 > Make sure to read over the new versions however, just in case new settings were added. Any missing settings can and will break the code.
+>
+> You may want to backup (or just not update) `auth.js` and `CLIENT_ID.txt` as well.
 
 1. Login to the Twitch Dev Console (https://dev.twitch.tv/console/apps) with your main or dedicated bot account.
 1. Create an app.
