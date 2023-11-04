@@ -9,18 +9,18 @@ Inspired by [kennyjacobson/Chat-Task-Tic-Overlay](https://github.com/kennyjacobs
 
 ### Public Commands
 
-- `task:help`: List commands.
-- `task:credits`: List bot credits.
-- `task:add <task>`: Add a task to the list. Task can contain spaces.
+- `!task:help`: List commands.
+- `!task:credits`: List bot credits.
+- `!task:add <task>`: Add a task to the list. Task can contain spaces.
 
 ### Mod Only Commands
 
-- `task:done <number>`: Finish a task
-- `task:remove <number>`: Delete a task
-- `task:edit <number> <new-content>`: Edit a task to contain different text.
-- `task:clear all`: Clear all tasks
-- `task:clear done`: Clear only fishised tasks.
-- `task:reload`: Reload bot and overlay.
+- `!task:done <number>`: Finish a task
+- `!task:remove <number>`: Delete a task
+- `!task:edit <number> <new-content>`: Edit a task to contain different text.
+- `!task:clear all`: Clear all tasks
+- `!task:clear done`: Clear only fishised tasks.
+- `!task:reload`: Reload bot and overlay.
 
 ## Files
 
