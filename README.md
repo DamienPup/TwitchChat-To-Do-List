@@ -3,23 +3,24 @@
 A chat controlled to do overlay for twitch.
 
 Created by DamienPup for [LadyWynter FantasyWriter](https://www.twitch.tv/ladywynter_fantasywriter).
-Inspired by [kennyjacobson/Chat-Task-Tic-Overlay](https://github.com/kennyjacobson/Chat-Task-Tic-Overlay).
+Inspired by [liyunze-coding/Chat-Task-Tic-Overlay](https://github.com/liyunze-coding/Chat-Task-Tic-Overlay).
 
 ## List of commands
 
 ### Public Commands
 
-- `task:help`: List commands.
-- `task:credits`: List bot credits.
-- `task:add <task>`: Add a task to the list. Task can contain spaces.
+- `!task:help`: List commands.
+- `!task:credits`: List bot credits.
+- `!task:add <task>`: Add a task to the list. Task can contain spaces.
 
 ### Mod Only Commands
 
-- `task:done <number>`: Finish a task
-- `task:remove <number>`: Delete a task
-- `task:clear all`: Clear all tasks
-- `task:clear done`: Clear only fishised tasks.
-- `task:reload`: Reload bot and overlay.
+- `!task:done <number>`: Finish a task
+- `!task:remove <number>`: Delete a task
+- `!task:edit <number> <new-content>`: Edit a task to contain different text.
+- `!task:clear all`: Clear all tasks
+- `!task:clear done`: Clear only fishised tasks.
+- `!task:reload`: Reload bot and overlay.
 
 ## Files
 
@@ -28,20 +29,28 @@ Inspired by [kennyjacobson/Chat-Task-Tic-Overlay](https://github.com/kennyjacobs
 
 - `CLIENT_ID.txt`: Used by `generate_token.py` to generate an oauth token.
 - `auth.js`: Holds bot username, channel to join, and oauth token.
-- `styles/taskList.css`: Holds styles for the overlay, see top of file for easy to change options.
-- `scripts/index.js`: The code. Some options located at top of file. Scroll down to the bottom and you can edit the names of the commands (make to change both the commands dict and help command text!)
+- `settings.js`: Holds the main settings for the overlay.
+- `style_settings.css`: Holds the styling settings for the overlay.
+
+- `styles/taskList.css`: The code for the styles.
+- `scripts/index.js`: The main code. Scroll down to the bottom and you can edit the names of the commands (make to change both the commands dict and help command text if you do so)
 
 ## Install Instructions
 
 > [!WARNING]
-> If you are updating from commit https://github.com/DamienPup/TwitchChat-To-Do-List/commit/79914d095bb6cbd005ce9bcfe85ca8c0982162cd or before, your settings are stored in `scripts/index.js` and `styles/taskList.css`.
-> BACKUP THE SETTINGS SECTIONS IN THESE FILES. ENSURE THE NEW VERSIONS ARE USED.
-> The new settings files are in `settings.js` and `style_settings.css`. You can import your settings there.
-> You may want to backup (or just not update) `auth.js` and `CLIENT_ID.txt` as well.
+> If you are updating from [commit #79914d0](https://github.com/DamienPup/TwitchChat-To-Do-List/commit/79914d095bb6cbd005ce9bcfe85ca8c0982162cd) or before, your settings are stored in `scripts/index.js` and `styles/taskList.css`.
+>
+> BACKUP THE SETTINGS SECTIONS IN THESE FILES. Please update to the new versions of those files.
+>
+> The new settings files are `settings.js` and `style_settings.css`. You can import your settings there.
+
 
 > [!NOTE]
 > When updating, make sure to not overwrite `settings.js` or `style_settings.css`. These contain your settings.
+>
 > Make sure to read over the new versions however, just in case new settings were added. Any missing settings can and will break the code.
+>
+> You may want to backup (or just not update) `auth.js` and `CLIENT_ID.txt` as well.
 
 1. Login to the Twitch Dev Console (https://dev.twitch.tv/console/apps) with your main or dedicated bot account.
 1. Create an app.
