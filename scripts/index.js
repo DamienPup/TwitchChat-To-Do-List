@@ -219,16 +219,16 @@ function commandAdd(user, command, message, flags, extra){
 
     let task = addTask(message);
     if (!task) {
-        return ComfyJS.Say(`${user} At most ${taskLimit} tasks may be active at once!`)
+        return ComfyJS.Say(`${user} ❌ At most ${taskLimit} tasks may be active at once!`)
     }
     renderDOM();
 
-    return ComfyJS.Say(`${user} Added task: ${task}`);
+    return ComfyJS.Say(`${user} ✅ Added task: ${task}`);
 }
 
 function commandDone(user, command, message, flags, extra){
     if (!isMod(flags)) {
-        return ComfyJS.Say(`${user} Only mods can use this command!`)
+        return ComfyJS.Say(`${user} ❌ Only mods can use this command!`)
     }
 
     if (message == "") {
@@ -237,21 +237,21 @@ function commandDone(user, command, message, flags, extra){
 
     index = parseInt(message);
     if (isNaN(index)) {
-        return ComfyJS.Say(`${user} ${index} is not a number!`);
+        return ComfyJS.Say(`${user} ❌ ${index} is not a number!`);
     }
 
     let task = finishTask(index - 1);
     if (!task){
-        return ComfyJS.Say(`${user} Task ${index} does not exist!`);
+        return ComfyJS.Say(`${user} ❌ Task ${index} does not exist!`);
     }
     renderDOM();
 
-    return ComfyJS.Say(`${user} Finshed task: ${task}`);
+    return ComfyJS.Say(`${user} ✅ Finshed task: ${task}`);
 }
 
 function commandRemove(user, command, message, flags, extra){
     if (!isMod(flags)) {
-        return ComfyJS.Say(`${user} Only mods can use this command!`)
+        return ComfyJS.Say(`${user} ❌ Only mods can use this command!`)
     }
 
     if (message == "") {
@@ -259,34 +259,34 @@ function commandRemove(user, command, message, flags, extra){
     }
 
     index = parseInt(message);
-    if (index == null) {
-        return ComfyJS.Say(`${user} ${index} is not a number!`);
+    if (isNaN(index)) {
+        return ComfyJS.Say(`${user} ❌ ${index} is not a number!`);
     }
 
     let task = removeTask(index - 1);
     if (!task){
-        return ComfyJS.Say(`${user} Task ${index} does not exist!`);
+        return ComfyJS.Say(`${user} ❌ Task ${index} does not exist!`);
     }
     renderDOM();
     
-    return ComfyJS.Say(`${user} Removed task: ${task}`);
+    return ComfyJS.Say(`${user} ✅ Removed task: ${task}`);
 }
 
 function commandClear(user, command, message, flags, extra){
     if (!isMod(flags)) {
-        return ComfyJS.Say(`${user} Only mods can use this command!`)
+        return ComfyJS.Say(`${user} ❌ Only mods can use this command!`)
     }
 
     if (message == "done"){
         clearDoneTasks();
         renderDOM();
 
-        return ComfyJS.Say(`${user} Cleared completed tasks!`);
+        return ComfyJS.Say(`${user} ✅ Cleared completed tasks!`);
     } else if (message == "all") {
         clearAllTasks();
         renderDOM();
 
-        return ComfyJS.Say(`${user} Cleared all tasks!`);
+        return ComfyJS.Say(`${user} ✅ Cleared all tasks!`);
     } else {
         return ComfyJS.Say(`${user} Usage: !${command} <done|all>`);
     }
@@ -294,7 +294,7 @@ function commandClear(user, command, message, flags, extra){
 
 function commandEdit(user, command, message, flags, extra) {
     if (!isMod(flags)) {
-        return ComfyJS.Say(`${user} Only mods can use this command!`)
+        return ComfyJS.Say(`${user} ❌ Only mods can use this command!`)
     }
 
     const segments = message.split(' ');
@@ -310,17 +310,17 @@ function commandEdit(user, command, message, flags, extra) {
     }
 
     index = parseInt(index);
-    if (index == null) {
-        return ComfyJS.Say(`${user} ${index} is not a number!`);
+    if (isNaN(index)) {
+        return ComfyJS.Say(`${user} ❌ ${index} is not a number!`);
     }
 
     task = replaceTask(index - 1, new_content);
     if (!task){
-        return ComfyJS.Say(`${user} Task ${index} does not exist!`);
+        return ComfyJS.Say(`${user} ❌ Task ${index} does not exist!`);
     }
     renderDOM();
 
-    return ComfyJS.Say(`Task ${index} is now: ${task}`);
+    return ComfyJS.Say(`✅ Task ${index} is now: ${task}`);
 }
 
 function commandHelp(user, command, message, flags, extra) {
