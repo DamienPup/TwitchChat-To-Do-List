@@ -12,10 +12,11 @@ Inspired by [liyunze-coding/Chat-Task-Tic-Overlay](https://github.com/liyunze-co
 - `!task:help`: List commands.
 - `!task:credits`: List bot credits.
 - `!task:add <task>`: Add a task to the list. Task can contain spaces.
+- `!task:done <number>`: Finish a task. You can only finish a task you started.
 
 ### Mod Only Commands
 
-- `!task:done <number>`: Finish a task
+- `!task:done <number>`: Finish a task. Mods can finish any task.
 - `!task:remove <number>`: Delete a task
 - `!task:edit <number> <new-content>`: Edit a task to contain different text.
 - `!task:clear all`: Clear all tasks

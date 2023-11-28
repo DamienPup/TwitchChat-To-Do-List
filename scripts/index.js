@@ -53,13 +53,14 @@ function clearTasksDB(){
 }
 
 // TASK MANAGEMENT
-function addTask(task) {
+function addTask(task, user) {
     if (taskLimit && tasks.length >= taskLimit) {
         return null;
     }
 
     tasks.push({
         task: task,
+        user: user,
         completed: false
     });
     saveTasksDB();
@@ -83,6 +84,12 @@ function removeTask(index){
     saveTasksDB();
 
     return removed[0].task;
+}
+
+function getTask(index) {
+    if (index < 0 || index >= tasks.length) return null;
+
+    return tasks[index];
 }
 
 function replaceTask(index, task) {
@@ -117,9 +124,11 @@ function renderDOM() {
     tasks.forEach((task, index) => {
         const taskElement = template.content.cloneNode(true);
             
-        taskElement.querySelector(".task-index").textContent = `${index + 1}.`;
+        taskElement.querySelector(".task-index").textContent = `${index + 1} (${task.user}).`;
         taskElement.querySelector(".task-text").textContent = task.task;
         taskElement.querySelector(".task-checkbox").checked = task.completed;
+
+        taskElement.querySelector(".task-index").classList.toggle("crossed", task.completed);
         taskElement.querySelector(".task-text").classList.toggle("crossed", task.completed);
         
         taskLists.forEach(taskList => {
@@ -217,7 +226,7 @@ function commandAdd(user, command, message, flags, extra){
         return ComfyJS.Say(`${user} Usage: !${command} <task-to-add>`);
     }
 
-    let task = addTask(message);
+    let task = addTask(message, user);
     if (!task) {
         return ComfyJS.Say(`${user} ❌ At most ${taskLimit} tasks may be active at once!`)
     }
@@ -227,10 +236,6 @@ function commandAdd(user, command, message, flags, extra){
 }
 
 function commandDone(user, command, message, flags, extra){
-    if (!isMod(flags)) {
-        return ComfyJS.Say(`${user} ❌ Only mods can use this command!`)
-    }
-
     if (message == "") {
         return ComfyJS.Say(`${user} Usage: !${command} <index>`);
     }
@@ -240,7 +245,12 @@ function commandDone(user, command, message, flags, extra){
         return ComfyJS.Say(`${user} ❌ ${index} is not a number!`);
     }
 
-    let task = finishTask(index - 1);
+    let task = getTask(index - 1);
+    if (!isMod(flags) && task.user != user) {
+        return ComfyJS.Say(`${user} ❌ You are not allowed to finish this task.`);
+    }
+
+    task = finishTask(index - 1);
     if (!task){
         return ComfyJS.Say(`${user} ❌ Task ${index} does not exist!`);
     }
@@ -327,7 +337,7 @@ function commandHelp(user, command, message, flags, extra) {
     if (isMod(flags)){
         return ComfyJS.Say("Commands: !tasks:add <task>, !tasks:done <index>, !tasks:remove <index>, !tasks:edit <index> <new-content>, !tasks:clear <all|done>, !tasks:help, !tasks:credits, !tasks:reload")
     }
-    return ComfyJS.Say("Commands: !tasks:add <task>, !tasks:help, !tasks:credits")
+    return ComfyJS.Say("Commands: !tasks:add <task>, !tasks:done <index>, !tasks:help, !tasks:credits")
 }
 
 function commandCredits(user, command, message, flags, extra) {
@@ -358,21 +368,36 @@ const commands = {
 ComfyJS.onCommand = (user, command, message, flags, extra) => {
     let cmd_func = commands[command];
     if (cmd_func){
-        return cmd_func(user, command, message, flags, extra);
+        try {
+            return cmd_func(user, command, message, flags, extra);
+        } catch (error) {
+            return ComfyJS.Say(`!!! Uncaught exception: ${error} !!! Please report this to the developer.`)
+        }
     }
 }
 
 // STARTUP CODE
 window.onload = function() {
-    loadFonts();
-    loadTasksDB();
+    try {
+        loadFonts();
+        loadTasksDB();
 
-    if (taskLimit && tasks.length > taskLimit) {
-        tasks = tasks.slice(0, taskLimit);
+        if (taskLimit && tasks.length > taskLimit) {
+            tasks = tasks.slice(0, taskLimit);
+        }
+
+        for (let task of tasks) {
+            task.task = task.task || "<unknown task>";
+            task.user = task.user || "<no user>";
+            task.complete = task.complete || false;
+        }
+
         saveTasksDB();
-    }
 
-    renderDOM();
+        renderDOM();
+    } catch (error) {
+        return ComfyJS.Say(`!!! Uncaught exception: ${error} !!! Please report this to the developer.`)
+    }
 }
 
 ComfyJS.Init(auth.username, `oauth:${auth.oauth}`, [auth.channel]);
