@@ -124,12 +124,13 @@ function renderDOM() {
     tasks.forEach((task, index) => {
         const taskElement = template.content.cloneNode(true);
             
-        taskElement.querySelector(".task-index").textContent = `${index + 1} (${task.user}).`;
-        taskElement.querySelector(".task-text").textContent = task.task;
+        //taskElement.querySelector(".task-index").textContent = `${index + 1} (${task.user}).`;
+        taskElement.querySelector(".task-index").textContent = `${index + 1}. ${task.user}: ${task.task}`;
+        //taskElement.querySelector(".task-text").textContent = task.task;
         taskElement.querySelector(".task-checkbox").checked = task.completed;
 
         taskElement.querySelector(".task-index").classList.toggle("crossed", task.completed);
-        taskElement.querySelector(".task-text").classList.toggle("crossed", task.completed);
+        ///taskElement.querySelector(".task-text").classList.toggle("crossed", task.completed);
         
         taskLists.forEach(taskList => {
             taskList.appendChild(taskElement.cloneNode(true)); 

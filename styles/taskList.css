@@ -115,6 +115,8 @@ body {
 
 	margin-bottom: 5px;
 	padding: 10px;
+
+	overflow-wrap: break-word;
 }
 
 .task-div:not(:last-child) {
