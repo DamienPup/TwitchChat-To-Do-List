@@ -346,8 +346,13 @@ function commandHelp(user, command, message, flags, extra) {
 
         const commandNames = config.commandNames[commandID]
         const commandSyntax = config.commandSyntaxes[commandID]
+        
+        let commandString = "!" + commandNames[0];
+        if (commandSyntax) {
+            commandString += " " + commandSyntax;
+        }
 
-        commands.push(commandNames[0] + " " + commandSyntax);
+        commands.push(commandString);
     }
     ComfyJS.Say("Commands: " + commands.join(", "));
 
