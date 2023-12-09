@@ -10,7 +10,6 @@ const config = (() => {
     // You can add multiple names for a single command, or just have one
     // The FIRST entry will be displayed in the help command as the primary command.
     // The remaining entries will be displayed as alises.
-    // TODO: Commands can be renamed, but help command isn't updated
     const commandNames = {
         // Add a task to the list
         add: ["task add", "tasks:add"],
@@ -39,7 +38,6 @@ const config = (() => {
 
     // Feel free to change the names of the parameters.
     // Just make sure it's still clear how many there are and what they are.
-    // TODO: Currently not implemented
     const commandSyntaxes = {
         add: "<task>",
         done: "<number>",
