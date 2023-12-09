@@ -334,11 +334,27 @@ function commandEdit(user, command, message, flags, extra) {
     return ComfyJS.Say(`✅ Task ${index} is now: ${task}`);
 }
 
+// Future TODO: Support showing more info for each command via (!task help (command)).
+// Future TODO: Allow other commands to display their help with correct names and syntaxes
+// Future TODO: Add permission settings so I don't have to hardcode the mod/non-mod commands.
 function commandHelp(user, command, message, flags, extra) {
-    if (isMod(flags)){
-        return ComfyJS.Say("Commands: !tasks:add <task>, !tasks:done <index>, !tasks:remove <index>, !tasks:edit <index> <new-content>, !tasks:clear <all|done>, !tasks:help, !tasks:credits, !tasks:reload")
+    let commands = []
+    for (const commandID in config.commandNames) {
+        if (!isMod(flags)
+        && (commandID != "add" && commandID != "done" && commandID != "help" && commandID != "credits"))
+            continue;
+
+        const commandNames = config.commandNames[commandID]
+        const commandSyntax = config.commandSyntaxes[commandID]
+
+        commands.push(commandNames[0] + " " + commandSyntax);
     }
-    return ComfyJS.Say("Commands: !tasks:add <task>, !tasks:done <index>, !tasks:help, !tasks:credits")
+    ComfyJS.Say("Commands: " + commands.join(", "));
+
+    // if (isMod(flags)){
+    //     return ComfyJS.Say("Commands: !tasks:add <task>, !tasks:done <index>, !tasks:remove <index>, !tasks:edit <index> <new-content>, !tasks:clear <all|done>, !tasks:help, !tasks:credits, !tasks:reload")
+    // }
+    // return ComfyJS.Say("Commands: !tasks:add <task>, !tasks:done <index>, !tasks:help, !tasks:credits")
 }
 
 function commandCredits(user, command, message, flags, extra) {
