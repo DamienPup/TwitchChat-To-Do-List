@@ -375,7 +375,7 @@ function getCommand(fullMessage) {
                 return {
                     commandID: command,
                     command: name,
-                    arguments: fullMessage.slice(alias.length).trim()
+                    arguments: fullMessage.slice(name.length).trim()
                 }
             }
         }
