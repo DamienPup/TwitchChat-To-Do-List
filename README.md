@@ -46,6 +46,7 @@ Inspired by [liyunze-coding/Chat-Task-Tic-Overlay](https://github.com/liyunze-co
 > (Otherwise the bot will crash)
 >
 > Last update to `settings.js`: Commit 62937632973e9ddaacd7c5fdfab1de882f95e87e on Dec 9th, 2023.
+>
 > Last update to `style_settings.css`: Commit 8093f8e52c7d6c3af4e70d975cdb5431db52fac3 on Nov 3rd, 2023.
 >
 > You may want to backup (or just not update) `auth.js` and `CLIENT_ID.txt` as well.
