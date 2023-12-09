@@ -49,9 +49,21 @@ const config = (() => {
         reload: "",
     }
 
+    // Descriptions of each command
+    const commandDescriptions = {
+        add: "Adds a task to the list",
+        done: "Finishes a task. Non-mods can only finish tasks they started.",
+        remove: "Removes a task (mod-only)",
+        edit: "Edits a task (mod-only)",
+        clear: "Clears either completed or all tasks (mod-only)",
+        help: "Displays a help message listing all commands",
+        credits: "Displays the bots credits",
+        reloads: "Reloads the bot and task list overlay (mod-only)",
+    }
+
     // !!! End of settings. DO NOT TOUCH THIS SECTION UNLESS UPDATING FROM A PREVIOUS VERSION.
     return {
         taskLimit, scrollingEnabled, scrollPxPerSecond, scrollPxGap, scrollLoopDelaySec, commandNames,
-        commandSyntaxes
+        commandSyntaxes, commandDescriptions
     };
 })();

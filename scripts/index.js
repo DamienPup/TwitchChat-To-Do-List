@@ -222,12 +222,30 @@ function isMod(flags) {
 	return flags.broadcaster || flags.mod;
 }
 
-function commandAdd(user, command, message, flags, extra){
-    if (message == "") {
-        return ComfyJS.Say(`${user} Usage: !${command} <task-to-add>`);
+function printCommandHelp(command) {
+    const commandNames = config.commandNames[command.commandID];
+    const commandSyntax = config.commandSyntaxes[command.commandID];
+    const commandDesc = config.commandDescriptions[command.commandID];
+    // Usage: !<pri command name> <command syntax> - <command description> (aliases: <other command names>)
+    let message = "Usage: !" + commandNames[0];
+    if (commandSyntax) {
+        message += " " + commandSyntax;
+    }
+    if (commandDesc) {
+        message += " - " + commandDesc;
+    }
+    if (commandNames.length > 1) {
+        message += " (aliases: " + commandNames.slice(1).map(name => "!" + name).join(", ") + ")";
+    }
+    return ComfyJS.Say(message);
+}
+
+function commandAdd(user, command, flags, extra){
+    if (command.arguments == "") {
+        return printCommandHelp(command);
     }
 
-    let task = addTask(message, user);
+    let task = addTask(command.arguments, user);
     if (!task) {
         return ComfyJS.Say(`${user} ❌ At most ${taskLimit} tasks may be active at once!`)
     }
@@ -236,12 +254,12 @@ function commandAdd(user, command, message, flags, extra){
     return ComfyJS.Say(`${user} ✅ Added task: ${task}`);
 }
 
-function commandDone(user, command, message, flags, extra){
-    if (message == "") {
-        return ComfyJS.Say(`${user} Usage: !${command} <index>`);
+function commandDone(user, command, flags, extra){
+    if (command.arguments == "") {
+        return printCommandHelp(command);
     }
 
-    index = parseInt(message);
+    index = parseInt(command.arguments);
     if (isNaN(index)) {
         return ComfyJS.Say(`${user} ❌ ${index} is not a number!`);
     }
@@ -260,16 +278,16 @@ function commandDone(user, command, message, flags, extra){
     return ComfyJS.Say(`${user} ✅ Finshed task: ${task}`);
 }
 
-function commandRemove(user, command, message, flags, extra){
+function commandRemove(user, command, flags, extra){
     if (!isMod(flags)) {
         return ComfyJS.Say(`${user} ❌ Only mods can use this command!`)
     }
 
-    if (message == "") {
-        return ComfyJS.Say(`${user} Usage: !${command} <index>`);
+    if (command.arguments == "") {
+        return printCommandHelp(command);
     }
 
-    index = parseInt(message);
+    index = parseInt(command.arguments);
     if (isNaN(index)) {
         return ComfyJS.Say(`${user} ❌ ${index} is not a number!`);
     }
@@ -283,41 +301,41 @@ function commandRemove(user, command, message, flags, extra){
     return ComfyJS.Say(`${user} ✅ Removed task: ${task}`);
 }
 
-function commandClear(user, command, message, flags, extra){
+function commandClear(user, command, flags, extra){
     if (!isMod(flags)) {
         return ComfyJS.Say(`${user} ❌ Only mods can use this command!`)
     }
 
-    if (message == "done"){
+    if (command.arguments == "done"){
         clearDoneTasks();
         renderDOM();
 
         return ComfyJS.Say(`${user} ✅ Cleared completed tasks!`);
-    } else if (message == "all") {
+    } else if (command.arguments == "all") {
         clearAllTasks();
         renderDOM();
 
         return ComfyJS.Say(`${user} ✅ Cleared all tasks!`);
     } else {
-        return ComfyJS.Say(`${user} Usage: !${command} <done|all>`);
+        return printCommandHelp(command);
     }
 }
 
-function commandEdit(user, command, message, flags, extra) {
+function commandEdit(user, command, flags, extra) {
     if (!isMod(flags)) {
         return ComfyJS.Say(`${user} ❌ Only mods can use this command!`)
     }
 
-    const segments = message.split(' ');
+    const segments = command.arguments.split(' ');
     if (segments.length < 2) {
-        return ComfyJS.Say(`${user} Usage: !${command} <index> <new-content>`);
+        return printCommandHelp(command);
     }
 
     index = segments[0];
     new_content = segments.slice(1).join(' ');
 
     if (new_content == "") {
-        return ComfyJS.Say(`${user} Usage: !${command} <index> <new-content>`);
+        return printCommandHelp(command);
     }
 
     index = parseInt(index);
@@ -335,9 +353,8 @@ function commandEdit(user, command, message, flags, extra) {
 }
 
 // Future TODO: Support showing more info for each command via (!task help (command)).
-// Future TODO: Allow other commands to display their help with correct names and syntaxes
 // Future TODO: Add permission settings so I don't have to hardcode the mod/non-mod commands.
-function commandHelp(user, command, message, flags, extra) {
+function commandHelp(user, command, flags, extra) {
     let commands = []
     for (const commandID in config.commandNames) {
         if (!isMod(flags)
@@ -354,7 +371,7 @@ function commandHelp(user, command, message, flags, extra) {
 
         commands.push(commandString);
     }
-    ComfyJS.Say("Commands: " + commands.join(", "));
+    return ComfyJS.Say("Commands: " + commands.join(", "));
 
     // if (isMod(flags)){
     //     return ComfyJS.Say("Commands: !tasks:add <task>, !tasks:done <index>, !tasks:remove <index>, !tasks:edit <index> <new-content>, !tasks:clear <all|done>, !tasks:help, !tasks:credits, !tasks:reload")
@@ -362,11 +379,11 @@ function commandHelp(user, command, message, flags, extra) {
     // return ComfyJS.Say("Commands: !tasks:add <task>, !tasks:done <index>, !tasks:help, !tasks:credits")
 }
 
-function commandCredits(user, command, message, flags, extra) {
+function commandCredits(user, command, flags, extra) {
     return ComfyJS.Say("Bot made by DamienPup for LadyWynter_FantasyWriter's stream. Inspired by https://github.com/liyunze-coding/Chat-Task-Tic-Overlay-Infinity")
 }
 
-function commandReload(user, command, message, flags, extra) {
+function commandReload(user, command, flags, extra) {
     if (!isMod(flags)) {
         return ComfyJS.Say(`${user} Only mods can use this command!`)
     }
@@ -408,7 +425,7 @@ ComfyJS.onCommand = (user, command, message, flags, extra) => {
     try {
         let cmd = getCommand(command + " " + message);
         if (cmd){
-            return commandFunctions[cmd.commandID](user, cmd.command, cmd.arguments, flags, extra);
+            return commandFunctions[cmd.commandID](user, cmd, flags, extra);
         }
     } catch (error) {
         return ComfyJS.Say(`!!! Uncaught exception: ${error} !!! Please report this to the developer.`)
