@@ -10,43 +10,45 @@ const config = (() => {
     // You can add multiple names for a single command, or just have one
     // The FIRST entry will be displayed in the help command as the primary command.
     // The remaining entries will be displayed as alises.
+    // TODO: Commands can be renamed, but help command isn't updated
     const commandNames = {
         // Add a task to the list
-        "add" : ["task add", "tasks:add"],
+        add: ["task add", "tasks:add"],
         // Finish a task
-        "done" : ["task done", "tasks:done"],
+        done: ["task done", "tasks:done"],
         // Remove a task
-        "remove" : ["task remove", "tasks:remove"],
+        remove: ["task remove", "tasks:remove"],
         // Edit a task
-        "edit" : ["task edit", "tasks:edit"],
+        edit: ["task edit", "tasks:edit"],
         // Clear all tasks or just finished ones
-        "clear" : ["task clear", "tasks:clear"],
+        clear: ["task clear", "tasks:clear"],
         // List all commands
-        "help" : ["task help", "tasks:help"],
+        help: ["task help", "tasks:help"],
         // List bot credits
-        "credits" : ["task credits", "tasks:credits"],
+        credits: ["task credits", "tasks:credits"],
         // Reload bot and overlay.
-        "reload" : ["task reload", "tasks:reload"],
+        reload: ["task reload", "tasks:reload"],
     }
     // FYI on format:
     // The part to the left of the colon is the command to be run.
     // The part to right is a list of possible names you can type in chat.
-    // E.g. if you set: "add" : ["task add", "tasks:add"],
+    // E.g. if you set: add: ["task add", "tasks:add"],
     // Then "!task add" OR "!tasks:add" will add a task to the last ("add" command)
     
     // !!! Advanced settings below !!!
 
     // Feel free to change the names of the parameters.
     // Just make sure it's still clear how many there are and what they are.
+    // TODO: Currently not implemented
     const commandSyntaxes = {
-        "add" : "<task>",
-        "done" : "<number>",
-        "remove" : "<number>",
-        "edit" : "<number> <new task>",
-        "clear" : "<done|all>",
-        "help" : "",
-        "credits" : "",
-        "reload" : "",
+        add: "<task>",
+        done: "<number>",
+        remove: "<number>",
+        edit: "<number> <new task>",
+        clear: "<done|all>",
+        help: "",
+        credits: "",
+        reload: "",
     }
 
     // !!! End of settings. DO NOT TOUCH THIS SECTION UNLESS UPDATING FROM A PREVIOUS VERSION.

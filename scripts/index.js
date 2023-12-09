@@ -355,25 +355,42 @@ function commandReload(user, command, message, flags, extra) {
     location.reload();
 }
 
-const commands = {
-    "tasks:add": commandAdd,
-    "tasks:done": commandDone,
-    "tasks:remove": commandRemove,
-    "tasks:edit": commandEdit,
-    "tasks:clear": commandClear,
-    "tasks:help": commandHelp,
-    "tasks:credits": commandCredits,
-    "tasks:reload": commandReload,
+const commandFunctions = {
+    add: commandAdd,
+    done: commandDone,
+    remove: commandRemove,
+    edit: commandEdit,
+    clear: commandClear,
+    help: commandHelp,
+    credits: commandCredits,
+    reload: commandReload,
+}
+
+function getCommand(fullMessage) {
+    for (const command in config.commandNames) {
+        const names = config.commandNames[command]
+
+        for (const name of names) {
+            if (fullMessage.startsWith(name)) {
+                return {
+                    commandID: command,
+                    command: name,
+                    arguments: fullMessage.slice(alias.length).trim()
+                }
+            }
+        }
+    }
+    return null
 }
 
 ComfyJS.onCommand = (user, command, message, flags, extra) => {
-    let cmd_func = commands[command];
-    if (cmd_func){
-        try {
-            return cmd_func(user, command, message, flags, extra);
-        } catch (error) {
-            return ComfyJS.Say(`!!! Uncaught exception: ${error} !!! Please report this to the developer.`)
+    try {
+        let cmd = getCommand(command + " " + message);
+        if (cmd){
+            return commandFunctions[cmd.commandID](user, cmd.command, cmd.arguments, flags, extra);
         }
+    } catch (error) {
+        return ComfyJS.Say(`!!! Uncaught exception: ${error} !!! Please report this to the developer.`)
     }
 }
 
