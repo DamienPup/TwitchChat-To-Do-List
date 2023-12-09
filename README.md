@@ -9,7 +9,7 @@ Inspired by [liyunze-coding/Chat-Task-Tic-Overlay](https://github.com/liyunze-co
 
 ### Public Commands
 
-- `!task:help`: List commands.
+- `!task:help (command)`: List commands. Optionally, get help on a command.
 - `!task:credits`: List bot credits.
 - `!task:add <task>`: Add a task to the list. Task can contain spaces.
 - `!task:done <number>`: Finish a task. You can only finish a task you started.
@@ -23,18 +23,12 @@ Inspired by [liyunze-coding/Chat-Task-Tic-Overlay](https://github.com/liyunze-co
 - `!task:clear done`: Clear only fishised tasks.
 - `!task:reload`: Reload bot and overlay.
 
-## Files
-
-> [!WARNING]
-> Modifing `taskList.css` or `index.js` can break things. Be careful and take a backup before doing so.
+## Notable Files
 
 - `CLIENT_ID.txt`: Used by `generate_token.py` to generate an oauth token.
 - `auth.js`: Holds bot username, channel to join, and oauth token.
 - `settings.js`: Holds the main settings for the overlay.
 - `style_settings.css`: Holds the styling settings for the overlay.
-
-- `styles/taskList.css`: The code for the styles.
-- `scripts/index.js`: The main code. Scroll down to the bottom and you can edit the names of the commands (make to change both the commands dict and help command text if you do so)
 
 ## Install Instructions
 
@@ -48,8 +42,11 @@ Inspired by [liyunze-coding/Chat-Task-Tic-Overlay](https://github.com/liyunze-co
 
 > [!NOTE]
 > When updating, make sure to not overwrite `settings.js` or `style_settings.css`. These contain your settings.
+> If the files have been updated since you last updated, please migrate your settings to the new versions.
+> (Otherwise the bot will crash)
 >
-> Make sure to read over the new versions however, just in case new settings were added. Any missing settings can and will break the code.
+> Last update to `settings.js`: Commit 62937632973e9ddaacd7c5fdfab1de882f95e87e on Dec 9th, 2023.
+> Last update to `style_settings.css`: Commit 8093f8e52c7d6c3af4e70d975cdb5431db52fac3 on Nov 3rd, 2023.
 >
 > You may want to backup (or just not update) `auth.js` and `CLIENT_ID.txt` as well.
 
