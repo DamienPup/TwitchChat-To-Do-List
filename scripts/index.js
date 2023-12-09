@@ -316,8 +316,12 @@ function commandClear(user, command, flags, extra){
         renderDOM();
 
         return ComfyJS.Say(`${user} ✅ Cleared all tasks!`);
-    } else {
-        return printCommandHelp(command);
+    } else  { 
+        printCommandHelp(command);
+        if (!isNaN(parseInt(command.arguments))) { // passed in a number to clear. Suggest the correct "remove" command instead
+            ComfyJS.Say(`(Did you mean !${config.commandNames.remove[0]} ${command.arguments}?)`);
+        }
+        return;
     }
 }
 
@@ -352,31 +356,33 @@ function commandEdit(user, command, flags, extra) {
     return ComfyJS.Say(`✅ Task ${index} is now: ${task}`);
 }
 
-// Future TODO: Support showing more info for each command via (!task help (command)).
 // Future TODO: Add permission settings so I don't have to hardcode the mod/non-mod commands.
 function commandHelp(user, command, flags, extra) {
-    let commands = []
-    for (const commandID in config.commandNames) {
-        if (!isMod(flags)
-        && (commandID != "add" && commandID != "done" && commandID != "help" && commandID != "credits"))
-            continue;
+    if (command.arguments == "") {
+        let commands = []
+        for (const commandID in config.commandNames) {
+            if (!isMod(flags)
+            && (commandID != "add" && commandID != "done" && commandID != "help" && commandID != "credits"))
+                continue;
 
-        const commandNames = config.commandNames[commandID]
-        const commandSyntax = config.commandSyntaxes[commandID]
-        
-        let commandString = "!" + commandNames[0];
-        if (commandSyntax) {
-            commandString += " " + commandSyntax;
+            const commandNames = config.commandNames[commandID]
+            const commandSyntax = config.commandSyntaxes[commandID]
+            
+            let commandString = "!" + commandNames[0];
+            if (commandSyntax) {
+                commandString += " " + commandSyntax;
+            }
+
+            commands.push(commandString);
         }
-
-        commands.push(commandString);
+        return ComfyJS.Say("Commands: " + commands.join(", "));
+    } else {
+        let targetCommand = getCommand(command.arguments);
+        if (targetCommand) 
+            return printCommandHelp(targetCommand);
+        else
+            return ComfyJS.Say("❌ That command does not exist.");
     }
-    return ComfyJS.Say("Commands: " + commands.join(", "));
-
-    // if (isMod(flags)){
-    //     return ComfyJS.Say("Commands: !tasks:add <task>, !tasks:done <index>, !tasks:remove <index>, !tasks:edit <index> <new-content>, !tasks:clear <all|done>, !tasks:help, !tasks:credits, !tasks:reload")
-    // }
-    // return ComfyJS.Say("Commands: !tasks:add <task>, !tasks:done <index>, !tasks:help, !tasks:credits")
 }
 
 function commandCredits(user, command, flags, extra) {

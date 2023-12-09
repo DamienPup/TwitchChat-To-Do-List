@@ -44,7 +44,7 @@ const config = (() => {
         remove: "<number>",
         edit: "<number> <new task>",
         clear: "<done|all>",
-        help: "",
+        help: "(command)",
         credits: "",
         reload: "",
     }
@@ -56,7 +56,7 @@ const config = (() => {
         remove: "Removes a task (mod-only)",
         edit: "Edits a task (mod-only)",
         clear: "Clears either completed or all tasks (mod-only)",
-        help: "Displays a help message listing all commands",
+        help: "Display a list of all commands or get help on a specific command",
         credits: "Displays the bots credits",
         reloads: "Reloads the bot and task list overlay (mod-only)",
     }
