@@ -476,3 +476,5 @@ console.log = function(error) {
 }
 
 ComfyJS.Init(auth.username, `oauth:${auth.oauth}`, [auth.channel]);
+
+console.log = oldConsoleLog;
