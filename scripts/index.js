@@ -462,4 +462,17 @@ window.onload = function() {
     }
 }
 
+// Send errors to screen instead of (invisiable) console
+const oldConsoleLog = console.log;
+console.log = function(error) {
+    if (!error.includes("error")) {
+        oldConsoleLog(error);
+        return;
+    }
+    var errorP = document.createElement("p");
+    errorP.classList.add("error");
+    errorP.textContent = error;
+    document.body.insertBefore(errorP, document.body.firstChild);
+}
+
 ComfyJS.Init(auth.username, `oauth:${auth.oauth}`, [auth.channel]);

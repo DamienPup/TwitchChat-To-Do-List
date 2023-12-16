@@ -168,3 +168,9 @@ input[type="checkbox"]:checked + label:after {
 .task-index {
 	padding-inline: 5px;
 }
+
+.error {
+	color: red;
+	font-weight: bold;
+	font-size: 25px;
+}
