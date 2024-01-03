@@ -1,3 +1,5 @@
+// Settings are located in settings.js. Try looking there first!
+
 // DON'T TOUCH THESE. IMPORTANT STATE VARAIBLES
 let tasks = [];
 let scrolling = false;
@@ -5,15 +7,6 @@ let scrolling = false;
 let primaryAnim = null;
 let secondaryAnim = null;
 // =====
-
-// TODO: remove these constants and just use `config` directly (exported by settings.js). I already do it for most of the other settings.
-// Settings (DO NOT CHANGE THESE, USE `settings.js` INSTEAD!!!)
-const taskLimit = config.taskLimit; // null or undefined to disable, any postive whole number to enable. Limit's the total number of tasks.
-
-const scrollingEnabled = config.scrollingEnabled; // true or false. Toggles scrolling.
-const scrollPxPerSecond = config.scrollPxPerSecond; // Speed of scrolling. Any number. (Untested with negatives!)
-const scrollPxGap = config.scrollPxGap; // Gap between last and first list item. Any positive whole number.
-const scrollLoopDelaySec = config.scrollLoopDelaySec; // Pause between loops in seconds. Any (positive) number.
 
 // FONTS
 function loadGoogleFont(font) {
@@ -55,7 +48,7 @@ function clearTasksDB(){
 
 // TASK MANAGEMENT
 function addTask(task, user) {
-    if (taskLimit && tasks.length >= taskLimit) {
+    if (config.taskLimit && tasks.length >= config.taskLimit) {
         return null;
     }
 
@@ -146,7 +139,7 @@ function renderDOM() {
 }
 
 async function infScrollAnim() {
-    if (!scrollingEnabled){
+    if (!config.scrollingEnabled){
         const secondaryTaskList = document.querySelector(".secondary");
         secondaryTaskList.style.display = "none";
         cancelAnim();
@@ -160,14 +153,14 @@ async function infScrollAnim() {
 	let taskWrapperHeight = taskWrapper.clientHeight;
 
     if (taskListHeight > taskWrapperHeight && !scrolling) {
-        await new Promise((resolve) => {setTimeout(resolve, scrollLoopDelaySec * 1000)});
+        await new Promise((resolve) => {setTimeout(resolve, config.scrollLoopDelaySec * 1000)});
 
         const primaryTaskList = document.querySelector(".primary");
         const secondaryTaskList = document.querySelector(".secondary");
         secondaryTaskList.style.display = "flex";
 
-        let finalHeight = taskListHeight + scrollPxGap;
-        let duration = (finalHeight / scrollPxPerSecond) * 1000;
+        let finalHeight = taskListHeight + config.scrollPxGap;
+        let duration = (finalHeight / config.scrollPxPerSecond) * 1000;
 
         let primaryListKeyframes = [
             {transform: `translateY(0)`},
@@ -253,7 +246,7 @@ function commandAdd(user, command, flags, extra){
 
     let task = addTask(command.arguments, user);
     if (!task) {
-        return sendStatus(`At most ${taskLimit} tasks may be active at once!`, false, user);
+        return sendStatus(`At most ${config.taskLimit} tasks may be active at once!`, false, user);
     }
     renderDOM();
 
@@ -470,8 +463,8 @@ window.onload = function() {
             }
         }
 
-        if (taskLimit && tasks.length > taskLimit) {
-            tasks = tasks.slice(0, taskLimit);
+        if (config.taskLimit && tasks.length > config.taskLimit) {
+            tasks = tasks.slice(0, config.taskLimit);
         }
 
         for (let task of tasks) {
