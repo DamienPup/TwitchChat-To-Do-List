@@ -6,6 +6,7 @@ let primaryAnim = null;
 let secondaryAnim = null;
 // =====
 
+// TODO: remove these constants and just use `config` directly (exported by settings.js). I already do it for most of the other settings.
 // Settings (DO NOT CHANGE THESE, USE `settings.js` INSTEAD!!!)
 const taskLimit = config.taskLimit; // null or undefined to disable, any postive whole number to enable. Limit's the total number of tasks.
 
@@ -240,6 +241,11 @@ function printCommandHelp(command) {
     return ComfyJS.Say(message);
 }
 
+function sendStatus(msg, successful, user) {
+    symbol = successful ? "✅" : "❌";
+    return ComfyJS.Say(`${user} ${symbol} ${msg}`);
+}
+
 function commandAdd(user, command, flags, extra){
     if (command.arguments == "") {
         return printCommandHelp(command);
@@ -247,11 +253,11 @@ function commandAdd(user, command, flags, extra){
 
     let task = addTask(command.arguments, user);
     if (!task) {
-        return ComfyJS.Say(`${user} ❌ At most ${taskLimit} tasks may be active at once!`)
+        return sendStatus(`At most ${taskLimit} tasks may be active at once!`, false, user);
     }
     renderDOM();
 
-    return ComfyJS.Say(`${user} ✅ Added task: ${task}`);
+    return sendStatus(`Added task: ${task}`, true, user);
 }
 
 function commandDone(user, command, flags, extra){
@@ -259,28 +265,38 @@ function commandDone(user, command, flags, extra){
         return printCommandHelp(command);
     }
 
-    index = parseInt(command.arguments);
+    let index = parseInt(command.arguments);
     if (isNaN(index)) {
-        return ComfyJS.Say(`${user} ❌ ${index} is not a number!`);
+        return sendStatus(`${index} is not a number!`, false, user)
     }
 
     let task = getTask(index - 1);
+    if (!task){
+        return sendStatus(`Task ${index} does not exist!`, false, user);
+    }
     if (!isMod(flags) && task.user != user) {
-        return ComfyJS.Say(`${user} ❌ You are not allowed to finish this task.`);
+        return sendStatus(`You are not allowed to finish this task.`, false, user);
     }
 
     task = finishTask(index - 1);
-    if (!task){
-        return ComfyJS.Say(`${user} ❌ Task ${index} does not exist!`);
+    if (config.autoDeleteCompletedTasks) {
+        if (config.autoDeleteDelay > 0) {
+            window.setTimeout(() => {
+                removeTask(index - 1);
+                renderDOM();
+            }, config.autoDeleteDelay * 1000);
+        } else {
+            removeTask(index - 1);
+        }
     }
     renderDOM();
 
-    return ComfyJS.Say(`${user} ✅ Finshed task: ${task}`);
+    return sendStatus(`Finshed task: ${task}`, true, user);
 }
 
 function commandRemove(user, command, flags, extra){
     if (!isMod(flags)) {
-        return ComfyJS.Say(`${user} ❌ Only mods can use this command!`)
+        return sendStatus(`Only mods can use this command!`, false, user);
     }
 
     if (command.arguments == "") {
@@ -289,33 +305,33 @@ function commandRemove(user, command, flags, extra){
 
     index = parseInt(command.arguments);
     if (isNaN(index)) {
-        return ComfyJS.Say(`${user} ❌ ${index} is not a number!`);
+        return sendStatus(`${command.arguments} is not a number!`, false, user);
     }
 
     let task = removeTask(index - 1);
     if (!task){
-        return ComfyJS.Say(`${user} ❌ Task ${index} does not exist!`);
+        return sendStatus(`Task ${index} does not exist!`, false, user);
     }
     renderDOM();
     
-    return ComfyJS.Say(`${user} ✅ Removed task: ${task}`);
+    return sendStatus(`Removed task: ${task}`, true, user);
 }
 
 function commandClear(user, command, flags, extra){
     if (!isMod(flags)) {
-        return ComfyJS.Say(`${user} ❌ Only mods can use this command!`)
+        return sendStatus(`Only mods can use this command!`, false, user);
     }
 
     if (command.arguments == "done"){
         clearDoneTasks();
         renderDOM();
 
-        return ComfyJS.Say(`${user} ✅ Cleared completed tasks!`);
+        return sendStatus(`Cleared completed tasks!`, true, user);
     } else if (command.arguments == "all") {
         clearAllTasks();
         renderDOM();
 
-        return ComfyJS.Say(`${user} ✅ Cleared all tasks!`);
+        return sendStatus(`Cleared all tasks!`, true, user);
     } else  { 
         printCommandHelp(command);
         if (!isNaN(parseInt(command.arguments))) { // passed in a number to clear. Suggest the correct "remove" command instead
@@ -327,7 +343,7 @@ function commandClear(user, command, flags, extra){
 
 function commandEdit(user, command, flags, extra) {
     if (!isMod(flags)) {
-        return ComfyJS.Say(`${user} ❌ Only mods can use this command!`)
+        return sendStatus(`Only mods can use this command!`, false, user);
     }
 
     const segments = command.arguments.split(' ');
@@ -335,25 +351,25 @@ function commandEdit(user, command, flags, extra) {
         return printCommandHelp(command);
     }
 
-    index = segments[0];
+    indexStr = segments[0];
     new_content = segments.slice(1).join(' ');
 
     if (new_content == "") {
         return printCommandHelp(command);
     }
 
-    index = parseInt(index);
+    index = parseInt(indexStr);
     if (isNaN(index)) {
-        return ComfyJS.Say(`${user} ❌ ${index} is not a number!`);
+        return sendStatus(`${indexStr} is not a number!`, false, user);
     }
 
-    task = replaceTask(index - 1, new_content);
+    let task = replaceTask(index - 1, new_content);
     if (!task){
-        return ComfyJS.Say(`${user} ❌ Task ${index} does not exist!`);
+        return sendStatus(`Task ${index} does not exist!`, false, user);
     }
     renderDOM();
 
-    return ComfyJS.Say(`✅ Task ${index} is now: ${task}`);
+    return sendStatus(`Task ${index} is now: ${task}`, true, user);
 }
 
 // Future TODO: Add permission settings so I don't have to hardcode the mod/non-mod commands.
@@ -381,7 +397,7 @@ function commandHelp(user, command, flags, extra) {
         if (targetCommand) 
             return printCommandHelp(targetCommand);
         else
-            return ComfyJS.Say("❌ That command does not exist.");
+            return sendStatus("That command does not exist.", false, user);
     }
 }
 
@@ -391,7 +407,7 @@ function commandCredits(user, command, flags, extra) {
 
 function commandReload(user, command, flags, extra) {
     if (!isMod(flags)) {
-        return ComfyJS.Say(`${user} Only mods can use this command!`)
+        return sendStatus(`Only mods can use this command!`, false, user);
     }
 
     ComfyJS.Say("Reloading bot and overlay.")
@@ -444,6 +460,16 @@ window.onload = function() {
         loadFonts();
         loadTasksDB();
 
+        if (config.autoDeleteCompletedTasks) {
+            for (let i = 0; i < tasks.length; i++) {
+                let task = tasks[i];
+                if (task.complete) {
+                    removeTask(i);
+                    i--;
+                }
+            }
+        }
+
         if (taskLimit && tasks.length > taskLimit) {
             tasks = tasks.slice(0, taskLimit);
         }
@@ -462,7 +488,7 @@ window.onload = function() {
     }
 }
 
-// Send errors to screen instead of (invisiable) console
+// Send errors to screen instead of (invisible) console
 const oldConsoleLog = console.log;
 console.log = function(error) {
     if (!error.includes("error")) {

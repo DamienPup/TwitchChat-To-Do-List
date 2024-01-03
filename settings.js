@@ -6,6 +6,9 @@ const config = (() => {
     const scrollPxGap = 0; // Gap between last and first list item. Any positive whole number.
     const scrollLoopDelaySec = 2.5; // Pause between loops in seconds. Any (positive) number.
 
+    const autoDeleteCompletedTasks = false; // true or false. If true, tasks are removed from the list after finishing them.
+    const autoDeleteDelay = 1; // (seconds) any number >= 0. The delay after completing a task before it is deleted. If <=0, the task is removed instantly.
+
     // Names of different commands. Spaces allowed.
     // You can add multiple names for a single command, or just have one
     // The FIRST entry will be displayed in the help command as the primary command.
@@ -64,6 +67,7 @@ const config = (() => {
     // !!! End of settings. DO NOT TOUCH THIS SECTION UNLESS UPDATING FROM A PREVIOUS VERSION.
     return {
         taskLimit, scrollingEnabled, scrollPxPerSecond, scrollPxGap, scrollLoopDelaySec, commandNames,
+        autoDeleteDelay, autoDeleteCompletedTasks,
         commandSyntaxes, commandDescriptions
     };
 })();
