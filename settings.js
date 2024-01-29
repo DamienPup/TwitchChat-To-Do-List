@@ -30,6 +30,8 @@ const config = (() => {
         credits: ["task credits", "tasks:credits"],
         // Reload bot and overlay.
         reload: ["task reload", "tasks:reload"],
+        // Reassign a task to another user.
+        reassign: ["task reassgin", "tasks:reassign"]
     }
     // FYI on format:
     // The part to the left of the colon is the command to be run.
@@ -50,18 +52,20 @@ const config = (() => {
         help: "(command)",
         credits: "",
         reload: "",
+        reassign: "<number> (user)"
     }
 
     // Descriptions of each command
     const commandDescriptions = {
-        add: "Adds a task to the list",
-        done: "Finishes a task. Non-mods can only finish tasks they started.",
-        remove: "Removes a task (mod-only)",
-        edit: "Edits a task (mod-only)",
-        clear: "Clears either completed or all tasks (mod-only)",
-        help: "Display a list of all commands or get help on a specific command",
-        credits: "Displays the bots credits",
-        reload: "Reloads the bot and task list overlay (mod-only)",
+        add: "Adds a task to the list.",
+        done: "Finishes a task.",
+        remove: "Removes a task.",
+        edit: "Edits a task.",
+        clear: "Clears either completed or all tasks.",
+        help: "Display a list of all commands or get help on a specific command.",
+        credits: "Displays the bots credits.",
+        reload: "Reloads the bot and task list overlay.",
+        reassign: "Reassign a task to a new user. If the user is not given, reassign to yourself.",
     }
 
     // TODO: add support for "follower" role at some point (requires extra setup)
@@ -81,11 +85,12 @@ const config = (() => {
         clear: "mod",
         help: "everyone",
         credits: "everyone",
-        reload: "broadcaster"
+        reload: "broadcaster",
+        reassign: "mod",
     }
     // Defaults:
     // Everyone can add tasks, view help and credits, and finish/delete/edit their own tasks.
-    // Mods can clear finished or all tasks, and finish/delete/edit all tasks
+    // Mods can clear finished or all tasks, and finish/delete/edit all tasks, as well as reassign tasks
     // Only the broadcaster can reload the bot+overlay.
 
     // !!! End of settings. DO NOT TOUCH THIS SECTION UNLESS UPDATING FROM A PREVIOUS VERSION.

@@ -95,6 +95,15 @@ function replaceTask(index, task) {
     return tasks[index].task;
 }
 
+function reassignTask(index, user) {
+    if (index < 0 || index >= tasks.length) return null;
+
+    tasks[index].user = user;
+    saveTasksDB();
+
+    return tasks[index].task;
+}
+
 function clearAllTasks(){
     clearTasksDB();
     saveTasksDB();
@@ -231,19 +240,33 @@ function hasPermission(level, flags, is_task_owner=null) {
 }
 
 function printCommandHelp(command) {
+    const permMessages = {
+        broadcaster: "broadcaster only",
+        mod: "mod only",
+        sub: "subs and mods only)",
+        vip: "vips, subs, and mods only",
+        everyone: null
+    }
+
     const commandNames = config.commandNames[command.commandID];
     const commandSyntax = config.commandSyntaxes[command.commandID];
     const commandDesc = config.commandDescriptions[command.commandID];
+    const commandPerms = command.permission_level;
     // Usage: !<pri command name> <command syntax> - <command description> (aliases: <other command names>)
     let message = "Usage: !" + commandNames[0];
     if (commandSyntax) {
-        message += " " + commandSyntax;
+        message += ` ${commandSyntax}`;
     }
     if (commandDesc) {
-        message += " - " + commandDesc;
+        message += ` - ${commandDesc}`;
     }
     if (commandNames.length > 1) {
-        message += " (aliases: " + commandNames.slice(1).map(name => "!" + name).join(", ") + ")";
+        message += ` (aliases: ${commandNames.slice(1).map(name => "!" + name).join(", ")})`;
+    }
+    if (typeof commandPerms === "string") {
+        message += ` (${permMessages[commandPerms]})`;
+    } else {
+        message += ` (tasks you own: ${permMessages[commandPerms.self]}, tasks others own: ${permMessages[commandPerms.others]})`;
     }
     return ComfyJS.Say(message);
 }
@@ -354,17 +377,13 @@ function commandClear(user, command, flags, extra){
 }
 
 function commandEdit(user, command, flags, extra) {
-    if (!isMod(flags)) {
-        return sendStatus(`Only mods can use this command!`, false, user);
-    }
-
     const segments = command.arguments.split(' ');
     if (segments.length < 2) {
         return printCommandHelp(command);
     }
 
-    indexStr = segments[0];
-    new_content = segments.slice(1).join(' ');
+    let indexStr = segments[0];
+    let new_content = segments.slice(1).join(' ');
 
     if (new_content == "") {
         return printCommandHelp(command);
@@ -426,6 +445,34 @@ function commandReload(user, command, flags, extra) {
     location.reload();
 }
 
+function commandReassign(user, command, flags, extra) {
+    const segments = command.arguments.split(' ');
+    if (segments.length < 1 || segments.length > 2) {
+        return printCommandHelp(command);
+    }
+
+    let indexStr = segments[0];
+    let targetUser = segments[1] || user;
+    targetUser = targetUser.replace(/^@/, '');
+
+    if (targetUser == "") {
+        return printCommandHelp(command);
+    }
+
+    index = parseInt(indexStr);
+    if (isNaN(index)) {
+        return sendStatus(`${indexStr} is not a number!`, false, user);
+    }
+
+    let task = reassignTask(index - 1, targetUser);
+    if (!task){
+        return sendStatus(`Task ${index} does not exist!`, false, user);
+    }
+    renderDOM();
+
+    return sendStatus(`Task ${index}'s user is now: ${targetUser}`, true, user);
+}
+
 const commandFunctions = {
     add: commandAdd,
     done: commandDone,
@@ -435,6 +482,7 @@ const commandFunctions = {
     help: commandHelp,
     credits: commandCredits,
     reload: commandReload,
+    reassign: commandReassign
 }
 
 function getCommand(fullMessage) {
