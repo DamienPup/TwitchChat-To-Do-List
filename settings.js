@@ -61,13 +61,37 @@ const config = (() => {
         clear: "Clears either completed or all tasks (mod-only)",
         help: "Display a list of all commands or get help on a specific command",
         credits: "Displays the bots credits",
-        reloads: "Reloads the bot and task list overlay (mod-only)",
+        reload: "Reloads the bot and task list overlay (mod-only)",
     }
+
+    // TODO: add support for "follower" role at some point (requires extra setup)
+    // Valid permissions (from highest to lower perms): broadcaster, mod, sub, vip, everyone
+    // For add, clear, help, credits, and reload: the permission level sets who can use the command
+    // ... i.e if set to "vip", vips, subs, mods, and the broadcaster can use the command
+    // For done, remove, and edit, there are two levels.
+    // ... "self" sets who can use the command on tasks they started.
+    // ... ... Recommended to set to everyone so everyone can finish, delete, and edit their own tasks
+    // ... "others" sets who can use the command on all other tasks.
+    // ... ... Recommended for mods and above to be able to moderate the contents of the todo list.
+    const commandPermissions = {
+        add: "everyone",
+        done: {self: "everyone", others: "mod"},
+        remove: {self: "everyone", others: "mod"},
+        edit: {self: "everyone", others: "mod"},
+        clear: "mod",
+        help: "everyone",
+        credits: "everyone",
+        reload: "broadcaster"
+    }
+    // Defaults:
+    // Everyone can add tasks, view help and credits, and finish/delete/edit their own tasks.
+    // Mods can clear finished or all tasks, and finish/delete/edit all tasks
+    // Only the broadcaster can reload the bot+overlay.
 
     // !!! End of settings. DO NOT TOUCH THIS SECTION UNLESS UPDATING FROM A PREVIOUS VERSION.
     return {
         taskLimit, scrollingEnabled, scrollPxPerSecond, scrollPxGap, scrollLoopDelaySec, commandNames,
         autoDeleteDelay, autoDeleteCompletedTasks,
-        commandSyntaxes, commandDescriptions
+        commandSyntaxes, commandDescriptions, commandPermissions
     };
 })();

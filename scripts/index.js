@@ -212,8 +212,22 @@ function cancelAnim() {
 }
 
 // TWITCH CHAT BOT
-function isMod(flags) {
-	return flags.broadcaster || flags.mod;
+const permissionLevels = {
+    broadcaster: function(flags) {return flags.broadcaster; },
+    mod: function(flags) {return flags.mod || permissionLevels.broadcaster(); },
+    sub: function(flags) {return flags.sub || permissionLevels.mod(); },
+    vip: function(flags) {return flags.vip || permissionLevels.sub(); },
+    everyone: function(flags) {return true; },
+}
+
+function hasPermission(level, flags, is_task_owner=null) {
+    if (typeof level === "string") {
+        return permissionLevels[level](flags)
+    } else if (is_task_owner !== null) {
+        return permissionLevels[level[is_task_owner ? "self" : "others"]](flags)
+    } else {
+        return true; // fallback to everyone. command will call back with correct is_task_owner.
+    }
 }
 
 function printCommandHelp(command) {
@@ -237,6 +251,14 @@ function printCommandHelp(command) {
 function sendStatus(msg, successful, user) {
     symbol = successful ? "✅" : "❌";
     return ComfyJS.Say(`${user} ${symbol} ${msg}`);
+}
+
+function sendPermissionError(user, required) {
+    level_str = `${required}`
+    if (required != "broadcaster") {
+        level_str += " and above"
+    }
+    return sendStatus(`Only ${level_str} can run this command!`, false, user);
 }
 
 function commandAdd(user, command, flags, extra){
@@ -267,7 +289,7 @@ function commandDone(user, command, flags, extra){
     if (!task){
         return sendStatus(`Task ${index} does not exist!`, false, user);
     }
-    if (!isMod(flags) && task.user != user) {
+    if (!hasPermission(command.permission_level, flags, task.user == user)) {
         return sendStatus(`You are not allowed to finish this task.`, false, user);
     }
 
@@ -288,10 +310,6 @@ function commandDone(user, command, flags, extra){
 }
 
 function commandRemove(user, command, flags, extra){
-    if (!isMod(flags)) {
-        return sendStatus(`Only mods can use this command!`, false, user);
-    }
-
     if (command.arguments == "") {
         return printCommandHelp(command);
     }
@@ -301,20 +319,21 @@ function commandRemove(user, command, flags, extra){
         return sendStatus(`${command.arguments} is not a number!`, false, user);
     }
 
-    let task = removeTask(index - 1);
+    let task = getTask(index - 1);
     if (!task){
         return sendStatus(`Task ${index} does not exist!`, false, user);
     }
+    if (!hasPermission(command.permission_level, flags, task.user == user)) {
+        return sendStatus(`You are not allowed to remove this task.`, false, user);
+    }
+
+    task = removeTask(index - 1);
     renderDOM();
     
     return sendStatus(`Removed task: ${task}`, true, user);
 }
 
 function commandClear(user, command, flags, extra){
-    if (!isMod(flags)) {
-        return sendStatus(`Only mods can use this command!`, false, user);
-    }
-
     if (command.arguments == "done"){
         clearDoneTasks();
         renderDOM();
@@ -356,22 +375,25 @@ function commandEdit(user, command, flags, extra) {
         return sendStatus(`${indexStr} is not a number!`, false, user);
     }
 
-    let task = replaceTask(index - 1, new_content);
+    let task = getTask(index - 1);
     if (!task){
         return sendStatus(`Task ${index} does not exist!`, false, user);
     }
+    if (!hasPermission(command.permission_level, flags, task.user == user)) {
+        return sendStatus(`You are not allowed to edit this task.`, false, user);
+    }
+
+    task = replaceTask(index - 1, new_content);
     renderDOM();
 
     return sendStatus(`Task ${index} is now: ${task}`, true, user);
 }
 
-// Future TODO: Add permission settings so I don't have to hardcode the mod/non-mod commands.
 function commandHelp(user, command, flags, extra) {
     if (command.arguments == "") {
         let commands = []
         for (const commandID in config.commandNames) {
-            if (!isMod(flags)
-            && (commandID != "add" && commandID != "done" && commandID != "help" && commandID != "credits"))
+            if (!hasPermission(config.commandPermissions[commandID], flags))
                 continue;
 
             const commandNames = config.commandNames[commandID]
@@ -399,10 +421,6 @@ function commandCredits(user, command, flags, extra) {
 }
 
 function commandReload(user, command, flags, extra) {
-    if (!isMod(flags)) {
-        return sendStatus(`Only mods can use this command!`, false, user);
-    }
-
     ComfyJS.Say("Reloading bot and overlay.")
 
     location.reload();
@@ -428,7 +446,8 @@ function getCommand(fullMessage) {
                 return {
                     commandID: command,
                     command: name,
-                    arguments: fullMessage.slice(name.length).trim()
+                    arguments: fullMessage.slice(name.length).trim(),
+                    permission_level: config.commandPermissions[command]
                 }
             }
         }
@@ -440,11 +459,22 @@ ComfyJS.onCommand = (user, command, message, flags, extra) => {
     try {
         let cmd = getCommand(command + " " + message);
         if (cmd){
-            return commandFunctions[cmd.commandID](user, cmd, flags, extra);
+            if (hasPermission(cmd.permission_level, flags)) {
+                return commandFunctions[cmd.commandID](user, cmd, flags, extra);
+            } else {
+                return sendPermissionError(user, cmd.permission_level);
+            }
         }
     } catch (error) {
         return ComfyJS.Say(`!!! Uncaught exception: ${error} !!! Please report this to the developer.`)
     }
+}
+
+function domError(error) {
+    let errorP = document.createElement("p");
+    errorP.classList.add("error");
+    errorP.textContent = error;
+    document.body.insertBefore(errorP, document.body.firstChild);
 }
 
 // STARTUP CODE
@@ -452,6 +482,26 @@ window.onload = function() {
     try {
         loadFonts();
         loadTasksDB();
+
+        // Validate all commands accounted for.
+        const commandConfig = {
+            commandNames: config.commandNames,
+            commandSyntaxes: config.commandSyntaxes,
+            commandDescriptions: config.commandDescriptions,
+            commandPermissions: config.commandPermissions,
+        }
+        const knownCommands = Object.keys(commandFunctions);
+        for (const [name, cfg] of Object.entries(commandConfig)) {
+            const commands = Object.keys(cfg);
+            const missingCommands = knownCommands.filter(cmd => !commands.includes(cmd));
+            const unknownCommands = commands.filter(cmd => !knownCommands.includes(cmd));
+            if (missingCommands.length > 0) {
+                domError(`command(s) ${missingCommands.join(', ')} not found in ${name}`);
+            }
+            if (unknownCommands.length > 0) {
+                domError(`unknown command(s) ${unknownCommands.join(', ')} found in ${name}`);
+            }
+        }
 
         if (config.autoDeleteCompletedTasks) {
             for (let i = 0; i < tasks.length; i++) {
@@ -481,19 +531,18 @@ window.onload = function() {
     }
 }
 
-// Send errors to screen instead of (invisible) console
-const oldConsoleLog = console.log;
-console.log = function(error) {
-    if (!error.includes("error")) {
-        oldConsoleLog(error);
+// Send login error to screen instead of (invisible) console
+const oldConsoleError = console.error;
+console.error = function(...parts) {
+    const error = parts.join(' ');
+    if (!error.toLowerCase().includes("login")) {
+        oldConsoleError(error);
         return;
     }
-    var errorP = document.createElement("p");
-    errorP.classList.add("error");
-    errorP.textContent = error;
-    document.body.insertBefore(errorP, document.body.firstChild);
+    
+    domError(error);
+
+    console.error = oldConsoleError; 
 }
 
 ComfyJS.Init(auth.username, `oauth:${auth.oauth}`, [auth.channel]);
-
-console.log = oldConsoleLog;

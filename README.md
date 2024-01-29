@@ -7,21 +7,17 @@ Inspired by [liyunze-coding/Chat-Task-Tic-Overlay](https://github.com/liyunze-co
 
 ## List of commands
 
-### Public Commands
+- `!task help (command)`: List commands. Optionally, get help on a command.
+- `!task credits`: List bot credits.
+- `!task add <task>`: Add a task to the list. Task can contain spaces.
+- `!task done <number>`: Finish a task.
+- `!task remove <number>`: Delete a task
+- `!task edit <number> <new-content>`: Edit a task to contain different text.
+- `!task clear all`: Clear all tasks
+- `!task clear done`: Clear only fishised tasks.
+- `!task reload`: Reload bot and overlay.
 
-- `!task:help (command)`: List commands. Optionally, get help on a command.
-- `!task:credits`: List bot credits.
-- `!task:add <task>`: Add a task to the list. Task can contain spaces.
-- `!task:done <number>`: Finish a task. You can only finish a task you started.
-
-### Mod Only Commands
-
-- `!task:done <number>`: Finish a task. Mods can finish any task.
-- `!task:remove <number>`: Delete a task
-- `!task:edit <number> <new-content>`: Edit a task to contain different text.
-- `!task:clear all`: Clear all tasks
-- `!task:clear done`: Clear only fishised tasks.
-- `!task:reload`: Reload bot and overlay.
+By default everyone can use `help` and `credits`, `add` tasks, and finish (`done`), `remove`, and `edit` tasks they started. Mods can use `clear`, and finish (`done`), `remove`, and `edit` all tasks. Only the broadcaster can `reload` the bot. All of these permissions can be changed in `settings.js`.
 
 ## Notable Files
 
