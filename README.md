@@ -5,6 +5,22 @@ A chat controlled to do overlay for twitch.
 Created by DamienPup for [LadyWynter FantasyWriter](https://www.twitch.tv/ladywynter_fantasywriter).
 Inspired by [liyunze-coding/Chat-Task-Tic-Overlay](https://github.com/liyunze-coding/Chat-Task-Tic-Overlay).
 
+## Table of Contents
+
+1. [List of Commands](#list-of-commands)
+2. [Notable Files](#notable-files)
+3. [Install Instructions](#install-instructions)
+    - [Manually generating an oauth token](#manually-generating-an-oauth-token)
+
+## Latest changes
+
+The latest changes since last time I pushed something to this repo:
+- Completed tasks can be auto-deleted after a customizeable time-delay. (See `settings.js`)
+- You can now change the permissions for every command. (See `settings.js`)
+- New command `!task reassign <number> (user)`, allowing you to reassign tasks. See [List of Commands](#list-of-commands).
+- Lots of bug fixes!
+- Various bits of code refactoring.
+
 ## List of commands
 
 - `!task help (command)`: List commands. Optionally, get help on a command.
@@ -53,7 +69,7 @@ By default everyone can use `help` and `credits`, `add` tasks, and finish (`done
    - Set the redirect URL to `http://localhost:5000/auth`
    - Set the type to `Chat Bot`
 2. Paste the app's `Client ID` into `CLIENT_ID.txt`.
-3. Run `generate_token.py` to genereate an oauth token. (See below for manual token generation instuctions)
+3. Run `generate_token.py` to genereate an oauth token. (See [below](#manually-generating-an-oauth-token) for manual token generation instuctions)
    - You will need Python install for this step. While this file was written with 3.12, older versions may work.
 5. Open `auth.js`. Fill out the target channel and bot username. Don't touch the `OAUTH_TOKEN`.
 6. Add a `Browser Source` to OBS or Streamlabs (or whatever your using), check `Local File` and select `index.html`.
