@@ -223,9 +223,9 @@ function cancelAnim() {
 // TWITCH CHAT BOT
 const permissionLevels = {
     broadcaster: function(flags) {return flags.broadcaster; },
-    mod: function(flags) {return flags.mod || permissionLevels.broadcaster(); },
-    sub: function(flags) {return flags.sub || permissionLevels.mod(); },
-    vip: function(flags) {return flags.vip || permissionLevels.sub(); },
+    mod: function(flags) {return flags.mod || permissionLevels.broadcaster(flags); },
+    sub: function(flags) {return flags.sub || permissionLevels.mod(flags); },
+    vip: function(flags) {return flags.vip || permissionLevels.sub(flags); },
     everyone: function(flags) {return true; },
 }
 
@@ -242,10 +242,10 @@ function hasPermission(level, flags, is_task_owner=null) {
 function printCommandHelp(command) {
     const permMessages = {
         broadcaster: "broadcaster only",
-        mod: "mod only",
+        mod: "mods only",
         sub: "subs and mods only)",
-        vip: "vips, subs, and mods only",
-        everyone: null
+        vip: "VIPs, subs, and mods only",
+        everyone: "everyone"
     }
 
     const commandNames = config.commandNames[command.commandID];
@@ -266,7 +266,8 @@ function printCommandHelp(command) {
     if (typeof commandPerms === "string") {
         message += ` (${permMessages[commandPerms]})`;
     } else {
-        message += ` (tasks you own: ${permMessages[commandPerms.self]}, tasks others own: ${permMessages[commandPerms.others]})`;
+
+        message += ` (${permMessages[commandPerms.self]} can edit tasks they own, ${permMessages[commandPerms.others]} can tasks others own)`;
     }
     return ComfyJS.Say(message);
 }
@@ -514,7 +515,7 @@ ComfyJS.onCommand = (user, command, message, flags, extra) => {
             }
         }
     } catch (error) {
-        return ComfyJS.Say(`!!! Uncaught exception: ${error} !!! Please report this to the developer.`)
+        return ComfyJS.Say(`!!! Uncaught exception: ${error}!!! Please report this to the developer.`)
     }
 }
 
@@ -554,7 +555,7 @@ window.onload = function() {
         if (config.autoDeleteCompletedTasks) {
             for (let i = 0; i < tasks.length; i++) {
                 let task = tasks[i];
-                if (task.complete) {
+                if (task.completed) {
                     removeTask(i);
                     i--;
                 }
@@ -575,7 +576,8 @@ window.onload = function() {
 
         renderDOM();
     } catch (error) {
-        return ComfyJS.Say(`!!! Uncaught exception: ${error} !!! Please report this to the developer.`)
+        domError(`${error} at ${error.stack[1]}`);
+        return ComfyJS.Say(`!!! Uncaught exception: ${error}!!! Please report this to the developer.`)
     }
 }
 

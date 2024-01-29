@@ -31,7 +31,7 @@ const config = (() => {
         // Reload bot and overlay.
         reload: ["task reload", "tasks:reload"],
         // Reassign a task to another user.
-        reassign: ["task reassgin", "tasks:reassign"]
+        reassign: ["task reassign", "tasks:reassign"]
     }
     // FYI on format:
     // The part to the left of the colon is the command to be run.
