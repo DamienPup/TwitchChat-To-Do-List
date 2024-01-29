@@ -42,11 +42,11 @@ By default everyone can use `help` and `credits`, `add` tasks, and finish (`done
 > If the files have been updated since you last updated, please migrate your settings to the new versions.
 > (Otherwise the bot will crash)
 >
-> Last update to `settings.js`: Commit 62937632973e9ddaacd7c5fdfab1de882f95e87e on Dec 9th, 2023.
+> Last update to `settings.js`: Commit 8f4fdbee6264ba2dab679b21f31c29d014e021da on Jan 28th, 2024.
 >
 > Last update to `style_settings.css`: Commit 8093f8e52c7d6c3af4e70d975cdb5431db52fac3 on Nov 3rd, 2023.
 >
-> You may want to backup (or just not update) `auth.js` and `CLIENT_ID.txt` as well.
+> You may want to backup (or not update) `auth.js` and `CLIENT_ID.txt` as well.
 
 1. Login to the Twitch Dev Console (https://dev.twitch.tv/console/apps) with your main or dedicated bot account.
 1. Create an app.
