@@ -38,6 +38,10 @@ const config = (() => {
     // The part to right is a list of possible names you can type in chat.
     // E.g. if you set: add: ["task add", "tasks:add"],
     // Then "!task add" OR "!tasks:add" will add a task to the last ("add" command)
+    // Note: Command prefixes (like "task " or "tasks:" in the default settings
+    // will not be required when passing a command to the help command.
+    // i.e. "!task help task add" can be shortned to "!task help add".
+
     
     // !!! Advanced settings below !!!
 

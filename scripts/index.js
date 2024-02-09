@@ -428,7 +428,7 @@ function commandHelp(user, command, flags, extra) {
         }
         return ComfyJS.Say("Commands: " + commands.join(", "));
     } else {
-        let targetCommand = getCommand(command.arguments);
+        let targetCommand = getCommand(command.arguments, config.generated.commandHelpNames);
         if (targetCommand) 
             return printCommandHelp(targetCommand);
         else
@@ -486,9 +486,12 @@ const commandFunctions = {
     reassign: commandReassign
 }
 
-function getCommand(fullMessage) {
-    for (const command in config.commandNames) {
-        const names = config.commandNames[command]
+function getCommand(fullMessage, commandNames = null) {
+    if (commandNames == null)
+        commandNames = config.commandNames;
+
+    for (const command in commandNames) {
+        const names = commandNames[command]
 
         for (const name of names) {
             if (fullMessage.startsWith(name)) {
