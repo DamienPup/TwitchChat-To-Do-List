@@ -54,7 +54,7 @@ By default everyone can use `help` and `credits`, `add` tasks, as well as finish
 > However, if they have changed since you lasted updated them: Make a backup, and migrate to the new files by copying your settings over. 
 > YOU WILL HAVE ISSUES IF YOU DO NOT UPDATE THE FILES.
 >
-> Last update to `settings.js`: Commit 8f4fdbee6264ba2dab679b21f31c29d014e021da on Jan 28th, 2024.
+> Last update to `settings.js`: Commit 7a498a6c1f8dd3c58719aa030246a33e6a1275bb on Feb 28th, 2024.
 >
 > Last update to `style_settings.css`: Commit 8093f8e52c7d6c3af4e70d975cdb5431db52fac3 on Nov 3rd, 2023.
 >
