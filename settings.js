@@ -14,6 +14,8 @@ const config = (() => {
     // The FIRST entry will be displayed in the help command as the primary command.
     // The remaining entries will be displayed as alises.
     const commandNames = {
+        // Print a given task and it's status in chat
+        show: ["task show", "tasks:show"],
         // Add a task to the list
         add: ["task add", "tasks:add"],
         // Finish a task
@@ -48,6 +50,7 @@ const config = (() => {
     // Feel free to change the names of the parameters.
     // Just make sure it's still clear how many there are and what they are.
     const commandSyntaxes = {
+        show: "<number>",
         add: "<task>",
         done: "<number>",
         remove: "<number>",
@@ -61,6 +64,7 @@ const config = (() => {
 
     // Descriptions of each command
     const commandDescriptions = {
+        show: "Print a given task and it's status.",
         add: "Adds a task to the list.",
         done: "Finishes a task.",
         remove: "Removes a task.",
@@ -82,6 +86,7 @@ const config = (() => {
     // ... "others" sets who can use the command on all other tasks.
     // ... ... Recommended for mods and above to be able to moderate the contents of the todo list.
     const commandPermissions = {
+        show: "everyone",
         add: "everyone",
         done: {self: "everyone", others: "mod"},
         remove: {self: "everyone", others: "mod"},

@@ -12,16 +12,20 @@ Inspired by [liyunze-coding/Chat-Task-Tic-Overlay](https://github.com/liyunze-co
 3. [Important Files](#important-files)
 4. [Install Instructions](#install-instructions)
     - [Manually generating an oauth token](#manually-generating-an-oauth-token)
+5. [Known Issues](#known-issues)
 
 ## Latest changes
 
 The latest changes since last time I pushed something to this repo:
-- Made it so commands can be shortned in the help command. This means instead of typing `!task help task add` you can now type `!task help add`.
+- Various bug fixes related to scrolling, and automatic task deletion.
+- New command `!task show`: Let's you see a task and it's status in chat. Useful if the task list is very long. (or your me and are debugging the task list)
+- Better error message when the chat bot fails to log in.
 
 ## List of commands
 
 - `!task help (command)`: List commands. Optionally, get help on a command.
 - `!task credits`: List bot credits.
+- `!task show <number>`: Shows a task and it's status in chat.
 - `!task add <task>`: Add a task to the list. Task can contain spaces.
 - `!task done <number>`: Finish a task.
 - `!task remove <number>`: Delete a task
@@ -86,3 +90,9 @@ https://id.twitch.tv/oauth2/authorize
 ```js
 const OAUTH_TOKEN = "YOUR_TOKEN_HERE";
 ```
+
+## Known Issues
+
+1. Adding multiple tasks too quickly while the list is scrolling may cause some overlap for one scroll cycle.
+2. Removing a task (or having it auto-removed) causes a gap for one scroll cycle.
+3. Editing a task or reassigning a task may cause either of the issues mentioned above.

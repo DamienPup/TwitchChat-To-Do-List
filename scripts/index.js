@@ -80,6 +80,11 @@ function removeTask(index){
     return removed[0].task;
 }
 
+function removeTaskByRef(task){
+    let index = tasks.indexOf(task);
+    return removeTask(index); // fine to pass -1 (not found) in here, will return `null` (not found) if so
+}
+
 function getTask(index) {
     if (index < 0 || index >= tasks.length) return null;
 
@@ -163,6 +168,7 @@ async function infScrollAnim() {
 
     if (taskListHeight > taskWrapperHeight && !scrolling) {
         await new Promise((resolve) => {setTimeout(resolve, config.scrollLoopDelaySec * 1000)});
+        if (scrolling) return;
 
         const primaryTaskList = document.querySelector(".primary");
         const secondaryTaskList = document.querySelector(".secondary");
@@ -194,11 +200,10 @@ async function infScrollAnim() {
         scrolling = true;
 
         primaryAnim.addEventListener("finish", animationFinished);
-        primaryAnim.addEventListener("cancel", animationFinished);
+        // primaryAnim.addEventListener("cancel", animationFinished);
     } else if (!scrolling) {
         const secondaryTaskList = document.querySelector(".secondary");
         secondaryTaskList.style.display = "none";
-
         cancelAnim();
     }
 }
@@ -207,7 +212,7 @@ function animationFinished() {
     scrolling = false;
     cancelAnim();
 	renderDOM();
-    infScrollAnim();
+    // infScrollAnim();
 }
 
 function cancelAnim() {
@@ -294,6 +299,7 @@ function commandAdd(user, command, flags, extra){
     if (!task) {
         return sendStatus(`At most ${config.taskLimit} tasks may be active at once!`, false, user);
     }
+    cancelAnim();
     renderDOM();
 
     return sendStatus(`Added task: ${task}`, true, user);
@@ -317,20 +323,20 @@ function commandDone(user, command, flags, extra){
         return sendStatus(`You are not allowed to finish this task.`, false, user);
     }
 
-    task = finishTask(index - 1);
+    finishTask(index - 1);
     if (config.autoDeleteCompletedTasks) {
         if (config.autoDeleteDelay > 0) {
-            window.setTimeout(() => {
-                removeTask(index - 1);
+            window.setTimeout((task) => {
+                removeTaskByRef(task);
                 renderDOM();
-            }, config.autoDeleteDelay * 1000);
+            }, config.autoDeleteDelay * 1000, task);
         } else {
             removeTask(index - 1);
         }
     }
     renderDOM();
 
-    return sendStatus(`Finshed task: ${task}`, true, user);
+    return sendStatus(`Finshed task: ${task.task}`, true, user);
 }
 
 function commandRemove(user, command, flags, extra){
@@ -360,11 +366,13 @@ function commandRemove(user, command, flags, extra){
 function commandClear(user, command, flags, extra){
     if (command.arguments == "done"){
         clearDoneTasks();
+        cancelAnim();
         renderDOM();
 
         return sendStatus(`Cleared completed tasks!`, true, user);
     } else if (command.arguments == "all") {
         clearAllTasks();
+        cancelAnim();
         renderDOM();
 
         return sendStatus(`Cleared all tasks!`, true, user);
@@ -474,7 +482,26 @@ function commandReassign(user, command, flags, extra) {
     return sendStatus(`Task ${index}'s user is now: ${targetUser}`, true, user);
 }
 
+function commandShow(user, command, flags, extra){
+    if (command.arguments == "") {
+        return printCommandHelp(command);
+    }
+
+    let index = parseInt(command.arguments);
+    if (isNaN(index)) {
+        return sendStatus(`${index} is not a number!`, false, user)
+    }
+
+    let task = getTask(index - 1);
+    if (!task){
+        return sendStatus(`Task ${index} does not exist!`, false, user);
+    }
+
+    return ComfyJS.Say(`${task.task}, started by ${task.user}, ${task.completed ? '' : 'not'} finished`);
+}
+
 const commandFunctions = {
+    show: commandShow,
     add: commandAdd,
     done: commandDone,
     remove: commandRemove,
@@ -593,6 +620,8 @@ console.error = function(...parts) {
         return;
     }
     
+    // dom error appends to top so we must add in reverse order
+    domError("(Try logging in again)");
     domError(error);
 
     console.error = oldConsoleError; 
