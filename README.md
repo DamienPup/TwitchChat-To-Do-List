@@ -18,6 +18,7 @@ Inspired by [liyunze-coding/Chat-Task-Tic-Overlay](https://github.com/liyunze-co
 
 The latest changes since last time I pushed something to this repo:
 - You can now change the font size of the different bits of text. See `style_settings.css`.
+- More details were added to `README.md`.
 
 ## List of commands
 
@@ -37,10 +38,17 @@ By default everyone can use `help` and `credits`, `add` tasks, as well as finish
 
 ## Important Files
 
-- `CLIENT_ID.txt`: Used by `generate_token.py` to generate an oauth token.
-- `auth.js`: Holds bot username, channel to join, and oauth token.
-- `settings.js`: Holds the main settings for the overlay.
-- `style_settings.css`: Holds the visual settings for the overlay.
+- `CLIENT_ID.txt`: 
+  - Used by `generate_token.py` to generate an oauth token, and pretty much nothing else. 
+  - If you generate your token manually, this is a nice place to store your client id.
+- `auth.js`:
+  - Holds login settings, including your oauth token, bot username, and channel name
+- `settings.js`:
+  - Holds the main settings for the overlay and bot
+  - Includes the active task limit, scrolling settings, auto-delete settings, command names and alisies, command help messages, and command permissions.
+- `style_settings.css`:
+  - Holds the visual settings for the overlay.
+  - Includes fonts, font sizes, and various color options.
 
 > [!CAUTION]
 > Any file that isn't one of these is NOT intented to be user-editable!
@@ -48,17 +56,16 @@ By default everyone can use `help` and `credits`, `add` tasks, as well as finish
 ## Install Instructions
 
 > [!IMPORTANT]
-> The following files contain your settings. If updating from a previous version, you may not want to update these files.
-> However, if they have changed since you lasted updated them: Make a backup, and migrate to the new files by copying your settings over. 
-> YOU WILL HAVE ISSUES IF YOU DO NOT UPDATE THE FILES.
+> The following files contain your settings. If updating from a previous version, do *not* replace these files unless they have been updated. If they have been updated, **migrate you settings to the new versions**.
+> You **will** have issues if you do not keep these updated.
 >
 > Last update to `settings.js`: Commit 7a498a6c1f8dd3c58719aa030246a33e6a1275bb on Feb 28th, 2024.
 >
-> Last update to `style_settings.css`: Commit 8093f8e52c7d6c3af4e70d975cdb5431db52fac3 on Nov 3rd, 2023.
+> Last update to `style_settings.css`: Commit fcf92313124f95b5665c72a2b04e0d55c1b5225f on Mar 16th, 2024.
 >
 > Last update to `auth.js`: Commit b807cf384b231e0700130d6f0da875f5604d956b on Oct 18, 2023.
 >
-> There should be no reason to update `CLIENT_ID.txt`.
+> `CLIENT_ID.txt` does not need updates.
 
 1. Login to the Twitch Dev Console (https://dev.twitch.tv/console/apps) with your main or dedicated bot account.
 2. Create an app.
@@ -84,7 +91,7 @@ https://id.twitch.tv/oauth2/authorize
 2. Replace `CLIENT_ID_HERE` with your apps Client ID.
 3. Paste this url into a brower, authorize the app, and wait for the browser to time out.
 4. Copy the `access_token` from the URL bar.
-5. Open `auth.js`, paste this into the quotes on the first line, after `OAUTH_TOKEN`. It should look like this:
+5. Open `auth.js`, and paste your token into the quotes on the first line, after `OAUTH_TOKEN`. It should look like this:
 ```js
 const OAUTH_TOKEN = "YOUR_TOKEN_HERE";
 ```
