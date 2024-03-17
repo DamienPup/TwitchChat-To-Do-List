@@ -17,9 +17,7 @@ Inspired by [liyunze-coding/Chat-Task-Tic-Overlay](https://github.com/liyunze-co
 ## Latest changes
 
 The latest changes since last time I pushed something to this repo:
-- Various bug fixes related to scrolling, and automatic task deletion.
-- New command `!task show`: Let's you see a task and it's status in chat. Useful if the task list is very long. (or your me and are debugging the task list)
-- Better error message when the chat bot fails to log in.
+- You can now change the font size of the different bits of text. See `style_settings.css`.
 
 ## List of commands
 
@@ -42,7 +40,7 @@ By default everyone can use `help` and `credits`, `add` tasks, as well as finish
 - `CLIENT_ID.txt`: Used by `generate_token.py` to generate an oauth token.
 - `auth.js`: Holds bot username, channel to join, and oauth token.
 - `settings.js`: Holds the main settings for the overlay.
-- `style_settings.css`: Holds the styling settings for the overlay.
+- `style_settings.css`: Holds the visual settings for the overlay.
 
 > [!CAUTION]
 > Any file that isn't one of these is NOT intented to be user-editable!

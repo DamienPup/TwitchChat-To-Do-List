@@ -1,10 +1,13 @@
 :root {
-	/* https://fonts.google.com/  */
+	/* 
+	 Fonts
+	 As of now, must be a font listed on: https://fonts.google.com/ 
+	*/
 	--header-font: "Fredoka One";
 	--body-font: "Nunito";
 
 	/*
-	 Style 
+	 Colors
 	 Must be a color name, hex code (with #) or rgba(0-255, 0-255, 0-255, 0-1) color.
 	 Examples: white, black, #f3b403, rgba(0, 0, 0, 0.5), rgba(244, 120, 0, 0.2)
 	*/
@@ -14,4 +17,13 @@
 	--task-list-background-color: rgba(0, 0, 0, 0.8);
 	--task-item-text-color: white;
 	--task-item-background-color: rgba(0, 0, 0, 0.8);
+
+	/* 
+	 Font sizes.
+	 Must be a number followed by "px".
+	 Examples: 16px, 20px, 25px.
+	*/
+	--title-font-size: 30px; /* The size of the title and the task counter */
+	--task-item-font-size: 20px; /* The size of each task item */
+	--error-font-size: 25px; /* The size of any displayed errors (like login failures) */
 }
