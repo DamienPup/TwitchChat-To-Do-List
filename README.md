@@ -50,13 +50,13 @@ By default everyone can use `help` and `credits`, `add` tasks, as well as finish
   - Holds the visual settings for the overlay.
   - Includes fonts, font sizes, and various color options.
 
-> [!CAUTION]
-> Any file that isn't one of these is NOT intented to be user-editable!
+> [!WARNING]
+> Edit any file *not* listed above **at your own risk**. I will not help you if you break the bot trying to edit a file that isn't listed above (unless you were planning on contributing, of course).
 
 ## Install Instructions
 
 > [!IMPORTANT]
-> The following files contain your settings. If updating from a previous version, do *not* replace these files unless they have been updated. If they have been updated, **migrate you settings to the new versions**.
+> The following files contain your settings. If updating from a previous version, do *not* replace these files unless they have been updated. If they have been updated, **migrate your settings to the new versions**.
 > You **will** have issues if you do not keep these updated.
 >
 > Last update to `settings.js`: Commit 7a498a6c1f8dd3c58719aa030246a33e6a1275bb on Feb 28th, 2024.
