@@ -17,8 +17,7 @@ Inspired by [liyunze-coding/Chat-Task-Tic-Overlay](https://github.com/liyunze-co
 ## Latest changes
 
 The latest changes since last time I pushed something to this repo:
-- You can now change the font size of the different bits of text. See `style_settings.css`.
-- More details were added to `README.md`.
+- Finally improved the scrolling animation to fix some long standing issues, see [Known Issues](#known-issues) for what's left.
 
 ## List of commands
 
@@ -98,6 +97,4 @@ const OAUTH_TOKEN = "YOUR_TOKEN_HERE";
 
 ## Known Issues
 
-1. Adding multiple tasks too quickly while the list is scrolling may cause some overlap for one scroll cycle.
-2. Removing a task (or having it auto-removed) causes a gap for one scroll cycle.
-3. Editing a task or reassigning a task may cause either of the issues mentioned above.
+1. Editing the task list (adding a task, removing a task, having a task auto-deleted, editing a task, or reassigning a task) may change the scroll speed for one scroll cycle.

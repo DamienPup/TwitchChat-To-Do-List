@@ -178,12 +178,12 @@ async function infScrollAnim() {
         let duration = (finalHeight / config.scrollPxPerSecond) * 1000;
 
         let primaryListKeyframes = [
-            {transform: `translateY(0)`},
-            {transform: `translateY(-${finalHeight}px)`},
+            {transform: `translateY(0%)`},
+            {transform: `translateY(calc(-100% - ${config.scrollPxGap}px))`},
         ];
         let secondaryListKeyframes = [
-            {transform: `translateY(${finalHeight}px)`},
-            {transform: `translateY(0)`},
+            {transform: `translateY(calc(100% + ${config.scrollPxGap}px))`},
+            {transform: `translateY(0%)`},
         ];
         let options = {
             duration: duration,
@@ -299,7 +299,6 @@ function commandAdd(user, command, flags, extra){
     if (!task) {
         return sendStatus(`At most ${config.taskLimit} tasks may be active at once!`, false, user);
     }
-    cancelAnim();
     renderDOM();
 
     return sendStatus(`Added task: ${task}`, true, user);
@@ -366,13 +365,11 @@ function commandRemove(user, command, flags, extra){
 function commandClear(user, command, flags, extra){
     if (command.arguments == "done"){
         clearDoneTasks();
-        cancelAnim();
         renderDOM();
 
         return sendStatus(`Cleared completed tasks!`, true, user);
     } else if (command.arguments == "all") {
         clearAllTasks();
-        cancelAnim();
         renderDOM();
 
         return sendStatus(`Cleared all tasks!`, true, user);
