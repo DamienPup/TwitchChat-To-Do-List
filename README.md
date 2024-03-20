@@ -20,6 +20,8 @@ The latest changes since last time I pushed something to this repo:
 - Finally improved the scrolling animation to fix some long standing issues, see [Known Issues](#known-issues) for what's left.
 - Reworked the documentation in `README.md`, `settings.js`, `style_settings.css`, and `auth.js`. Unless you want the updated comments, these files don't need to be updated, as they weren't changed functionally.
   - Note that some sections in `settings.js` *were* reordered, so it may be a safe idea to update that file.
+- The `credits` command now shows the bots github url.
+- New `github` command to display only the bots github url, and not the entire credits.
 
 ## List of commands
 
@@ -34,8 +36,9 @@ The latest changes since last time I pushed something to this repo:
 - `!task clear done`: Clear only fishised tasks.
 - `!task reload`: Reload bot and overlay.
 - `!task reassign <number> (user)`: Reassign a task to a new user. If the user is not given, reassign to yourself.
+- `!task github`: Display the bots github url.
 
-By default everyone can use `help` and `credits`, `add` tasks, as well as finish (`done`), `remove`, and `edit` tasks they started. Mods can use `clear`, `reassign`, as well as finish (`done`), `remove`, and `edit` all tasks. Only the broadcaster can `reload` the bot. All of these permissions can be changed in `settings.js`.
+By default everyone can use `help`,  `credits` and `github`, `add` tasks, as well as finish (`done`), `remove`, and `edit` tasks they started. Mods can use `clear`, `reassign`, as well as finish (`done`), `remove`, and `edit` all tasks. Only the broadcaster can `reload` the bot. All of these permissions can be changed in `settings.js`.
 
 ## Settings Files
 
@@ -60,7 +63,7 @@ By default everyone can use `help` and `credits`, `add` tasks, as well as finish
 > The following files contain your settings. If updating from a previous version, do *not* replace these files unless they have been updated. If they have been updated, **migrate your settings to the new versions**.
 > You **will** have issues if you do not keep these updated.
 >
-> Last update to `settings.js`: Commit 7a498a6c1f8dd3c58719aa030246a33e6a1275bb on Feb 28th, 2024.
+> Last update to `settings.js`: Commit d40c5347872239badb0e8a11d4af2db7f8116547 on Mar 19th, 2024.
 >
 > Last update to `style_settings.css`: Commit fcf92313124f95b5665c72a2b04e0d55c1b5225f on Mar 16th, 2024.
 >
