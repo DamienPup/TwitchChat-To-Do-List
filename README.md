@@ -54,7 +54,7 @@ By default everyone can use `help`,  `credits` and `github`, `add` tasks, as wel
   - Includes fonts, font sizes, and various color options.
 
 > [!WARNING]
-> Do not edit any file expect for the ones listed above. Unless you are contributing to the bot, editing a non-settings file is an action taken **at your own risk** and is not officially supported.
+> Do not edit any other files. Editing other files may break the bot and cause it to stop working. Editing other files is an action taken **at your own risk** and is not officially supported.
 
 ## Install Instructions
 
