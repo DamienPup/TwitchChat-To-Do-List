@@ -59,7 +59,7 @@ By default everyone can use `help`,  `credits` and `github`, `add` tasks, as wel
 > The following files contain your settings. If updating from a previous version, do *not* replace these files unless they have been updated. If they have been updated, **migrate your settings to the new versions**.
 > You **will** have issues if you do not keep these updated.
 >
-> Last update to `settings.js`: Commit 7a498a6c1f8dd3c58719aa030246a33e6a1275bb on Feb 28th, 2024.
+> Last update to `settings.js`: Commit d40c5347872239badb0e8a11d4af2db7f8116547 on Mar 19th, 2024.
 >
 > Last update to `style_settings.css`: Commit fcf92313124f95b5665c72a2b04e0d55c1b5225f on Mar 16th, 2024.
 >
