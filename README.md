@@ -12,7 +12,6 @@ Inspired by [liyunze-coding/Chat-Task-Tic-Overlay](https://github.com/liyunze-co
 3. [Settings Files](#settings-files)
 4. [Install Instructions](#install-instructions)
     - [Manually generating an oauth token](#manually-generating-an-oauth-token)
-5. [Known Issues](#known-issues)
 
 ## Latest changes
 
@@ -101,7 +100,3 @@ https://id.twitch.tv/oauth2/authorize
 ```js
 const OAUTH_TOKEN = "YOUR_TOKEN_HERE";
 ```
-
-## Known Issues
-
-1. Editing the task list (adding a task, removing a task, having a task auto-deleted, editing a task, or reassigning a task) may change the scroll speed for one scroll cycle.
