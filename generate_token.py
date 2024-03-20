@@ -37,7 +37,7 @@ class SimpleRequestHandler(BaseHTTPRequestHandler):
         with open("auth.js") as fp:
             lines = fp.readlines()
 
-        lines[0] = f"const OAUTH_TOKEN = \"{token[0]}\"; // Use generate_token.exe to fill this out!\n"
+        lines[0] = f"const OAUTH_TOKEN = \"{token[0]}\"; // View the README to fill this out!\n"
 
         with open("auth.js", "w") as fp:
             fp.writelines(lines)

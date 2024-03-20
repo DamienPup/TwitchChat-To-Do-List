@@ -1,6 +1,6 @@
 # TwitchChat-To-Do-List
 
-A chat controlled to do overlay for twitch.
+A chat-controlled to do list overlay for [Twitch](https://www.twitch.tv/).
 
 Created by DamienPup for [LadyWynter FantasyWriter](https://www.twitch.tv/ladywynter_fantasywriter).
 Inspired by [liyunze-coding/Chat-Task-Tic-Overlay](https://github.com/liyunze-coding/Chat-Task-Tic-Overlay).
@@ -9,7 +9,7 @@ Inspired by [liyunze-coding/Chat-Task-Tic-Overlay](https://github.com/liyunze-co
 
 1. [Latest changes](#latest-changes)
 2. [List of Commands](#list-of-commands)
-3. [Important Files](#important-files)
+3. [Settings Files](#settings-files)
 4. [Install Instructions](#install-instructions)
     - [Manually generating an oauth token](#manually-generating-an-oauth-token)
 
@@ -17,6 +17,8 @@ Inspired by [liyunze-coding/Chat-Task-Tic-Overlay](https://github.com/liyunze-co
 
 The latest changes since last time I pushed something to this repo:
 - Finally improved the scrolling animation to fix some long standing issues, see [Known Issues](#known-issues) for what's left.
+- Reworked the documentation in `README.md`, `settings.js`, `style_settings.css`, and `auth.js`. Unless you want the updated comments, these files don't need to be updated, as they weren't changed functionally.
+  - Note that some sections in `settings.js` *were* reordered, so it may be a safe idea to update that file.
 - The `credits` command now shows the bots github url.
 - New `github` command to display only the bots github url, and not the entire credits.
 
@@ -37,11 +39,11 @@ The latest changes since last time I pushed something to this repo:
 
 By default everyone can use `help`,  `credits` and `github`, `add` tasks, as well as finish (`done`), `remove`, and `edit` tasks they started. Mods can use `clear`, `reassign`, as well as finish (`done`), `remove`, and `edit` all tasks. Only the broadcaster can `reload` the bot. All of these permissions can be changed in `settings.js`.
 
-## Important Files
+## Settings Files
 
 - `CLIENT_ID.txt`: 
   - Used by `generate_token.py` to generate an oauth token, and pretty much nothing else. 
-  - If you generate your token manually, this is a nice place to store your client id.
+  - If you generate your token manually, this can still be a nice place to store a copy of your client id, so you don't need to login to the twitch dev console to get it.
 - `auth.js`:
   - Holds login settings, including your oauth token, bot username, and channel name
 - `settings.js`:
@@ -52,7 +54,7 @@ By default everyone can use `help`,  `credits` and `github`, `add` tasks, as wel
   - Includes fonts, font sizes, and various color options.
 
 > [!WARNING]
-> Edit any file *not* listed above **at your own risk**. I will not help you if you break the bot trying to edit a file that isn't listed above (unless you were planning on contributing, of course).
+> Do not edit any other files. Editing other files may break the bot and cause it to stop working. Editing other files is an action taken **at your own risk** and is not officially supported.
 
 ## Install Instructions
 
@@ -67,8 +69,10 @@ By default everyone can use `help`,  `credits` and `github`, `add` tasks, as wel
 > Last update to `auth.js`: Commit b807cf384b231e0700130d6f0da875f5604d956b on Oct 18, 2023.
 >
 > `CLIENT_ID.txt` does not need updates.
+>
+> (note: the dates above do not count updates that don't affect functionality)
 
-1. Login to the Twitch Dev Console (https://dev.twitch.tv/console/apps) with your main or dedicated bot account.
+1. Login to the [Twitch Developer Console](https://dev.twitch.tv/console/apps) with your main or dedicated bot account.
 2. Create an app.
    - Set the redirect URL to `http://localhost:5000/auth`
    - Set the type to `Chat Bot`
