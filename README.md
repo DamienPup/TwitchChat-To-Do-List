@@ -18,6 +18,8 @@ Inspired by [liyunze-coding/Chat-Task-Tic-Overlay](https://github.com/liyunze-co
 
 The latest changes since last time I pushed something to this repo:
 - Finally improved the scrolling animation to fix some long standing issues, see [Known Issues](#known-issues) for what's left.
+- The `credits` command now shows the bots github url.
+- New `github` command to display only the bots github url, and not the entire credits.
 
 ## List of commands
 
