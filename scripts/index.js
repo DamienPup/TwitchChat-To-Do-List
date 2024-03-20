@@ -449,7 +449,6 @@ function commandGithub(user, command, flags, extra) {
     return ComfyJS.Say("Github Repo: https://github.com/DamienPup/TwitchChat-To-Do-List")
 }
 
-
 function commandReload(user, command, flags, extra) {
     ComfyJS.Say("Reloading bot and overlay.")
 
