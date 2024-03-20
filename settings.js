@@ -33,7 +33,9 @@ const config = (() => {
         // Reload bot and overlay.
         reload: ["task reload", "tasks:reload"],
         // Reassign a task to another user.
-        reassign: ["task reassign", "tasks:reassign"]
+        reassign: ["task reassign", "tasks:reassign"],
+        // Show the bots gh repo
+        github: ["task github", "tasks:github"]
     }
     // FYI on format:
     // The part to the left of the colon is the command to be run.
@@ -59,7 +61,8 @@ const config = (() => {
         help: "(command)",
         credits: "",
         reload: "",
-        reassign: "<number> (user)"
+        reassign: "<number> (user)",
+        github: "",
     }
 
     // Descriptions of each command
@@ -74,6 +77,7 @@ const config = (() => {
         credits: "Displays the bots credits.",
         reload: "Reloads the bot and task list overlay.",
         reassign: "Reassign a task to a new user. If the user is not given, reassign to yourself.",
+        github: "Display the bot's github url.",
     }
 
     // TODO: add support for "follower" role at some point (requires extra setup)
@@ -96,6 +100,7 @@ const config = (() => {
         credits: "everyone",
         reload: "broadcaster",
         reassign: "mod",
+        github: "everyone",
     }
     // Defaults:
     // Everyone can add tasks, view help and credits, and finish/delete/edit their own tasks.

@@ -32,8 +32,9 @@ The latest changes since last time I pushed something to this repo:
 - `!task clear done`: Clear only fishised tasks.
 - `!task reload`: Reload bot and overlay.
 - `!task reassign <number> (user)`: Reassign a task to a new user. If the user is not given, reassign to yourself.
+- `!task github`: Display the bots github url.
 
-By default everyone can use `help` and `credits`, `add` tasks, as well as finish (`done`), `remove`, and `edit` tasks they started. Mods can use `clear`, `reassign`, as well as finish (`done`), `remove`, and `edit` all tasks. Only the broadcaster can `reload` the bot. All of these permissions can be changed in `settings.js`.
+By default everyone can use `help`,  `credits` and `github`, `add` tasks, as well as finish (`done`), `remove`, and `edit` tasks they started. Mods can use `clear`, `reassign`, as well as finish (`done`), `remove`, and `edit` all tasks. Only the broadcaster can `reload` the bot. All of these permissions can be changed in `settings.js`.
 
 ## Important Files
 
