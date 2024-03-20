@@ -1,18 +1,28 @@
 const config = (() => {
-    const taskLimit = null; // null or undefined to disable, any postive whole number to enable. Limit's the total number of tasks.
+    // Limit the total number of active tasks on the todo list.
+    // Set to `null` or `undefined` to disable, or any postive whole number to set the limit.
+    const taskLimit = null;
 
-    const scrollingEnabled = true; // true or false. Toggles scrolling.
-    const scrollPxPerSecond = 25; // Speed of scrolling. Any number. (Untested with negatives!)
-    const scrollPxGap = 0; // Gap between last and first list item. Any positive whole number.
-    const scrollLoopDelaySec = 2.5; // Pause between loops in seconds. Any (positive) number.
-
-    const autoDeleteCompletedTasks = false; // true or false. If true, tasks are removed from the list after finishing them.
+    // Enable or disable scrolling. `true` or `false`.
+    const scrollingEnabled = true;
+    // The speed of scrolling in pixels per second. Can be any postive number. Will likely not work with negative numbers.
+    const scrollPxPerSecond = 25;
+    // The gap inbetween the copies of the todo list when scrolling. Can be any positive whole number (or 0).
+    const scrollPxGap = 0;
+    // The pause between scroll loops in seconds. Can be any positive number.
+    const scrollLoopDelaySec = 2.5;
+    
+    // If enabled (`true`), tasks are removed from the after they are finished. `true` or `false`.
+    // If enabled, finished tasks will also be removed on reload.
+    const autoDeleteCompletedTasks = false;
+    // The delay (in seconds) after a task is finished before removing it. Can be any positive number (or 0).
+    // If <=0, the task is removed instantly.
     const autoDeleteDelay = 1; // (seconds) any number >= 0. The delay after completing a task before it is deleted. If <=0, the task is removed instantly.
 
     // Names of different commands. Spaces allowed.
     // You can add multiple names for a single command, or just have one
     // The FIRST entry will be displayed in the help command as the primary command.
-    // The remaining entries will be displayed as alises.
+    // The rest of the entries will be displayed as alises.
     const commandNames = {
         // Print a given task and it's status in chat
         show: ["task show", "tasks:show"],
@@ -35,49 +45,17 @@ const config = (() => {
         // Reassign a task to another user.
         reassign: ["task reassign", "tasks:reassign"]
     }
-    // FYI on format:
-    // The part to the left of the colon is the command to be run.
+    // Note on how the above segment is formatted:
+    // The part to the left of the colon is the command to be run. Don't change this.
     // The part to right is a list of possible names you can type in chat.
-    // E.g. if you set: add: ["task add", "tasks:add"],
-    // Then "!task add" OR "!tasks:add" will add a task to the last ("add" command)
-    // Note: Command prefixes (like "task " or "tasks:" in the default settings
+    // E.g. e.g. this entry: 'add: ["task add", "tasks:add"]'
+    // Will make it so that "!task add" OR "!tasks:add" will add a task to the last (the "add" command)
+    // Note: Common command prefixes (like the "task " or "tasks:" in the default settings)
     // will not be required when passing a command to the help command.
     // i.e. "!task help task add" can be shortned to "!task help add".
 
-    
-    // !!! Advanced settings below !!!
-
-    // Feel free to change the names of the parameters.
-    // Just make sure it's still clear how many there are and what they are.
-    const commandSyntaxes = {
-        show: "<number>",
-        add: "<task>",
-        done: "<number>",
-        remove: "<number>",
-        edit: "<number> <new task>",
-        clear: "<done|all>",
-        help: "(command)",
-        credits: "",
-        reload: "",
-        reassign: "<number> (user)"
-    }
-
-    // Descriptions of each command
-    const commandDescriptions = {
-        show: "Print a given task and it's status.",
-        add: "Adds a task to the list.",
-        done: "Finishes a task.",
-        remove: "Removes a task.",
-        edit: "Edits a task.",
-        clear: "Clears either completed or all tasks.",
-        help: "Display a list of all commands or get help on a specific command.",
-        credits: "Displays the bots credits.",
-        reload: "Reloads the bot and task list overlay.",
-        reassign: "Reassign a task to a new user. If the user is not given, reassign to yourself.",
-    }
-
     // TODO: add support for "follower" role at some point (requires extra setup)
-    // Valid permissions (from highest to lower perms): broadcaster, mod, sub, vip, everyone
+    // Valid permissions (from highest to lowest permissions): broadcaster, mod, sub, vip, everyone
     // For add, clear, help, credits, and reload: the permission level sets who can use the command
     // ... i.e if set to "vip", vips, subs, mods, and the broadcaster can use the command
     // For done, remove, and edit, there are two levels.
@@ -102,7 +80,38 @@ const config = (() => {
     // Mods can clear finished or all tasks, and finish/delete/edit all tasks, as well as reassign tasks
     // Only the broadcaster can reload the bot+overlay.
 
-    // !!! End of settings. DO NOT TOUCH THIS SECTION UNLESS UPDATING FROM A PREVIOUS VERSION.
+    // The syntax format of each command.
+    // The default shows required parameters in <> and optional ones in (). 
+    // Options are shown using |.
+    // Feel free to change the names of the parameters, but try to keep the general format the same so things aren't confusing.
+    const commandSyntaxes = {
+        show: "<number>",
+        add: "<task>",
+        done: "<number>",
+        remove: "<number>",
+        edit: "<number> <new task>",
+        clear: "<done|all>",
+        help: "(command)",
+        credits: "",
+        reload: "",
+        reassign: "<number> (user)"
+    }
+
+    // The descriptions (help messages) of each command.
+    const commandDescriptions = {
+        show: "Print a given task and it's status.",
+        add: "Adds a task to the list.",
+        done: "Finishes a task.",
+        remove: "Removes a task.",
+        edit: "Edits a task.",
+        clear: "Clears either completed or all tasks.",
+        help: "Display a list of all commands or get help on a specific command.",
+        credits: "Displays the bots credits.",
+        reload: "Reloads the bot and task list overlay.",
+        reassign: "Reassign a task to a new user. If the user is not given, reassign to yourself.",
+    }
+
+    // !!! End of settings. DO NOT TOUCH THIS SECTION UNLESS MANUALLY UPDATING FROM A PREVIOUS VERSION. !!!
     return {
         taskLimit, scrollingEnabled, scrollPxPerSecond, scrollPxGap, scrollLoopDelaySec, commandNames,
         autoDeleteDelay, autoDeleteCompletedTasks,
