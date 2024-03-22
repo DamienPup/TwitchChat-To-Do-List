@@ -27,6 +27,7 @@ body {
 	border-radius: 0px;
 	padding: 0px;
 
+	isolation: isolate;
 	background: var(--overlay-background);
 }
 
