@@ -91,7 +91,7 @@ https://id.twitch.tv/oauth2/authorize
 ?client_id=CLIENT_ID_HERE
 &redirect_uri=http://localhost:5000/auth
 &response_type=token
-&scope=channel:moderate+chat:edit+chat:read+channel:manage:broadcast+user:edit:broadcast+channel:read:redemptions+user:read:email
+&scope=chat:read+chat:edit+channel:read:redemptions+user:read:email
 ```
 2. Replace `CLIENT_ID_HERE` with your apps Client ID.
 3. Paste this url into a brower, authorize the app, and wait for the browser to time out.

@@ -65,26 +65,26 @@ def main():
     server_thread = threading.Thread(target=run_server)
     server_thread.start()
 
-    with open("CLIENT_ID.txt") as fp:
-        CLIENT_ID = fp.read()
+    try:
+        with open("CLIENT_ID.txt") as fp:
+            CLIENT_ID = fp.read()
 
-    TWITCH_AUTH_LINK = ("https://id.twitch.tv/oauth2/authorize"
-                         f"?client_id={CLIENT_ID}"
-                         "&redirect_uri=http://localhost:5000/auth"
-                         "&response_type=token"
-                         "&scope=channel:moderate+chat:edit+chat:read+channel:manage:broadcast+user:edit:broadcast+channel:read"
-                         ":redemptions+user:read:email")
+        TWITCH_AUTH_LINK = ("https://id.twitch.tv/oauth2/authorize"
+                            f"?client_id={CLIENT_ID}"
+                            "&redirect_uri=http://localhost:5000/auth"
+                            "&response_type=token"
+                            "&scope=chat:read+chat:edit+channel:read:redemptions+user:read:email")
 
-    print("=" * 25)
-    print("Open this link in your browser, if one doesn't open automatically.")
-    print(TWITCH_AUTH_LINK)
-    print("=" * 25)
-    webbrowser.open_new_tab(TWITCH_AUTH_LINK)
+        print("=" * 25)
+        print("Open this link in your browser, if one doesn't open automatically.")
+        print(TWITCH_AUTH_LINK)
+        print("=" * 25)
+        webbrowser.open_new_tab(TWITCH_AUTH_LINK)
 
-    while not GOT_TOKEN:
-        time.sleep(0.1)
-
-    SERVER.shutdown()
+        while not GOT_TOKEN:
+            time.sleep(0.1)
+    finally:
+        SERVER.shutdown()
 
 if __name__ == '__main__':
     main()
