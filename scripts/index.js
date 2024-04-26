@@ -551,11 +551,36 @@ ComfyJS.onCommand = (user, command, message, flags, extra) => {
     }
 }
 
-function domError(error) {
+function criticalError(error) {
+    // show error
     let errorP = document.createElement("p");
-    errorP.classList.add("error");
-    errorP.textContent = error;
-    document.body.insertBefore(errorP, document.body.firstChild);
+    errorP.innerText = error;
+    errorP.classList.add("critical-error");
+    document.querySelector(".main-content").append(errorP);
+
+    // hide task list
+    document.querySelector(".header").style.display = "none";
+    document.querySelector(".task-wrapper").style.display = "none";
+}
+
+function showErrorNotification(error) {
+    // make notification
+    let errorDiv = document.createElement("div");
+    errorDiv.classList.add("notification", "notification--error");
+    errorDiv.innerText = error;
+    document.querySelector(".notifications").append(errorDiv);
+    errorDiv.offsetWidth; // cursed code: force dom changes to apply to ensure transitions run
+
+    // show notification
+    errorDiv.classList.add("notification--show");
+
+    // hide after 5s
+    setTimeout(() => {
+        errorDiv.classList.remove("notification--show");
+        errorDiv.addEventListener("transitionend", () => {
+            errorDiv.remove();
+        });
+    }, 5000);
 }
 
 // STARTUP CODE
@@ -608,25 +633,33 @@ window.onload = function() {
 
         renderDOM();
     } catch (error) {
-        domError(`${error} at ${error.stack[1]}`);
+        showErrorNotification(`${error} at ${error.stack[1]}`);
         return ComfyJS.Say(`!!! Uncaught exception: ${error}!!! Please report this to the developer.`)
     }
 }
 
-// Send login error to screen instead of (invisible) console
-const oldConsoleError = console.error;
-console.error = function(...parts) {
-    const error = parts.join(' ');
-    if (!error.toLowerCase().includes("login")) {
-        oldConsoleError(error);
-        return;
-    }
-    
-    // dom error appends to top so we must add in reverse order
-    domError("(Try logging in again)");
-    domError(error);
-
-    console.error = oldConsoleError; 
+ComfyJS.onError = function(error) {
+	if (typeof error === 'string') {
+		if (error.toLowerCase().includes("login") ||
+		    error.toLowerCase().includes("logging in")) {
+			// failed to login, oauth token likely incorrect
+			criticalError(error + "\nTry logging in again.")
+			return;
+		}
+		else if (error.toLowerCase().includes("NICK")) {
+			// bad NICK, chat username was wrong
+			criticalError(error + "\nEnsure you typed your account/bot username correctly.")
+			return;
+		}
+		else if (error.toLowerCase().includes("auth")) {
+			// improper auth flow, should never happen
+            // if this happens likely a Comfy.js or TMI.js issue, or Twitch is having a bad time
+			criticalError(error + "\nTry again later or ask the developer for help.")
+			return;
+		}
+	}
+	// Something else went wrong
+	showErrorNotification(error);
 }
 
 ComfyJS.Init(auth.username, `oauth:${auth.oauth}`, [auth.channel]);
