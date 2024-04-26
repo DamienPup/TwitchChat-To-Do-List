@@ -16,10 +16,9 @@ Inspired by [liyunze-coding/Chat-Task-Tic-Overlay](https://github.com/liyunze-co
 ## Latest changes
 
 The latest changes since last time I pushed something to this repo:
-- Finally improved the scrolling animation to fix some long standing issues, see [Known Issues](#known-issues) for what's left.
-- The `credits` command now shows the bots github url.
-- New `github` command to display only the bots github url, and not the entire credits.
-- Bug fix: The background for the whole overlay no longer overlaps the task item text.
+- Improved the token generation script and released it as a windows .exe
+- Less twitch permissions are now required
+- Better error handing
 
 ## List of commands
 
