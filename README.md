@@ -19,6 +19,7 @@ The latest changes since last time I pushed something to this repo:
 - Improved the token generation script and released it as a windows .exe
 - Less twitch permissions are now required
 - Better error handing
+- Fixed issues with the scrolling animation
 
 ## List of commands
 
