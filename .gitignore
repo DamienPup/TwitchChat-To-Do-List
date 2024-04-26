@@ -1,3 +1,8 @@
+[Bb]uild/
+[Bb]uilds/
+[Dd]ist/
+[Dd]ists/
+
 # Created by https://www.toptal.com/developers/gitignore/api/windows,visualstudiocode
 # Edit at https://www.toptal.com/developers/gitignore?templates=windows,visualstudiocode
 
@@ -46,4 +51,4 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-# End of https://www.toptal.com/developers/gitignore/api/windows,visualstudiocode,web
+# End of https://www.toptal.com/developers/gitignore/api/windows,visualstudiocode

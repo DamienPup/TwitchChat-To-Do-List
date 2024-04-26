@@ -79,6 +79,7 @@ By default everyone can use `help`,  `credits` and `github`, `add` tasks, as wel
 4. Run `generate_token.py` to generate an oauth token. (See [below](#manually-generating-an-oauth-token) for manual token generation instuctions)
    <!-- TODO: Confirm minimum version requirement -->
    - You will need Python install for this step. 3.6 or later is required, however 3.12 is recommended.
+   - The releases tab (should) contain a `pyinstaller` build of this tool. To use it: download it, put it in the same directory as the script file, and run it. No promises it won't be blocked by your browser or AV.
 5. Open `auth.js`. Fill out the target channel and bot username. Don't touch the `OAUTH_TOKEN`.
 6. Add a `Browser Source` to OBS or Streamlabs (or whatever your using), check `Local File` and select `index.html`.
 
