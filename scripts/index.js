@@ -1,12 +1,9 @@
-// Settings are located in settings.js. Try looking there first!
+// If you're looking for settings, they are located in settings.js! Try looking there first!
 
-// DON'T TOUCH THESE. IMPORTANT STATE VARAIBLES
+// STATE VARS
 let tasks = [];
 let scrolling = false;
-
-let primaryAnim = null;
-let secondaryAnim = null;
-// =====
+let animationStartTime = null;
 
 // FONTS
 function loadGoogleFont(font) {
@@ -149,14 +146,12 @@ function renderDOM() {
     let completedTasks = tasks.filter((value) => value.completed).length;
     taskCount.textContent = `${completedTasks}/${totalTasks}`;
 
-    infScrollAnim();
+    startScrollAnimation();
 }
 
-async function infScrollAnim() {
+function startScrollAnimation() {
     if (!config.scrollingEnabled){
-        const secondaryTaskList = document.querySelector(".secondary");
-        secondaryTaskList.style.display = "none";
-        cancelAnim();
+        stopScrollAnimation();
         return;
     }
 
@@ -167,62 +162,62 @@ async function infScrollAnim() {
     let taskWrapperHeight = taskWrapper.clientHeight;
 
     if (taskListHeight > taskWrapperHeight && !scrolling) {
-        await new Promise((resolve) => {setTimeout(resolve, config.scrollLoopDelaySec * 1000)});
-        if (scrolling) return;
-
-        const primaryTaskList = document.querySelector(".primary");
         const secondaryTaskList = document.querySelector(".secondary");
         secondaryTaskList.style.display = "flex";
-
-        let finalHeight = taskListHeight + config.scrollPxGap;
-        let duration = (finalHeight / config.scrollPxPerSecond) * 1000;
-
-        let primaryListKeyframes = [
-            {transform: `translateY(0%)`},
-            {transform: `translateY(calc(-100% - ${config.scrollPxGap}px))`},
-        ];
-        let secondaryListKeyframes = [
-            {transform: `translateY(calc(100% + ${config.scrollPxGap}px))`},
-            {transform: `translateY(0%)`},
-        ];
-        let options = {
-            duration: duration,
-            iterations: 1,
-            easing: "linear"
-        };
-
-        primaryAnim = primaryTaskList.animate(primaryListKeyframes, options);
-        secondaryAnim = secondaryTaskList.animate(secondaryListKeyframes, options);
-        
-        primaryAnim.play();
-        secondaryAnim.play();
-
         scrolling = true;
-
-        primaryAnim.addEventListener("finish", animationFinished);
-        // primaryAnim.addEventListener("cancel", animationFinished);
-    } else if (!scrolling) {
-        const secondaryTaskList = document.querySelector(".secondary");
-        secondaryTaskList.style.display = "none";
-        cancelAnim();
+        requestAnimationFrame(infScrollAnimation)
+    } else {
+        stopScrollAnimation();
     }
 }
 
-function animationFinished() {
+function stopScrollAnimation() {
+    const secondaryTaskList = document.querySelector(".secondary");
+    secondaryTaskList.style.display = "none";
     scrolling = false;
-    cancelAnim();
-    renderDOM();
-    // infScrollAnim();
 }
 
-function cancelAnim() {
-    if (primaryAnim) {
-        primaryAnim.cancel();
+function lerp(a, b, t) {
+    return a * (1 - t) + b * t;
+}
+
+function infScrollAnimation(time) {
+    const taskList = document.querySelector(".task-list");
+    const primaryTaskList = document.querySelector(".primary");
+    const secondaryTaskList = document.querySelector(".secondary");
+
+    if (!scrolling) {
+        primaryTaskList.style.transform = "";
+        animationStartTime = null;
+        return;
     }
-    if (secondaryAnim) {
-        secondaryAnim.cancel();
+    if (animationStartTime == null) {
+        animationStartTime = time;
     }
-    scrolling = false;
+
+    secondaryTaskList.style.display = "flex";
+
+    let finalHeight = taskList.scrollHeight + config.scrollPxGap;
+    let duration = (finalHeight / config.scrollPxPerSecond) * 1000;
+
+    const elapsedTime = time - animationStartTime;
+    const progress = Math.min(elapsedTime / duration, 1);
+
+    let primaryStartY = 0; //px
+    let primaryEndY = -primaryTaskList.clientHeight - config.scrollPxGap; //px
+    let secondaryStartY = primaryTaskList.clientHeight + config.scrollPxGap; //px
+    let secondaryEndY = 0; //px
+
+    primaryTaskList.style.transform = `translateY(${lerp(primaryStartY, primaryEndY, progress)}px)`
+    secondaryTaskList.style.transform = `translateY(${lerp(secondaryStartY, secondaryEndY, progress)}px)`
+
+    if (elapsedTime >= duration) {
+        primaryTaskList.style.transform = "";
+        animationStartTime = null;
+        renderDOM(); // this will restart the animation after the dom is refreshed
+    } else {
+        requestAnimationFrame(infScrollAnimation);
+    }
 }
 
 // TWITCH CHAT BOT
