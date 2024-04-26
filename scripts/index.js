@@ -161,7 +161,8 @@ function startScrollAnimation() {
     const taskWrapper = document.querySelector(".task-wrapper");
     let taskWrapperHeight = taskWrapper.clientHeight;
 
-    if (taskListHeight > taskWrapperHeight && !scrolling) {
+    if (taskListHeight > taskWrapperHeight) {
+        if (scrolling) return;
         const secondaryTaskList = document.querySelector(".secondary");
         secondaryTaskList.style.display = "flex";
         scrolling = true;
@@ -214,7 +215,10 @@ function infScrollAnimation(time) {
     if (elapsedTime >= duration) {
         primaryTaskList.style.transform = "";
         animationStartTime = null;
-        renderDOM(); // this will restart the animation after the dom is refreshed
+        setTimeout(() => {
+            stopScrollAnimation();
+            renderDOM();
+        }, config.scrollLoopDelaySec * 1000); // this will restart the animation if needed after the dom is refreshed
     } else {
         requestAnimationFrame(infScrollAnimation);
     }
