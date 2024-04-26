@@ -196,8 +196,6 @@ function infScrollAnimation(time) {
         animationStartTime = time;
     }
 
-    secondaryTaskList.style.display = "flex";
-
     let finalHeight = taskList.scrollHeight + config.scrollPxGap;
     let duration = (finalHeight / config.scrollPxPerSecond) * 1000;
 
