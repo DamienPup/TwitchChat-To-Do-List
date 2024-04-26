@@ -10,11 +10,11 @@ let secondaryAnim = null;
 
 // FONTS
 function loadGoogleFont(font) {
-	WebFont.load({
-		google: {
-			families: [font],
-		},
-	});
+    WebFont.load({
+        google: {
+            families: [font],
+        },
+    });
 }
 
 function loadFonts() {
@@ -161,10 +161,10 @@ async function infScrollAnim() {
     }
 
     const taskList = document.querySelector(".task-list");
-	let taskListHeight = taskList.scrollHeight;
+    let taskListHeight = taskList.scrollHeight;
 
-	const taskWrapper = document.querySelector(".task-wrapper");
-	let taskWrapperHeight = taskWrapper.clientHeight;
+    const taskWrapper = document.querySelector(".task-wrapper");
+    let taskWrapperHeight = taskWrapper.clientHeight;
 
     if (taskListHeight > taskWrapperHeight && !scrolling) {
         await new Promise((resolve) => {setTimeout(resolve, config.scrollLoopDelaySec * 1000)});
@@ -211,18 +211,18 @@ async function infScrollAnim() {
 function animationFinished() {
     scrolling = false;
     cancelAnim();
-	renderDOM();
+    renderDOM();
     // infScrollAnim();
 }
 
 function cancelAnim() {
-	if (primaryAnim) {
-		primaryAnim.cancel();
-	}
-	if (secondaryAnim) {
-		secondaryAnim.cancel();
-	}
-	scrolling = false;
+    if (primaryAnim) {
+        primaryAnim.cancel();
+    }
+    if (secondaryAnim) {
+        secondaryAnim.cancel();
+    }
+    scrolling = false;
 }
 
 // TWITCH CHAT BOT
@@ -639,27 +639,27 @@ window.onload = function() {
 }
 
 ComfyJS.onError = function(error) {
-	if (typeof error === 'string') {
-		if (error.toLowerCase().includes("login") ||
-		    error.toLowerCase().includes("logging in")) {
-			// failed to login, oauth token likely incorrect
-			criticalError(error + "\nTry logging in again.")
-			return;
-		}
-		else if (error.toLowerCase().includes("NICK")) {
-			// bad NICK, chat username was wrong
-			criticalError(error + "\nEnsure you typed your account/bot username correctly.")
-			return;
-		}
-		else if (error.toLowerCase().includes("auth")) {
-			// improper auth flow, should never happen
+    if (typeof error === 'string') {
+        if (error.toLowerCase().includes("login") ||
+            error.toLowerCase().includes("logging in")) {
+            // failed to login, oauth token likely incorrect
+            criticalError(error + "\nTry logging in again.")
+            return;
+        }
+        else if (error.toLowerCase().includes("NICK")) {
+            // bad NICK, chat username was wrong
+            criticalError(error + "\nEnsure you typed your account/bot username correctly.")
+            return;
+        }
+        else if (error.toLowerCase().includes("auth")) {
+            // improper auth flow, should never happen
             // if this happens likely a Comfy.js or TMI.js issue, or Twitch is having a bad time
-			criticalError(error + "\nTry again later or ask the developer for help.")
-			return;
-		}
-	}
-	// Something else went wrong
-	showErrorNotification(error);
+            criticalError(error + "\nTry again later or ask the developer for help.")
+            return;
+        }
+    }
+    // Something else went wrong
+    showErrorNotification(error);
 }
 
 ComfyJS.Init(auth.username, `oauth:${auth.oauth}`, [auth.channel]);
