@@ -11,7 +11,7 @@ Inspired by [liyunze-coding/Chat-Task-Tic-Overlay](https://github.com/liyunze-co
 2. [List of Commands](#list-of-commands)
 3. [Settings Files](#settings-files)
 4. [Install Instructions](#install-instructions)
-    - [Manually generating an oauth token](#manually-generating-an-oauth-token)
+    - [Manually Generating an OAuth Token](#manually-generating-an-oauth-token)
 
 ## Latest changes
 
@@ -83,7 +83,7 @@ By default everyone can use `help`,  `credits` and `github`, `add` tasks, as wel
 5. Open `auth.js`. Fill out the target channel and bot username. Don't touch the `OAUTH_TOKEN`.
 6. Add a `Browser Source` to OBS or Streamlabs (or whatever your using), check `Local File` and select `index.html`.
 
-### Manually generating an oauth token
+### Manually Generating an OAuth Token
 
 1. Copy this URL:
 ```
