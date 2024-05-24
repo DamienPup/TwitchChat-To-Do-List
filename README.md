@@ -16,10 +16,7 @@ Inspired by [liyunze-coding/Chat-Task-Tic-Overlay](https://github.com/liyunze-co
 ## Latest changes
 
 The latest changes since last time I pushed something to this repo:
-- Improved the token generation script and released it as a windows .exe
-- Less twitch permissions are now required
-- Better error handing
-- Fixed issues with the scrolling animation
+- Added new settings to give better control over the look of the header.
 
 ## List of commands
 
