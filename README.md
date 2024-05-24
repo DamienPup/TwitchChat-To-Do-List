@@ -63,7 +63,7 @@ By default everyone can use `help`,  `credits` and `github`, `add` tasks, as wel
 >
 > Last update to `settings.js`: Commit d40c5347872239badb0e8a11d4af2db7f8116547 on Mar 19th, 2024.
 >
-> Last update to `style_settings.css`: Commit fcf92313124f95b5665c72a2b04e0d55c1b5225f on Mar 16th, 2024.
+> Last update to `style_settings.css`: Commit a215828d84f31034fae8b3279593d413835a9942 on May 23th, 2024.
 >
 > Last update to `auth.js`: Commit b807cf384b231e0700130d6f0da875f5604d956b on Oct 18, 2023.
 >
