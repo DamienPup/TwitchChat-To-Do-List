@@ -38,7 +38,7 @@ body {
     justify-content: space-between;
 
     width: 100%;
-    height: calc(var(--title-font-size) * 2);
+    height: calc(max(calc(var(--title-font-size) * var(--header-lines)), var(--counter-font-size)) * 2);
 
     font-family: var(--header-font);
 
@@ -56,7 +56,7 @@ body {
 }
 
 .tasks-count {
-    font-size: var(--title-font-size);
+    font-size: var(--counter-font-size);
 }
 
 .task-wrapper {

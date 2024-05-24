@@ -23,7 +23,10 @@
 	  Must be a number followed by "px".
 	  Examples: 16px, 20px, 25px.
 	*/
-	--title-font-size: 30px; /* The size of the title and the task counter */
+	--title-font-size: 30px; /* The size of the title */
+	--counter-font-size: 30px; /* The size of the task counter text */
 	--task-item-font-size: 20px; /* The size of each task item */
 	--error-font-size: 25px; /* The size of any displayed errors (like login failures) */
+
+	--header-lines: 1; /* The number of lines in the title text. */
 }
