@@ -1,33 +1,33 @@
 :root {
-	/* 
-	 Fonts
-	  For now, any fonts used must be from: https://fonts.google.com/.
-	*/
-	--header-font: "Fredoka One"; /* The font of the title and task counter */
-	--body-font: "Nunito"; /* The font of the task items */
+    /* 
+     Fonts
+      For now, any fonts used must be from: https://fonts.google.com/.
+    */
+    --header-font: "Fredoka One"; /* The font of the title and task counter */
+    --body-font: "Nunito"; /* The font of the task items */
 
-	/*
-	 Colors
-	  Must be a color name, hex code (with #) or rgba(0-255, 0-255, 0-255, 0-1) color.
-	  Examples: white, black, #f3b403, rgba(0, 0, 0, 0.5), rgba(244, 120, 0, 0.2)
-	*/
-	--overlay-background: rgba(0, 0, 0, 0.5); /* The background of the full overlay */
-	--header-text-color: white; /* The text color of the title and task counter */
-	--header-background-color: rgba(0, 0, 0, 0.9); /* The background of the title and task counter box */
-	--task-list-background-color: rgba(0, 0, 0, 0.8); /* The background of the list of tasks */
-	--task-item-text-color: white; /* The text color of the task items */
-	--task-item-background-color: rgba(0, 0, 0, 0.8); /* The background color of each task item */
+    /*
+     Colors
+      Must be a color name, hex code (with #) or rgba(0-255, 0-255, 0-255, 0-1) color.
+      Examples: white, black, #f3b403, rgba(0, 0, 0, 0.5), rgba(244, 120, 0, 0.2)
+    */
+    --overlay-background: rgba(0, 0, 0, 0.5); /* The background of the full overlay */
+    --header-text-color: white; /* The text color of the title and task counter */
+    --header-background-color: rgba(0, 0, 0, 0.9); /* The background of the title and task counter box */
+    --task-list-background-color: rgba(0, 0, 0, 0.8); /* The background of the list of tasks */
+    --task-item-text-color: white; /* The text color of the task items */
+    --task-item-background-color: rgba(0, 0, 0, 0.8); /* The background color of each task item */
 
-	/* 
-	 Font sizes
-	  Must be a number followed by "px".
-	  Examples: 16px, 20px, 25px.
-	*/
-	--title-font-size: 30px; /* The size of the title */
-	--counter-font-size: 30px; /* The size of the task counter text */
-	--task-item-font-size: 20px; /* The size of each task item */
-	--error-font-size: 25px; /* The size of any displayed errors (like login failures) */
+    /* 
+     Font sizes
+      Must be a number followed by "px".
+      Examples: 16px, 20px, 25px.
+    */
+    --title-font-size: 30px; /* The size of the title */
+    --counter-font-size: 30px; /* The size of the task counter text */
+    --task-item-font-size: 20px; /* The size of each task item */
+    --error-font-size: 25px; /* The size of any displayed errors (like login failures) */
 
-	/* ==================== */
-	--header-lines: 1; /* The number of lines in the title text. This is automatically set by the title in settings.js!  */
+    /* ==================== */
+    --header-lines: 1; /* The number of lines in the title text. This is automatically set by the title in settings.js!  */
 }

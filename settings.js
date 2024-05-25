@@ -11,7 +11,7 @@ const config = (() => {
     const scrollPxGap = 0;
     // The pause between scroll loops in seconds. Can be any positive number.
     const scrollLoopDelaySec = 2.5;
-    
+
     // If enabled (`true`), tasks are removed from the after they are finished. `true` or `false`.
     // If enabled, finished tasks will also be removed on reload.
     const autoDeleteCompletedTasks = false;
@@ -70,7 +70,7 @@ const config = (() => {
         reassign: ["task reassign", "tasks:reassign"],
         // Show the bots gh repo
         github: ["task github", "tasks:github"],
-    }
+    };
     // Note on how the above segment is formatted:
     // The part to the left of the colon is the command to be run. Don't change this.
     // The part to right is a list of possible names you can type in chat.
@@ -91,23 +91,23 @@ const config = (() => {
     const commandPermissions = {
         show: "everyone",
         add: "everyone",
-        done: {self: "everyone", others: "mod"},
-        remove: {self: "everyone", others: "mod"},
-        edit: {self: "everyone", others: "mod"},
+        done: { self: "everyone", others: "mod" },
+        remove: { self: "everyone", others: "mod" },
+        edit: { self: "everyone", others: "mod" },
         clear: "mod",
         help: "everyone",
         credits: "everyone",
         reload: "broadcaster",
         reassign: "mod",
         github: "everyone",
-    }
+    };
     // Defaults:
     // Everyone can add tasks, view help and credits, and finish/delete/edit their own tasks.
     // Mods can clear finished or all tasks, and finish/delete/edit all tasks, as well as reassign tasks
     // Only the broadcaster can reload the bot+overlay.
 
     // The syntax format of each command.
-    // The default shows required parameters in <> and optional ones in (). 
+    // The default shows required parameters in <> and optional ones in ().
     // Options are shown using |.
     // Feel free to change the names of the parameters, but try to keep the general format the same so things aren't confusing.
     const commandSyntaxes = {
@@ -122,7 +122,7 @@ const config = (() => {
         reload: "",
         reassign: "<number> (user)",
         github: "",
-    }
+    };
 
     // The descriptions (help messages) of each command.
     const commandDescriptions = {
@@ -137,7 +137,7 @@ const config = (() => {
         reload: "Reloads the bot and task list overlay.",
         reassign: "Reassign a task to a new user. If the user is not given, reassign to yourself.",
         github: "Display the bot's github url.",
-    }
+    };
 
     // !!! End of settings. DO NOT TOUCH THIS SECTION UNLESS MANUALLY UPDATING FROM A PREVIOUS VERSION. !!!
     return {

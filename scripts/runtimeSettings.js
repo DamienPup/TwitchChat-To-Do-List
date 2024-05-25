@@ -49,14 +49,14 @@ function generateCommandHelpNames() {
     const prefixes = findCommandPrefixes();
 
     const commandHelpNames = JSON.parse(JSON.stringify(config.commandNames)); // deep copy command names
-    
+
     for (let command of Object.keys(commandHelpNames)) {
         for (let name of commandHelpNames[command]) {
             for (let prefix of prefixes) {
                 if (!name.startsWith(prefix)) continue;
                 let shortname = name.substring(prefix.length);
                 if (!commandHelpNames[command].includes(shortname)) {
-                    commandHelpNames[command].push(shortname)
+                    commandHelpNames[command].push(shortname);
                 }
             }
         }
@@ -69,6 +69,6 @@ config.generated = (() => {
     const commandHelpNames = generateCommandHelpNames();
 
     return {
-        commandHelpNames
-    }
+        commandHelpNames,
+    };
 })();

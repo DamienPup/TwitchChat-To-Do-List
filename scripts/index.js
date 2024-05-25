@@ -30,7 +30,7 @@ function saveTasksDB() {
     localStorage.setItem("tasks", JSON.stringify(tasks));
 }
 
-function loadTasksDB(){
+function loadTasksDB() {
     if (localStorage.tasks) {
         tasks = JSON.parse(localStorage.tasks);
     } else {
@@ -38,7 +38,7 @@ function loadTasksDB(){
     }
 }
 
-function clearTasksDB(){
+function clearTasksDB() {
     localStorage.clear();
     tasks = [];
     saveTasksDB();
@@ -53,11 +53,11 @@ function addTask(task, user) {
     tasks.push({
         task: task,
         user: user,
-        completed: false
+        completed: false,
     });
     saveTasksDB();
 
-    return task
+    return task;
 }
 
 function finishTask(index) {
@@ -69,7 +69,7 @@ function finishTask(index) {
     return tasks[index].task;
 }
 
-function removeTask(index){
+function removeTask(index) {
     if (index < 0 || index >= tasks.length) return null;
 
     let removed = tasks.splice(index, 1);
@@ -78,7 +78,7 @@ function removeTask(index){
     return removed[0].task;
 }
 
-function removeTaskByRef(task){
+function removeTaskByRef(task) {
     let index = tasks.indexOf(task);
     return removeTask(index); // fine to pass -1 (not found) in here, will return `null` (not found) if so
 }
@@ -107,7 +107,7 @@ function reassignTask(index, user) {
     return tasks[index].task;
 }
 
-function clearAllTasks(){
+function clearAllTasks() {
     clearTasksDB();
     saveTasksDB();
 }
@@ -124,12 +124,12 @@ function renderDOM() {
     const taskCount = document.querySelector(".tasks-count");
 
     taskLists.forEach(taskList => {
-        taskList.innerHTML = ""; 
+        taskList.innerHTML = "";
     });
 
     tasks.forEach((task, index) => {
         const taskElement = template.content.cloneNode(true);
-            
+
         //taskElement.querySelector(".task-index").textContent = `${index + 1} (${task.user}).`;
         taskElement.querySelector(".task-index").textContent = `${index + 1}. ${task.user}: ${task.task}`;
         //taskElement.querySelector(".task-text").textContent = task.task;
@@ -137,9 +137,9 @@ function renderDOM() {
 
         taskElement.querySelector(".task-index").classList.toggle("crossed", task.completed);
         ///taskElement.querySelector(".task-text").classList.toggle("crossed", task.completed);
-        
+
         taskLists.forEach(taskList => {
-            taskList.appendChild(taskElement.cloneNode(true)); 
+            taskList.appendChild(taskElement.cloneNode(true));
         });
     });
 
@@ -151,7 +151,7 @@ function renderDOM() {
 }
 
 function startScrollAnimation() {
-    if (!config.scrollingEnabled){
+    if (!config.scrollingEnabled) {
         stopScrollAnimation();
         return;
     }
@@ -167,7 +167,7 @@ function startScrollAnimation() {
         const secondaryTaskList = document.querySelector(".secondary");
         secondaryTaskList.style.display = "flex";
         scrolling = true;
-        requestAnimationFrame(infScrollAnimation)
+        requestAnimationFrame(infScrollAnimation);
     } else {
         stopScrollAnimation();
     }
@@ -225,7 +225,7 @@ function infScrollAnimation(time) {
 
 function cycleCommandInHeader() {
     if (!config.cycleCommands) {
-        return
+        return;
     }
 
     const cycleTitle = document.querySelector(".cycle-title");
@@ -234,18 +234,12 @@ function cycleCommandInHeader() {
         return;
     }
 
-    let leavingKeyframes = [
-        {opacity: "100%"},
-        {opacity: "0%"},
-    ];
-    let enteringKeyframes = [
-        {opacity: "0%"},
-        {opacity: "100%"},
-    ];
+    let leavingKeyframes = [{ opacity: "100%" }, { opacity: "0%" }];
+    let enteringKeyframes = [{ opacity: "0%" }, { opacity: "100%" }];
     let options = {
         duration: config.fadeTime * 1000,
         iterations: 1,
-        easing: "linear"
+        easing: "linear",
     };
 
     leaveAnimation = cycleTitle.animate(leavingKeyframes, options);
@@ -255,7 +249,7 @@ function cycleCommandInHeader() {
             .replace("{command}", config.commandsToCycle[nextCycleCommand])
             .replace(/^ +/g, "\u00A0")
             .replace(/ +$/g, "\u00A0");
-        nextCycleCommand = (nextCycleCommand + 1) % config.commandsToCycle.length;   
+        nextCycleCommand = (nextCycleCommand + 1) % config.commandsToCycle.length;
 
         enterAnimation = cycleTitle.animate(enteringKeyframes, options);
         enterAnimation.play();
@@ -267,16 +261,26 @@ function cycleCommandInHeader() {
 
 // TWITCH CHAT BOT
 const permissionLevels = {
-    broadcaster: function(flags) {return flags.broadcaster; },
-    mod: function(flags) {return flags.mod || permissionLevels.broadcaster(flags); },
-    sub: function(flags) {return flags.sub || permissionLevels.mod(flags); },
-    vip: function(flags) {return flags.vip || permissionLevels.sub(flags); },
-    everyone: function(flags) {return true; },
-}
+    broadcaster: function (flags) {
+        return flags.broadcaster;
+    },
+    mod: function (flags) {
+        return flags.mod || permissionLevels.broadcaster(flags);
+    },
+    sub: function (flags) {
+        return flags.sub || permissionLevels.mod(flags);
+    },
+    vip: function (flags) {
+        return flags.vip || permissionLevels.sub(flags);
+    },
+    everyone: function (flags) {
+        return true;
+    },
+};
 
-function hasPermission(level, flags, is_task_owner=null) {
+function hasPermission(level, flags, is_task_owner = null) {
     if (typeof level === "string") {
-        return permissionLevels[level](flags)
+        return permissionLevels[level](flags);
     } else if (is_task_owner !== null) {
         return permissionLevels[level[is_task_owner ? "self" : "others"]](flags)
     } else {
@@ -290,8 +294,8 @@ function printCommandHelp(command) {
         mod: "mods only",
         sub: "subs and mods only)",
         vip: "VIPs, subs, and mods only",
-        everyone: "everyone"
-    }
+        everyone: "everyone",
+    };
 
     const commandNames = config.commandNames[command.commandID];
     const commandSyntax = config.commandSyntaxes[command.commandID];
@@ -311,7 +315,6 @@ function printCommandHelp(command) {
     if (typeof commandPerms === "string") {
         message += ` (${permMessages[commandPerms]})`;
     } else {
-
         message += ` (${permMessages[commandPerms.self]} can edit tasks they own, ${permMessages[commandPerms.others]} can tasks others own)`;
     }
     return ComfyJS.Say(message);
@@ -323,14 +326,14 @@ function sendStatus(msg, successful, user) {
 }
 
 function sendPermissionError(user, required) {
-    level_str = `${required}`
+    level_str = `${required}`;
     if (required != "broadcaster") {
-        level_str += " and above"
+        level_str += " and above";
     }
     return sendStatus(`Only ${level_str} can run this command!`, false, user);
 }
 
-function commandAdd(user, command, flags, extra){
+function commandAdd(user, command, flags, extra) {
     if (command.arguments == "") {
         return printCommandHelp(command);
     }
@@ -344,18 +347,18 @@ function commandAdd(user, command, flags, extra){
     return sendStatus(`Added task: ${task}`, true, user);
 }
 
-function commandDone(user, command, flags, extra){
+function commandDone(user, command, flags, extra) {
     if (command.arguments == "") {
         return printCommandHelp(command);
     }
 
     let index = parseInt(command.arguments);
     if (isNaN(index)) {
-        return sendStatus(`${index} is not a number!`, false, user)
+        return sendStatus(`${index} is not a number!`, false, user);
     }
 
     let task = getTask(index - 1);
-    if (!task){
+    if (!task) {
         return sendStatus(`Task ${index} does not exist!`, false, user);
     }
     if (!hasPermission(command.permission_level, flags, task.user == user)) {
@@ -365,7 +368,7 @@ function commandDone(user, command, flags, extra){
     finishTask(index - 1);
     if (config.autoDeleteCompletedTasks) {
         if (config.autoDeleteDelay > 0) {
-            window.setTimeout((task) => {
+            window.setTimeout(task => {
                 removeTaskByRef(task);
                 renderDOM();
             }, config.autoDeleteDelay * 1000, task);
@@ -378,7 +381,7 @@ function commandDone(user, command, flags, extra){
     return sendStatus(`Finshed task: ${task.task}`, true, user);
 }
 
-function commandRemove(user, command, flags, extra){
+function commandRemove(user, command, flags, extra) {
     if (command.arguments == "") {
         return printCommandHelp(command);
     }
@@ -389,7 +392,7 @@ function commandRemove(user, command, flags, extra){
     }
 
     let task = getTask(index - 1);
-    if (!task){
+    if (!task) {
         return sendStatus(`Task ${index} does not exist!`, false, user);
     }
     if (!hasPermission(command.permission_level, flags, task.user == user)) {
@@ -398,12 +401,12 @@ function commandRemove(user, command, flags, extra){
 
     task = removeTask(index - 1);
     renderDOM();
-    
+
     return sendStatus(`Removed task: ${task}`, true, user);
 }
 
-function commandClear(user, command, flags, extra){
-    if (command.arguments == "done"){
+function commandClear(user, command, flags, extra) {
+    if (command.arguments == "done") {
         clearDoneTasks();
         renderDOM();
 
@@ -413,9 +416,10 @@ function commandClear(user, command, flags, extra){
         renderDOM();
 
         return sendStatus(`Cleared all tasks!`, true, user);
-    } else  { 
+    } else {
         printCommandHelp(command);
-        if (!isNaN(parseInt(command.arguments))) { // passed in a number to clear. Suggest the correct "remove" command instead
+        // passed in a number to clear. Suggest the correct "remove" command instead
+        if (!isNaN(parseInt(command.arguments))) {
             ComfyJS.Say(`(Did you mean !${config.commandNames.remove[0]} ${command.arguments}?)`);
         }
         return;
@@ -423,13 +427,13 @@ function commandClear(user, command, flags, extra){
 }
 
 function commandEdit(user, command, flags, extra) {
-    const segments = command.arguments.split(' ');
+    const segments = command.arguments.split(" ");
     if (segments.length < 2) {
         return printCommandHelp(command);
     }
 
     let indexStr = segments[0];
-    let new_content = segments.slice(1).join(' ');
+    let new_content = segments.slice(1).join(" ");
 
     if (new_content == "") {
         return printCommandHelp(command);
@@ -441,7 +445,7 @@ function commandEdit(user, command, flags, extra) {
     }
 
     let task = getTask(index - 1);
-    if (!task){
+    if (!task) {
         return sendStatus(`Task ${index} does not exist!`, false, user);
     }
     if (!hasPermission(command.permission_level, flags, task.user == user)) {
@@ -456,14 +460,14 @@ function commandEdit(user, command, flags, extra) {
 
 function commandHelp(user, command, flags, extra) {
     if (command.arguments == "") {
-        let commands = []
+        let commands = [];
         for (const commandID in config.commandNames) {
             if (!hasPermission(config.commandPermissions[commandID], flags))
                 continue;
 
-            const commandNames = config.commandNames[commandID]
-            const commandSyntax = config.commandSyntaxes[commandID]
-            
+            const commandNames = config.commandNames[commandID];
+            const commandSyntax = config.commandSyntaxes[commandID];
+
             let commandString = "!" + commandNames[0];
             if (commandSyntax) {
                 commandString += " " + commandSyntax;
@@ -482,28 +486,32 @@ function commandHelp(user, command, flags, extra) {
 }
 
 function commandCredits(user, command, flags, extra) {
-    return ComfyJS.Say("Bot made by DamienPup for LadyWynter_FantasyWriter's stream. Inspired by https://github.com/liyunze-coding/Chat-Task-Tic-Overlay-Infinity. Get the bot yourself at https://github.com/DamienPup/TwitchChat-To-Do-List.")
+    return ComfyJS.Say(
+        "Bot made by DamienPup for LadyWynter_FantasyWriter's stream. Inspired by https://github.com/liyunze-coding/Chat-Task-Tic-Overlay-Infinity. Get the bot yourself at https://github.com/DamienPup/TwitchChat-To-Do-List."
+    );
 }
 
 function commandGithub(user, command, flags, extra) {
-    return ComfyJS.Say("Github Repo: https://github.com/DamienPup/TwitchChat-To-Do-List")
+    return ComfyJS.Say(
+        "Github Repo: https://github.com/DamienPup/TwitchChat-To-Do-List"
+    );
 }
 
 function commandReload(user, command, flags, extra) {
-    ComfyJS.Say("Reloading bot and overlay.")
+    ComfyJS.Say("Reloading bot and overlay.");
 
     location.reload();
 }
 
 function commandReassign(user, command, flags, extra) {
-    const segments = command.arguments.split(' ');
+    const segments = command.arguments.split(" ");
     if (segments.length < 1 || segments.length > 2) {
         return printCommandHelp(command);
     }
 
     let indexStr = segments[0];
     let targetUser = segments[1] || user;
-    targetUser = targetUser.replace(/^@/, '');
+    targetUser = targetUser.replace(/^@/, "");
 
     if (targetUser == "") {
         return printCommandHelp(command);
@@ -515,7 +523,7 @@ function commandReassign(user, command, flags, extra) {
     }
 
     let task = reassignTask(index - 1, targetUser);
-    if (!task){
+    if (!task) {
         return sendStatus(`Task ${index} does not exist!`, false, user);
     }
     renderDOM();
@@ -523,18 +531,18 @@ function commandReassign(user, command, flags, extra) {
     return sendStatus(`Task ${index}'s user is now: ${targetUser}`, true, user);
 }
 
-function commandShow(user, command, flags, extra){
+function commandShow(user, command, flags, extra) {
     if (command.arguments == "") {
         return printCommandHelp(command);
     }
 
     let index = parseInt(command.arguments);
     if (isNaN(index)) {
-        return sendStatus(`${index} is not a number!`, false, user)
+        return sendStatus(`${index} is not a number!`, false, user);
     }
 
     let task = getTask(index - 1);
-    if (!task){
+    if (!task) {
         return sendStatus(`Task ${index} does not exist!`, false, user);
     }
 
@@ -553,14 +561,14 @@ const commandFunctions = {
     reload: commandReload,
     reassign: commandReassign,
     github: commandGithub,
-}
+};
 
 function getCommand(fullMessage, commandNames = null) {
     if (commandNames == null)
         commandNames = config.commandNames;
 
     for (const command in commandNames) {
-        const names = commandNames[command]
+        const names = commandNames[command];
 
         for (const name of names) {
             if (fullMessage.startsWith(name)) {
@@ -568,18 +576,18 @@ function getCommand(fullMessage, commandNames = null) {
                     commandID: command,
                     command: name,
                     arguments: fullMessage.slice(name.length).trim(),
-                    permission_level: config.commandPermissions[command]
-                }
+                    permission_level: config.commandPermissions[command],
+                };
             }
         }
     }
-    return null
+    return null;
 }
 
 ComfyJS.onCommand = (user, command, message, flags, extra) => {
     try {
         let cmd = getCommand(command + " " + message);
-        if (cmd){
+        if (cmd) {
             if (hasPermission(cmd.permission_level, flags)) {
                 return commandFunctions[cmd.commandID](user, cmd, flags, extra);
             } else {
@@ -589,7 +597,7 @@ ComfyJS.onCommand = (user, command, message, flags, extra) => {
     } catch (error) {
         return ComfyJS.Say(`!!! Uncaught exception: ${error}!!! Please report this to the developer.`)
     }
-}
+};
 
 function criticalError(error) {
     // show error
@@ -624,7 +632,7 @@ function showErrorNotification(error) {
 }
 
 // STARTUP CODE
-window.onload = function() {
+window.onload = function () {
     try {
         loadFonts();
         loadTasksDB();
@@ -646,7 +654,7 @@ window.onload = function() {
             commandSyntaxes: config.commandSyntaxes,
             commandDescriptions: config.commandDescriptions,
             commandPermissions: config.commandPermissions,
-        }
+        };
         const knownCommands = Object.keys(commandFunctions);
         for (const [name, cfg] of Object.entries(commandConfig)) {
             const commands = Object.keys(cfg);
@@ -688,22 +696,20 @@ window.onload = function() {
         showErrorNotification(`${error} at ${error.stack[1]}`);
         return ComfyJS.Say(`!!! Uncaught exception: ${error}!!! Please report this to the developer.`)
     }
-}
+};
 
 ComfyJS.onError = function(error) {
     if (typeof error === 'string') {
         if (error.toLowerCase().includes("login") ||
             error.toLowerCase().includes("logging in")) {
             // failed to login, oauth token likely incorrect
-            criticalError(error + "\nTry logging in again.")
+            criticalError(error + "\nTry logging in again.");
             return;
-        }
-        else if (error.toLowerCase().includes("NICK")) {
+        } else if (error.toLowerCase().includes("NICK")) {
             // bad NICK, chat username was wrong
             criticalError(error + "\nEnsure you typed your account/bot username correctly.")
             return;
-        }
-        else if (error.toLowerCase().includes("auth")) {
+        } else if (error.toLowerCase().includes("auth")) {
             // improper auth flow, should never happen
             // if this happens likely a Comfy.js or TMI.js issue, or Twitch is having a bad time
             criticalError(error + "\nTry again later or ask the developer for help.")
@@ -712,6 +718,6 @@ ComfyJS.onError = function(error) {
     }
     // Something else went wrong
     showErrorNotification(error);
-}
+};
 
 ComfyJS.Init(auth.username, `oauth:${auth.oauth}`, [auth.channel]);
