@@ -251,8 +251,11 @@ function cycleCommandInHeader() {
     leaveAnimation = cycleTitle.animate(leavingKeyframes, options);
     leaveAnimation.play();
     leaveAnimation.addEventListener("finish", () => {
-        cycleTitle.innerText = config.commandsToCycle[nextCycleCommand];
-        nextCycleCommand += 1;    
+        cycleTitle.innerText = config.cycleTitle
+            .replace("{command}", config.commandsToCycle[nextCycleCommand])
+            .replace(/^ +/g, "\u00A0")
+            .replace(/ +$/g, "\u00A0");
+        nextCycleCommand = (nextCycleCommand + 1) % config.commandsToCycle.length;   
 
         enterAnimation = cycleTitle.animate(enteringKeyframes, options);
         enterAnimation.play();
@@ -629,7 +632,9 @@ window.onload = function() {
         // Setup static title, and determine header line count.
         let staticTitle = document.querySelector(".title");
         if (staticTitle != null) {
-            staticTitle.innerText = config.staticTitle;
+            staticTitle.innerText = config.staticTitle
+                .replace(/^ +/g, "\u00A0")
+                .replace(/ +$/g, "\u00A0");
         }
         static_lines = config.staticTitle.match('\n')?.length || 0;
         cycle_lines = config.cycleTitle.match('\n')?.length || 0;
