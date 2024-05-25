@@ -57,17 +57,6 @@ body {
     font-size: var(--title-font-size);
 }
 
-.cycle-title {
-	position: absolute;
-	top: 0;
-	left: 0;
-}
-
-.cycle-title-wrapper {
-	display: flex;
-	position: relative;
-}
-
 .tasks-count {
     font-size: var(--counter-font-size);
 }

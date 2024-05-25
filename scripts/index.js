@@ -228,18 +228,11 @@ function cycleCommandInHeader() {
         return
     }
 
-    const leavingTitle = document.querySelector(".cycle-title.cycle-leaving");
-    const currentTitle = document.querySelector(".cycle-title.cycle-current");
-    if (leavingTitle == null || currentTitle == null) {
+    const cycleTitle = document.querySelector(".cycle-title");
+    if (cycleTitle == null) {
         console.error("missing cycle titles");
         return;
     }
-
-    leavingTitle.innerText = currentTitle.innerText;
-    leavingTitle.style.opacity = "100%";
-    currentTitle.style.opacity = "0%";
-    currentTitle.innerText = config.commandsToCycle[nextCycleCommand];
-    nextCycleCommand += 1;
 
     let leavingKeyframes = [
         {opacity: "100%"},
@@ -250,17 +243,20 @@ function cycleCommandInHeader() {
         {opacity: "100%"},
     ];
     let options = {
-        duration: config.fadeTime,
+        duration: config.fadeTime * 1000,
         iterations: 1,
         easing: "linear"
     };
 
-    leaveAnimation = leavingTitle.animate(leavingKeyframes, options);
+    leaveAnimation = cycleTitle.animate(leavingKeyframes, options);
     leaveAnimation.play();
     leaveAnimation.addEventListener("finish", () => {
-        enterAnimation = currentTitle.animate(enteringKeyframes, options);
+        cycleTitle.innerText = config.commandsToCycle[nextCycleCommand];
+        nextCycleCommand += 1;    
+
+        enterAnimation = cycleTitle.animate(enteringKeyframes, options);
         enterAnimation.play();
-        leaveAnimation.addEventListener("finish", () => {
+        enterAnimation.addEventListener("finish", () => {
             window.setTimeout(cycleCommandInHeader, config.holdTime * 1000);
         });
     });
@@ -635,8 +631,8 @@ window.onload = function() {
         if (staticTitle != null) {
             staticTitle.innerText = config.staticTitle;
         }
-        static_lines = config.staticTitle.match('\n').length || 0;
-        cycle_lines = config.cycleTitle.match('\n').length || 0;
+        static_lines = config.staticTitle.match('\n')?.length || 0;
+        cycle_lines = config.cycleTitle.match('\n')?.length || 0;
         document.documentElement.style.setProperty("--header-lines", static_lines + cycle_lines);
 
         // Validate all commands accounted for.
