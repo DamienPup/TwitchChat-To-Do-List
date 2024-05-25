@@ -32,11 +32,6 @@ body {
 }
 
 .header {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-
     width: 100%;
     height: calc(max(calc(var(--title-font-size) * var(--header-lines)), var(--counter-font-size)) * 2);
 
@@ -50,9 +45,27 @@ body {
     background-color: var(--header-background-color);
 }
 
-.title {
+.horiz {
+	display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.title, .cycle-title {
     font-weight: bold;
     font-size: var(--title-font-size);
+}
+
+.cycle-title {
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+.cycle-title-wrapper {
+	display: flex;
+	position: relative;
 }
 
 .tasks-count {

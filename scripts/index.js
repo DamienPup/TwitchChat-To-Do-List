@@ -4,6 +4,7 @@
 let tasks = [];
 let scrolling = false;
 let animationStartTime = null;
+let nextCycleCommand = 0;
 
 // FONTS
 function loadGoogleFont(font) {
@@ -220,6 +221,49 @@ function infScrollAnimation(time) {
     } else {
         requestAnimationFrame(infScrollAnimation);
     }
+}
+
+function cycleCommandInHeader() {
+    if (!config.cycleCommands) {
+        return
+    }
+
+    const leavingTitle = document.querySelector(".cycle-title.cycle-leaving");
+    const currentTitle = document.querySelector(".cycle-title.cycle-current");
+    if (leavingTitle == null || currentTitle == null) {
+        console.error("missing cycle titles");
+        return;
+    }
+
+    leavingTitle.innerText = currentTitle.innerText;
+    leavingTitle.style.opacity = "100%";
+    currentTitle.style.opacity = "0%";
+    currentTitle.innerText = config.commandsToCycle[nextCycleCommand];
+    nextCycleCommand += 1;
+
+    let leavingKeyframes = [
+        {opacity: "100%"},
+        {opacity: "0%"},
+    ];
+    let enteringKeyframes = [
+        {opacity: "0%"},
+        {opacity: "100%"},
+    ];
+    let options = {
+        duration: config.fadeTime,
+        iterations: 1,
+        easing: "linear"
+    };
+
+    leaveAnimation = leavingTitle.animate(leavingKeyframes, options);
+    leaveAnimation.play();
+    leaveAnimation.addEventListener("finish", () => {
+        enterAnimation = currentTitle.animate(enteringKeyframes, options);
+        enterAnimation.play();
+        leaveAnimation.addEventListener("finish", () => {
+            window.setTimeout(cycleCommandInHeader, config.holdTime * 1000);
+        });
+    });
 }
 
 // TWITCH CHAT BOT
@@ -586,6 +630,15 @@ window.onload = function() {
         loadFonts();
         loadTasksDB();
 
+        // Setup static title, and determine header line count.
+        let staticTitle = document.querySelector(".title");
+        if (staticTitle != null) {
+            staticTitle.innerText = config.staticTitle;
+        }
+        static_lines = config.staticTitle.match('\n').length || 0;
+        cycle_lines = config.cycleTitle.match('\n').length || 0;
+        document.documentElement.style.setProperty("--header-lines", static_lines + cycle_lines);
+
         // Validate all commands accounted for.
         const commandConfig = {
             commandNames: config.commandNames,
@@ -628,6 +681,7 @@ window.onload = function() {
 
         saveTasksDB();
 
+        cycleCommandInHeader(); // does nothing if the cycling has been disabled
         renderDOM();
     } catch (error) {
         showErrorNotification(`${error} at ${error.stack[1]}`);

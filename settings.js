@@ -19,6 +19,30 @@ const config = (() => {
     // If <=0, the task is removed instantly.
     const autoDeleteDelay = 1; // (seconds) any number >= 0. The delay after completing a task before it is deleted. If <=0, the task is removed instantly.
 
+    // The final title looks like:
+    // <static title><cycle title>
+    // e.g. with default settigns:
+    // To Do List | !task help
+
+    // The part of the title that doesn't change
+    // To add multiple lines to the title, DO NOT PRESS ENTER! That will BREAK THE FILE. Instead, type "\n" to insert a new line.
+    // example of newline: "To Do\nList" // add newline between Do and List.
+    const staticTitle = "To Do List | ";
+    // The part of the title that cycles through each command (shown after the static title)
+    // {command} is replaced with the command currently being shown
+    const cycleTitle = "{command}";
+    // Enables or disables the cycling of commands in the title. If disabled, `cycleTitle` is not shown.
+    const cycleCommands = true;
+    const holdTime = 5.0; // (seconds) How long to display a command for.
+    const fadeTime = 1.0; // (seconds) How long to fade in/out the previous/next commands.
+    // The list of commands to display in the title. Given as-is to `cycleTitle`.
+    const commandsToCycle = [
+        "!task help", // help
+        // task commands
+        "!task add", "!task done", "!task remove", "!task edit",
+        "!task credits", "!task github" // credits
+    ];
+
     // Names of different commands. Spaces allowed.
     // You can add multiple names for a single command, or just have one
     // The FIRST entry will be displayed in the help command as the primary command.
@@ -56,7 +80,6 @@ const config = (() => {
     // will not be required when passing a command to the help command.
     // i.e. "!task help task add" can be shortned to "!task help add".
 
-    // TODO: add support for "follower" role at some point (requires extra setup)
     // Valid permissions (from highest to lowest permissions): broadcaster, mod, sub, vip, everyone
     // For add, clear, help, credits, and reload: the permission level sets who can use the command
     // ... i.e if set to "vip", vips, subs, mods, and the broadcaster can use the command
@@ -120,6 +143,7 @@ const config = (() => {
     return {
         taskLimit, scrollingEnabled, scrollPxPerSecond, scrollPxGap, scrollLoopDelaySec, commandNames,
         autoDeleteDelay, autoDeleteCompletedTasks,
-        commandSyntaxes, commandDescriptions, commandPermissions
+        commandSyntaxes, commandDescriptions, commandPermissions,
+        staticTitle, cycleTitle, cycleCommands, holdTime, fadeTime, commandsToCycle,
     };
 })();
