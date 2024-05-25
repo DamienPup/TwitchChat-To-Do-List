@@ -46,13 +46,15 @@ body {
 }
 
 .horiz {
-	display: flex;
+    display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
 }
 
 .title, .cycle-title {
+    display: inline;
+
     font-weight: bold;
     font-size: var(--title-font-size);
 }

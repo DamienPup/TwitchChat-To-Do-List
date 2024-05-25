@@ -638,7 +638,7 @@ window.onload = function() {
         }
         static_lines = config.staticTitle.match('\n')?.length || 0;
         cycle_lines = config.cycleTitle.match('\n')?.length || 0;
-        document.documentElement.style.setProperty("--header-lines", static_lines + cycle_lines);
+        document.documentElement.style.setProperty("--header-lines", static_lines + cycle_lines + 1);
 
         // Validate all commands accounted for.
         const commandConfig = {
