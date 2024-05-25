@@ -43,13 +43,13 @@ By default everyone can use `help`,  `credits` and `github`, `add` tasks, as wel
   - Used by `generate_token.py` to generate an oauth token, and pretty much nothing else. 
   - If you generate your token manually, this can still be a nice place to store a copy of your client id, so you don't need to login to the twitch dev console to get it.
 - `auth.js`:
-  - Holds login settings, including your oauth token, bot username, and channel name
+  - Holds login settings: your oauth token, bot username, and channel name
 - `settings.js`:
   - Holds the main settings for the overlay and bot
-  - Includes the active task limit, scrolling settings, auto-delete settings, command names and alisies, command help messages, and command permissions.
+  - Includes the active task limit, scrolling settings, auto-delete settings, title settings, command names, alisies, and permissions, and more.
 - `style_settings.css`:
   - Holds the visual settings for the overlay.
-  - Includes fonts, font sizes, and various color options.
+  - Includes fonts, font sizes, various color options, and more.
 
 > [!WARNING]
 > Do not edit any other files. Editing other files may break the bot and cause it to stop working. Editing other files is an action taken **at your own risk** and is not officially supported.
