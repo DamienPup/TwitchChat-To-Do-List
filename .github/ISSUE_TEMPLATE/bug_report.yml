@@ -1,0 +1,54 @@
+name: "Bug Report"
+description: "Report a bug with the project."
+labels: ["bug"]
+title: "bug: Bug Title Goes Here"
+body:
+  - type: checkboxes
+    id: tasks
+    attributes:
+      label: "Tasks"
+      options:
+        - label: "I certify I have checked to see if there are any [issues](https://github.com/DamienPup/TwitchChat-To-Do-List/issues) that match my issue."
+          required: true
+        - label: "I certify I have checked to see if there are any [pull requests](https://github.com/DamienPup/TwitchChat-To-Do-List/pulls) that might resolve my issue."
+          required: true
+    validations:
+      required: true
+  - type: textarea
+    id: whathappened
+    attributes:
+      label: "Description"
+      description: "Describe what happened."
+      placeholder: "This bug happened..."
+    validations:
+        required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: "Reproduction Steps"
+      description: "Describe how to reproduce this bug. You may also attach your settings files here. (Do NOT include auth.js!!!)"
+      value: |
+        1.
+        2.
+        3.
+        ...
+    validations:
+        required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: "Expected Behavior"
+      description: "Describe what you expected to happen and how it differs from what actually happened."
+      placeholder: "I expected so and so to happen."
+    validations:
+        required: true
+  - type: input
+    id: software
+    attributes:
+      label: Software
+      description: "What streaming software or browser were you using?"
+  - type: input
+    id: os
+    attributes:
+      label: Operating System
+      description: "What operating system were you using?"      

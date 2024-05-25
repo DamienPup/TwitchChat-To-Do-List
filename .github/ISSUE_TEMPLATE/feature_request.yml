@@ -1,0 +1,28 @@
+name: "Feature Request"
+description: "Request a new feature for the project."
+labels: ["enhancement"]
+title: "feat: Feature Name Goes Here"
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Note on the title: If you're feature request is a breaking change, add an \"!\" after \"feat\"".
+        e.g. feat!: This feature breaks existing users
+  - type: checkboxes
+    attributes:
+      label: "Tasks"
+      options:
+        - label: "I certify I have checked to see if there are any [issues](https://github.com/DamienPup/TwitchChat-To-Do-List/issues) that match my issue."
+          required: true
+        - label: "I certify I have checked to see if there are any [pull requests](https://github.com/DamienPup/TwitchChat-To-Do-List/pulls) that might resolve my issue."
+          required: true
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      id: request
+      label: "Feature Request"
+      description: "Describe the feature in detail. If possible, include details on implementation and/or addtional important notes."
+      placeholder: "I want a feature that does <whatever>..."
+    validations:
+        required: true
