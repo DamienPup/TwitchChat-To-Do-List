@@ -17,6 +17,7 @@ Inspired by [liyunze-coding/Chat-Task-Tic-Overlay](https://github.com/liyunze-co
 
 The latest changes since last time I pushed something to this repo:
 - Added new settings to give better control over the look of the header.
+- Added a feature to have the commands of the bot cycle in the title. See `settings.js` for details.
 
 ## List of commands
 
@@ -60,7 +61,7 @@ By default everyone can use `help`,  `credits` and `github`, `add` tasks, as wel
 >
 > Last update to `settings.js`: Commit d40c5347872239badb0e8a11d4af2db7f8116547 on Mar 19th, 2024.
 >
-> Last update to `style_settings.css`: Commit a215828d84f31034fae8b3279593d413835a9942 on May 23th, 2024.
+> Last update to `style_settings.css`: Commit 9af7ae1928ffb0949160ddf8e5fb6021e18b40de on May 24th, 2024.
 >
 > Last update to `auth.js`: Commit b807cf384b231e0700130d6f0da875f5604d956b on Oct 18, 2023.
 >

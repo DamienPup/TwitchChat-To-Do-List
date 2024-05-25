@@ -28,5 +28,6 @@
 	--task-item-font-size: 20px; /* The size of each task item */
 	--error-font-size: 25px; /* The size of any displayed errors (like login failures) */
 
-	--header-lines: 1; /* The number of lines in the title text. */
+	/* ==================== */
+	--header-lines: 1; /* The number of lines in the title text. This is automatically set by the title in settings.js!  */
 }
