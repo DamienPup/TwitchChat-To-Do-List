@@ -487,7 +487,7 @@ function commandHelp(user, command, flags, extra) {
 
 function commandCredits(user, command, flags, extra) {
     return ComfyJS.Say(
-        "Bot made by DamienPup for LadyWynter_FantasyWriter's stream. Inspired by https://github.com/liyunze-coding/Chat-Task-Tic-Overlay-Infinity. Get the bot yourself at https://github.com/DamienPup/TwitchChat-To-Do-List."
+        "Bot made by DamienPup for LadyWynter_Author's stream. Inspired by https://github.com/liyunze-coding/Chat-Task-Tic-Overlay-Infinity. Get the bot yourself at https://github.com/DamienPup/TwitchChat-To-Do-List."
     );
 }
 

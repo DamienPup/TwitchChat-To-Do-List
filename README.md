@@ -2,7 +2,7 @@
 
 A chat-controlled to do list overlay for [Twitch](https://www.twitch.tv/).
 
-Created by DamienPup for [LadyWynter FantasyWriter](https://www.twitch.tv/ladywynter_fantasywriter).
+Created by DamienPup for [LadyWynter_Author](https://www.twitch.tv/LadyWynter_Author).
 Inspired by [liyunze-coding/Chat-Task-Tic-Overlay](https://github.com/liyunze-coding/Chat-Task-Tic-Overlay).
 
 ## Table of Contents
