@@ -141,7 +141,7 @@ function renderDOM() {
 
                 let header = document.createElement("p");
                 header.innerText = task.user;
-                header.classList.add("title");
+                header.classList.add("task-username");
                 userDivs[task.user].appendChild(header);
             }
             

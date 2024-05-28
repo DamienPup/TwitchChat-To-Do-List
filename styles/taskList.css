@@ -175,6 +175,12 @@ input[type="checkbox"]:checked + label:after {
     padding-inline: 5px;
 }
 
+.task-username {
+    font-weight: bold;
+    color: var(--task-username-color);
+    font-size: var(--task-username-font-size);
+}
+
 /* Error handling */
 
 .critical-error {
