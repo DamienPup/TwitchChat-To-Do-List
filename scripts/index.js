@@ -127,21 +127,43 @@ function renderDOM() {
         taskList.innerHTML = "";
     });
 
+    let userDivs = {};
+
     tasks.forEach((task, index) => {
         const taskElement = template.content.cloneNode(true);
 
-        //taskElement.querySelector(".task-index").textContent = `${index + 1} (${task.user}).`;
-        taskElement.querySelector(".task-index").textContent = `${index + 1}. ${task.user}: ${task.task}`;
-        //taskElement.querySelector(".task-text").textContent = task.task;
         taskElement.querySelector(".task-checkbox").checked = task.completed;
+        taskElement.querySelector(".task-text").classList.toggle("crossed", task.completed);
 
-        taskElement.querySelector(".task-index").classList.toggle("crossed", task.completed);
-        ///taskElement.querySelector(".task-text").classList.toggle("crossed", task.completed);
+        if (config.userGroupingEnabled) {
+            if (!(task.user in userDivs)) {
+                userDivs[task.user] = document.createElement("div");
 
-        taskLists.forEach(taskList => {
-            taskList.appendChild(taskElement.cloneNode(true));
-        });
+                let header = document.createElement("p");
+                header.innerText = task.user;
+                header.classList.add("title");
+                userDivs[task.user].appendChild(header);
+            }
+            
+            taskElement.querySelector(".task-text").textContent = `${index + 1}. ${task.task}`;
+
+            userDivs[task.user].appendChild(taskElement);
+        } else {
+            taskElement.querySelector(".task-text").textContent = `${index + 1}. ${task.user}: ${task.task}`;
+
+            taskLists.forEach(taskList => {
+                taskList.appendChild(taskElement.cloneNode(true));
+            });
+        }
     });
+
+    if (config.userGroupingEnabled) {
+        Object.values(userDivs).forEach(userDiv => {
+            taskLists.forEach(taskList => {
+                taskList.appendChild(userDiv.cloneNode(true));
+            });
+        });
+    }
 
     let totalTasks = tasks.length;
     let completedTasks = tasks.filter((value) => value.completed).length;

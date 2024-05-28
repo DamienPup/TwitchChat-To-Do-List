@@ -3,6 +3,9 @@ const config = (() => {
     // Set to `null` or `undefined` to disable, or any postive whole number to set the limit.
     const taskLimit = null;
 
+    // Enable or disable grouping tasks by usernames:
+    const userGroupingEnabled = true;
+
     // Enable or disable scrolling. `true` or `false`.
     const scrollingEnabled = true;
     // The speed of scrolling in pixels per second. Can be any postive number. Will likely not work with negative numbers.
@@ -145,5 +148,6 @@ const config = (() => {
         autoDeleteDelay, autoDeleteCompletedTasks,
         commandSyntaxes, commandDescriptions, commandPermissions,
         staticTitle, cycleTitle, cycleCommands, holdTime, fadeTime, commandsToCycle,
+        userGroupingEnabled,
     };
 })();
