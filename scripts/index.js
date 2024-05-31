@@ -356,11 +356,11 @@ function sendPermissionError(user, required) {
 }
 
 function commandAdd(user, command, flags, extra) {
-    if (command.arguments == "") {
+    if (command.arguments.length < 1) {
         return printCommandHelp(command);
     }
 
-    let task = addTask(command.arguments, user);
+    let task = addTask(command.arguments.join(" "), user);
     if (!task) {
         return sendStatus(`At most ${config.taskLimit} tasks may be active at once!`, false, user);
     }
@@ -370,11 +370,11 @@ function commandAdd(user, command, flags, extra) {
 }
 
 function commandDone(user, command, flags, extra) {
-    if (command.arguments == "") {
+    if (command.arguments.length != 1) {
         return printCommandHelp(command);
     }
 
-    let index = parseInt(command.arguments);
+    let index = parseInt(command.arguments[0]);
     if (isNaN(index)) {
         return sendStatus(`${index} is not a number!`, false, user);
     }
@@ -404,11 +404,11 @@ function commandDone(user, command, flags, extra) {
 }
 
 function commandRemove(user, command, flags, extra) {
-    if (command.arguments == "") {
+    if (command.arguments.length != 1) {
         return printCommandHelp(command);
     }
 
-    index = parseInt(command.arguments);
+    index = parseInt(command.arguments[0]);
     if (isNaN(index)) {
         return sendStatus(`${command.arguments} is not a number!`, false, user);
     }
@@ -428,20 +428,20 @@ function commandRemove(user, command, flags, extra) {
 }
 
 function commandClear(user, command, flags, extra) {
-    if (command.arguments == "done") {
+    if (command.arguments[0] == "done") {
         clearDoneTasks();
         renderDOM();
 
         return sendStatus(`Cleared completed tasks!`, true, user);
-    } else if (command.arguments == "all") {
+    } else if (command.arguments[0] == "all") {
         clearAllTasks();
         renderDOM();
 
         return sendStatus(`Cleared all tasks!`, true, user);
     } else {
         printCommandHelp(command);
-        // passed in a number to clear. Suggest the correct "remove" command instead
-        if (!isNaN(parseInt(command.arguments))) {
+        // May have passed in a number to `clear`. Suggest the correct `remove` command instead
+        if (!isNaN(parseInt(command.arguments[0]))) {
             ComfyJS.Say(`(Did you mean !${config.commandNames.remove[0]} ${command.arguments}?)`);
         }
         return;
@@ -449,13 +449,12 @@ function commandClear(user, command, flags, extra) {
 }
 
 function commandEdit(user, command, flags, extra) {
-    const segments = command.arguments.split(" ");
-    if (segments.length < 2) {
+    if (command.arguments.length < 2) {
         return printCommandHelp(command);
     }
 
-    let indexStr = segments[0];
-    let new_content = segments.slice(1).join(" ");
+    let indexStr = command.arguments[0];
+    let new_content = command.arguments.slice(1).join(" ");
 
     if (new_content == "") {
         return printCommandHelp(command);
@@ -481,7 +480,8 @@ function commandEdit(user, command, flags, extra) {
 }
 
 function commandHelp(user, command, flags, extra) {
-    if (command.arguments == "") {
+    let givenCommand = command.arguments.join(" ");
+    if (givenCommand == "") {
         let commands = [];
         for (const commandID in config.commandNames) {
             if (!hasPermission(config.commandPermissions[commandID], flags))
@@ -499,7 +499,7 @@ function commandHelp(user, command, flags, extra) {
         }
         return ComfyJS.Say("Commands: " + commands.join(", "));
     } else {
-        let targetCommand = getCommand(command.arguments, config.generated.commandHelpNames);
+        let targetCommand = getCommand(givenCommand, config.generated.commandHelpNames);
         if (targetCommand) 
             return printCommandHelp(targetCommand);
         else
@@ -526,13 +526,12 @@ function commandReload(user, command, flags, extra) {
 }
 
 function commandReassign(user, command, flags, extra) {
-    const segments = command.arguments.split(" ");
-    if (segments.length < 1 || segments.length > 2) {
+    if (command.arguments.length < 1 || command.arguments.length > 3) {
         return printCommandHelp(command);
     }
 
-    let indexStr = segments[0];
-    let targetUser = segments[1] || user;
+    let indexStr = command.arguments[0];
+    let targetUser = command.arguments[1] || user;
     targetUser = targetUser.replace(/^@/, "");
 
     if (targetUser == "") {
@@ -554,11 +553,11 @@ function commandReassign(user, command, flags, extra) {
 }
 
 function commandShow(user, command, flags, extra) {
-    if (command.arguments == "") {
+    if (command.arguments.length != 1) {
         return printCommandHelp(command);
     }
 
-    let index = parseInt(command.arguments);
+    let index = parseInt(command.arguments[0]);
     if (isNaN(index)) {
         return sendStatus(`${index} is not a number!`, false, user);
     }
@@ -594,10 +593,11 @@ function getCommand(fullMessage, commandNames = null) {
 
         for (const name of names) {
             if (fullMessage.startsWith(name)) {
+                let args = fullMessage.slice(name.length).trim().split(" ");
                 return {
                     commandID: command,
                     command: name,
-                    arguments: fullMessage.slice(name.length).trim(),
+                    arguments: (args.length == 1 && args[0] == "") ? [] : args, // don't return [""]
                     permission_level: config.commandPermissions[command],
                 };
             }
