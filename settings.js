@@ -3,6 +3,9 @@ const config = (() => {
     // Set to `null` or `undefined` to disable, or any postive whole number to set the limit.
     const taskLimit = null;
 
+    // Enable or disable grouping tasks by usernames:
+    const userGroupingEnabled = true;
+
     // Enable or disable scrolling. `true` or `false`.
     const scrollingEnabled = true;
     // The speed of scrolling in pixels per second. Can be any postive number. Will likely not work with negative numbers.
@@ -110,17 +113,20 @@ const config = (() => {
     // The default shows required parameters in <> and optional ones in ().
     // Options are shown using |.
     // Feel free to change the names of the parameters, but try to keep the general format the same so things aren't confusing.
+    const taskSyntaxUngrouped = "<number>"; // The format to access tasks when grouping is disabled
+    const taskSyntaxGrouped = "(username) <number>"; // The format to access tasks when grouped is enabled (added optional username argument to allow access to other users tasks for moderation purposes)
+    const taskSyntax = userGroupingEnabled ? taskSyntaxGrouped : taskSyntaxUngrouped; // don't touch this line
     const commandSyntaxes = {
-        show: "<number>",
+        show: `${taskSyntax}`,
         add: "<task>",
-        done: "<number>",
-        remove: "<number>",
-        edit: "<number> <new task>",
+        done: `${taskSyntax}`,
+        remove: `${taskSyntax}`,
+        edit: `${taskSyntax} <new task>`,
         clear: "<done|all>",
         help: "(command)",
         credits: "",
         reload: "",
-        reassign: "<number> (user)",
+        reassign: `${taskSyntax} (user)`,
         github: "",
     };
 
@@ -145,5 +151,6 @@ const config = (() => {
         autoDeleteDelay, autoDeleteCompletedTasks,
         commandSyntaxes, commandDescriptions, commandPermissions,
         staticTitle, cycleTitle, cycleCommands, holdTime, fadeTime, commandsToCycle,
+        userGroupingEnabled,
     };
 })();

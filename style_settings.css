@@ -4,6 +4,7 @@
       For now, any fonts used must be from: https://fonts.google.com/.
     */
     --header-font: "Fredoka One"; /* The font of the title and task counter */
+    --username-font: "Nunito"; /* The font of the usernames, when username grouping is enabled */
     --body-font: "Nunito"; /* The font of the task items */
 
     /*
@@ -15,6 +16,7 @@
     --header-text-color: white; /* The text color of the title and task counter */
     --header-background-color: rgba(0, 0, 0, 0.9); /* The background of the title and task counter box */
     --task-list-background-color: rgba(0, 0, 0, 0.8); /* The background of the list of tasks */
+    --task-username-color: white; /* The task usernames, when username grouping is enabled */
     --task-item-text-color: white; /* The text color of the task items */
     --task-item-background-color: rgba(0, 0, 0, 0.8); /* The background color of each task item */
 
@@ -25,6 +27,7 @@
     */
     --title-font-size: 30px; /* The size of the title */
     --counter-font-size: 30px; /* The size of the task counter text */
+    --task-username-font-size: 25px; /* The size of usernames, when username grouping is enabled.  */
     --task-item-font-size: 20px; /* The size of each task item */
     --error-font-size: 25px; /* The size of any displayed errors (like login failures) */
 

@@ -171,8 +171,15 @@ input[type="checkbox"]:checked + label:after {
     transform: translateY(-4px);
 }
 
-.task-index {
+.task-text {
     padding-inline: 5px;
+}
+
+.task-username {
+    font-family: var(--username-font);
+    font-weight: bold;
+    color: var(--task-username-color);
+    font-size: var(--task-username-font-size);
 }
 
 /* Error handling */
