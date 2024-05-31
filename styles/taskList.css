@@ -176,6 +176,7 @@ input[type="checkbox"]:checked + label:after {
 }
 
 .task-username {
+    font-family: var(--username-font);
     font-weight: bold;
     color: var(--task-username-color);
     font-size: var(--task-username-font-size);

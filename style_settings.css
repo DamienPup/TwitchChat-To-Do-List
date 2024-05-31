@@ -4,6 +4,7 @@
       For now, any fonts used must be from: https://fonts.google.com/.
     */
     --header-font: "Fredoka One"; /* The font of the title and task counter */
+    --username-font: "Nunito"; /* The font of the usernames, when username grouping is enabled */
     --body-font: "Nunito"; /* The font of the task items */
 
     /*
