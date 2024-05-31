@@ -588,16 +588,45 @@ function commandReassign(user, command, flags, extra) {
 }
 
 function commandShow(user, command, flags, extra) {
-    if (command.arguments.length < 1 || command.arguments.length > 2) {
+    if (command.arguments.length > 2) {
         return printCommandHelp(command);
     }
 
-    let {task, index} = cmdGetTask(user, command);
-    if (!task) {
-        return;
-    }
+    switch (command.arguments.length) {
+        case 0: // show all user tasks
+            let userTasks = [];
+            tasks.forEach(task => {
+                if (task.user != user) return;
 
-    return ComfyJS.Say(`${task.task}, started by ${task.user}, ${task.completed ? '' : 'not'} finished`);
+                let userTask = task.task;
+                if (task.completed) {
+                    userTask += " (finished)"
+                }
+                userTasks.push(userTask);
+            });
+            return ComfyJS.Say(`Your tasks: ${userTasks.join(", ")}`);
+        case 1: // show <username> OR show <index>
+            let username = command.arguments[0]
+            if (isNaN(parseInt(username))) { // show <username>
+                let userTasks = [];
+                tasks.forEach(task => {
+                    if (task.user != username) return;
+
+                    let userTask = task.task;
+                    if (task.completed) {
+                        userTask += " (finished)"
+                    }
+                    userTasks.push(userTask);
+                });
+                return ComfyJS.Say(`${username}'s tasks: ${userTasks.join(", ")}`);
+            }
+        case 2: // show <username> <index> OR (via fallthrough) show <index>
+            let {task, _} = cmdGetTask(user, command);
+            if (!task) {
+                return;
+            }
+            return ComfyJS.Say(`${task.task}, started by ${task.user}, ${task.completed ? '' : 'not'} finished`);
+    }
 }
 
 const commandFunctions = {

@@ -117,7 +117,7 @@ const config = (() => {
     const taskSyntaxGrouped = "(username) <number>"; // The format to access tasks when grouped is enabled (added optional username argument to allow access to other users tasks for moderation purposes)
     const taskSyntax = userGroupingEnabled ? taskSyntaxGrouped : taskSyntaxUngrouped; // don't touch this line
     const commandSyntaxes = {
-        show: `${taskSyntax}`,
+        show: `[username] [number]`,
         add: "<task>",
         done: `${taskSyntax}`,
         remove: `${taskSyntax}`,
