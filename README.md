@@ -18,22 +18,35 @@ Inspired by [liyunze-coding/Chat-Task-Tic-Overlay](https://github.com/liyunze-co
 The latest changes since last time I pushed something to this repo:
 - Added new settings to give better control over the look of the header.
 - Added a feature to have the commands of the bot cycle in the title. See `settings.js` for details.
-- Improved the formatting of the code.
+- **MAJOR**: Added a new feature (on by default) to group tasks by username. This is a **breaking change**!
+  - Tasks are now grouped by username by default.
+  - Task numbers now only target your own tasks, and you can target other users tasks by added their names before the number.
+  - There's some extra style settings to control the new username headers.
+  - The old behavior can be restored by disabling `enableUsernameGrouping` in `settings.js`. This disables ALL of this features changes.
 
 ## List of commands
 
 - `!task help (command)`: List commands. Optionally, get help on a command.
 - `!task credits`: List bot credits.
-- `!task show <number>`: Shows a task and it's status in chat.
-- `!task add <task>`: Add a task to the list. Task can contain spaces.
-- `!task done <number>`: Finish a task.
-- `!task remove <number>`: Delete a task
-- `!task edit <number> <new-content>`: Edit a task to contain different text.
+- `!task show <@task>`: Shows a task and it's status in chat.
+- `!task add <task content...>`: Add a task to the list. Task can contain spaces.
+- `!task done <@task>`: Finish a task.
+- `!task remove <@task>`: Delete a task
+- `!task edit <@task> <new content...>`: Edit a task to contain different text.
 - `!task clear all`: Clear all tasks
 - `!task clear done`: Clear only fishised tasks.
 - `!task reload`: Reload bot and overlay.
-- `!task reassign <number> (user)`: Reassign a task to a new user. If the user is not given, reassign to yourself.
+- `!task reassign <@task> (user)`: Reassign a task to a new user. If the user is not given, reassign to yourself.
 - `!task github`: Display the bots github url.
+
+`<@task>` above means one of two things:
+- If username grouping is enabled: `[username] <number>`. Examples:
+    - `!task done 1` - Finish your first task.
+    - `!task done DamienPup 5` - Finish `DamienPup`'s 5th task.
+    - `!task reassign 2 JohnDoe` - Give your second task to `JohnDoe`.
+    - `!task reassign DamienPup 2 JohnDoe` - Give `DamienPup`'s second task to `JohnDoe`.
+- If username grupising is disabled: `<number>`.  Examples:
+    - `!task remove 3` - Delete the third task on the list.
 
 By default everyone can use `help`,  `credits` and `github`, `add` tasks, as well as finish (`done`), `remove`, and `edit` tasks they started. Mods can use `clear`, `reassign`, as well as finish (`done`), `remove`, and `edit` all tasks. Only the broadcaster can `reload` the bot. All of these permissions can be changed in `settings.js`.
 
@@ -60,9 +73,9 @@ By default everyone can use `help`,  `credits` and `github`, `add` tasks, as wel
 > The following files contain your settings. If updating from a previous version, do *not* replace these files unless they have been updated. If they have been updated, **migrate your settings to the new versions**.
 > You **will** have issues if you do not keep these updated.
 >
-> Last update to `settings.js`: 9af7ae1928ffb0949160ddf8e5fb6021e18b40de on May 24th, 2024.
+> Last update to `settings.js`: Commit a9191c9fe001f303cb4625a368c2a573bd546aa2 on May 30th, 2024.
 >
-> Last update to `style_settings.css`: Commit a215828d84f31034fae8b3279593d413835a9942 on May 23th, 2024.
+> Last update to `style_settings.css`: Commit 2711b1af202c72e93af3c015039bcf66c668895d on May 30th, 2024.
 >
 > Last update to `auth.js`: Commit b807cf384b231e0700130d6f0da875f5604d956b on Oct 18, 2023.
 >
