@@ -12,23 +12,24 @@ Inspired by [liyunze-coding/Chat-Task-Tic-Overlay](https://github.com/liyunze-co
 3. [Settings Files](#settings-files)
 4. [Install Instructions](#install-instructions)
     - [Manually Generating an OAuth Token](#manually-generating-an-oauth-token)
+    - [Minor Updates](#minor-updates)
 
 ## Latest changes
 
 The latest changes since last time I pushed something to this repo:
-- Added new settings to give better control over the look of the header.
 - Added a feature to have the commands of the bot cycle in the title. See `settings.js` for details.
 - **MAJOR**: Added a new feature (on by default) to group tasks by username. This is a **breaking change**!
   - Tasks are now grouped by username by default.
   - Task numbers now only target your own tasks, and you can target other users tasks by added their names before the number.
   - There's some extra style settings to control the new username headers.
   - The old behavior can be restored by disabling `enableUsernameGrouping` in `settings.js`. This disables ALL of this features changes.
+- `!task show` can now show all commands for you or another user, the task number is no longer required.
 
 ## List of commands
 
 - `!task help (command)`: List commands. Optionally, get help on a command.
 - `!task credits`: List bot credits.
-- `!task show <@task>`: Shows a task and it's status in chat.
+- `!task show [username] [task]`: Shows a task and it's status in chat, or shows all tasks for you or another user.
 - `!task add <task content...>`: Add a task to the list. Task can contain spaces.
 - `!task done <@task>`: Finish a task.
 - `!task remove <@task>`: Delete a task
@@ -48,7 +49,7 @@ The latest changes since last time I pushed something to this repo:
 - If username grupising is disabled: `<number>`.  Examples:
     - `!task remove 3` - Delete the third task on the list.
 
-By default everyone can use `help`,  `credits` and `github`, `add` tasks, as well as finish (`done`), `remove`, and `edit` tasks they started. Mods can use `clear`, `reassign`, as well as finish (`done`), `remove`, and `edit` all tasks. Only the broadcaster can `reload` the bot. All of these permissions can be changed in `settings.js`.
+By default everyone can use `help`, `credits` and `github`, `show` and `add` tasks, as well as finish (`done`), `remove`, and `edit` tasks they started. Mods can use `clear` and `reassign`, as well as finish (`done`), `remove`, and `edit` all tasks. Only the broadcaster can `reload` the bot. All of these permissions can be changed in `settings.js`.
 
 ## Settings Files
 
@@ -73,11 +74,14 @@ By default everyone can use `help`,  `credits` and `github`, `add` tasks, as wel
 > The following files contain your settings. If updating from a previous version, do *not* replace these files unless they have been updated. If they have been updated, **migrate your settings to the new versions**.
 > You **will** have issues if you do not keep these updated.
 >
-> Last update to `settings.js`: Commit a9191c9fe001f303cb4625a368c2a573bd546aa2 on May 30th, 2024.
+> For minor updates, see the [Minor Updates](#minor-updates) section.
 >
-> Last update to `style_settings.css`: Commit 2711b1af202c72e93af3c015039bcf66c668895d on May 30th, 2024.
+> Last **major** update to `settings.js`: Commit a9191c9 on May 30th, 2024.
+> Last *minor* update to `settings.js`: Commit 6c19327 on May 30th 2024.
 >
-> Last update to `auth.js`: Commit b807cf384b231e0700130d6f0da875f5604d956b on Oct 18, 2023.
+> Last **major** update to `style_settings.css`: Commit 2711b1a on May 30th, 2024.
+>
+> Last **major** update to `auth.js`: Commit b807cf3 on Oct 18, 2023.
 >
 > `CLIENT_ID.txt` does not need updates.
 >
@@ -113,3 +117,9 @@ https://id.twitch.tv/oauth2/authorize
 ```js
 const OAUTH_TOKEN = "YOUR_TOKEN_HERE";
 ```
+
+### Minor Updates
+
+1. Commit 6c19327 made a small change to `settings.js`. If updating from commit a9191c9 or later, simply change line 120 of `settings.js`:
+   - From: ```show: `${taskSyntax}`,```
+   - To: ```show: `[username] [number]`,```
