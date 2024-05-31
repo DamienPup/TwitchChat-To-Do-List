@@ -117,6 +117,22 @@ function clearDoneTasks() {
     saveTasksDB();
 }
 
+function getTaskGrouped(username, number) {
+    let matchIndex = 0;
+    let result = null;
+
+    tasks.forEach((task, index) => {
+        if (task.user == username) {
+            if (matchIndex == number) {
+                result = { task: task, index: index };
+            }
+            matchIndex++;
+        }
+    });
+
+    return result;
+}
+
 // RENDERING & ANIMATION
 function renderDOM() {
     const template = document.getElementById("task-template");
@@ -137,17 +153,21 @@ function renderDOM() {
 
         if (config.userGroupingEnabled) {
             if (!(task.user in userDivs)) {
-                userDivs[task.user] = document.createElement("div");
+                userDivs[task.user] = {
+                    div: document.createElement("div"),
+                    count: 1,
+                };
 
                 let header = document.createElement("p");
                 header.innerText = task.user;
                 header.classList.add("task-username");
-                userDivs[task.user].appendChild(header);
+                userDivs[task.user].div.appendChild(header);
             }
             
-            taskElement.querySelector(".task-text").textContent = `${index + 1}. ${task.task}`;
+            taskElement.querySelector(".task-text").textContent = `${userDivs[task.user].count}. ${task.task}`;
+            userDivs[task.user].count += 1;
 
-            userDivs[task.user].appendChild(taskElement);
+            userDivs[task.user].div.appendChild(taskElement);
         } else {
             taskElement.querySelector(".task-text").textContent = `${index + 1}. ${task.user}: ${task.task}`;
 
@@ -160,7 +180,7 @@ function renderDOM() {
     if (config.userGroupingEnabled) {
         Object.values(userDivs).forEach(userDiv => {
             taskLists.forEach(taskList => {
-                taskList.appendChild(userDiv.cloneNode(true));
+                taskList.appendChild(userDiv.div.cloneNode(true));
             });
         });
     }
@@ -355,6 +375,42 @@ function sendPermissionError(user, required) {
     return sendStatus(`Only ${level_str} can run this command!`, false, user);
 }
 
+function cmdGetTask(user, command) {
+    if (config.userGroupingEnabled) {
+        let username = user;
+        let index = parseInt(command.arguments[0]);
+        if (isNaN(index)) {
+            username = command.arguments[0];
+            index = parseInt(command.arguments[1]);
+            if (isNaN(index)) { 
+                return sendStatus(`${command.arguments[0]} or ${command.arguments[1]} are not numbers!`, false, user);
+            } else {
+                command.arguments.splice(0, 2); // remove username + index
+            }
+        } else {
+            command.arguments.splice(0, 1); // remove index
+        }
+
+        let task = getTaskGrouped(username, index - 1);
+        if (!task) {
+            return sendStatus(`Task ${index} does not exist!`, false, user);
+        }
+        return task;
+    } else {
+        let index = parseInt(command.arguments[0]);
+        if (isNaN(index)) {
+            return sendStatus(`${command.arguments[0]} is not a number!`, false, user);
+        }
+        command.arguments.splice(0, 1); // remove index
+
+        let task = getTask(index - 1);
+        if (!task) {
+            return sendStatus(`Task ${index} does not exist!`, false, user);
+        }
+        return { task: task, index: index - 1}; // compat with getTaskGrouped API
+    }
+}
+
 function commandAdd(user, command, flags, extra) {
     if (command.arguments.length < 1) {
         return printCommandHelp(command);
@@ -370,24 +426,19 @@ function commandAdd(user, command, flags, extra) {
 }
 
 function commandDone(user, command, flags, extra) {
-    if (command.arguments.length != 1) {
+    if (command.arguments.length < 1 || command.arguments.length > 2) {
         return printCommandHelp(command);
     }
 
-    let index = parseInt(command.arguments[0]);
-    if (isNaN(index)) {
-        return sendStatus(`${index} is not a number!`, false, user);
-    }
-
-    let task = getTask(index - 1);
+    let {task, index} = cmdGetTask(user, command);
     if (!task) {
-        return sendStatus(`Task ${index} does not exist!`, false, user);
+        return;
     }
     if (!hasPermission(command.permission_level, flags, task.user == user)) {
         return sendStatus(`You are not allowed to finish this task.`, false, user);
     }
 
-    finishTask(index - 1);
+    finishTask(index);
     if (config.autoDeleteCompletedTasks) {
         if (config.autoDeleteDelay > 0) {
             window.setTimeout(task => {
@@ -395,7 +446,7 @@ function commandDone(user, command, flags, extra) {
                 renderDOM();
             }, config.autoDeleteDelay * 1000, task);
         } else {
-            removeTask(index - 1);
+            removeTask(index);
         }
     }
     renderDOM();
@@ -404,24 +455,19 @@ function commandDone(user, command, flags, extra) {
 }
 
 function commandRemove(user, command, flags, extra) {
-    if (command.arguments.length != 1) {
+    if (command.arguments.length < 1 || command.arguments.length > 2) {
         return printCommandHelp(command);
     }
 
-    index = parseInt(command.arguments[0]);
-    if (isNaN(index)) {
-        return sendStatus(`${command.arguments} is not a number!`, false, user);
-    }
-
-    let task = getTask(index - 1);
+    let {task, index} = cmdGetTask(user, command);
     if (!task) {
-        return sendStatus(`Task ${index} does not exist!`, false, user);
+        return;
     }
     if (!hasPermission(command.permission_level, flags, task.user == user)) {
         return sendStatus(`You are not allowed to remove this task.`, false, user);
     }
 
-    task = removeTask(index - 1);
+    task = removeTask(index);
     renderDOM();
 
     return sendStatus(`Removed task: ${task}`, true, user);
@@ -453,30 +499,23 @@ function commandEdit(user, command, flags, extra) {
         return printCommandHelp(command);
     }
 
-    let indexStr = command.arguments[0];
-    let new_content = command.arguments.slice(1).join(" ");
-
-    if (new_content == "") {
-        return printCommandHelp(command);
-    }
-
-    index = parseInt(indexStr);
-    if (isNaN(index)) {
-        return sendStatus(`${indexStr} is not a number!`, false, user);
-    }
-
-    let task = getTask(index - 1);
+    let {task, index} = cmdGetTask(user, command);
     if (!task) {
-        return sendStatus(`Task ${index} does not exist!`, false, user);
+        return;
     }
     if (!hasPermission(command.permission_level, flags, task.user == user)) {
         return sendStatus(`You are not allowed to edit this task.`, false, user);
     }
 
-    task = replaceTask(index - 1, new_content);
+    let new_content = command.arguments.join(" ");
+    if (new_content == "") {
+        return printCommandHelp(command);
+    }
+
+    task = replaceTask(index, new_content);
     renderDOM();
 
-    return sendStatus(`Task ${index} is now: ${task}`, true, user);
+    return sendStatus(`Task ${index + 1} is now: ${task}`, true, user);
 }
 
 function commandHelp(user, command, flags, extra) {
@@ -530,41 +569,32 @@ function commandReassign(user, command, flags, extra) {
         return printCommandHelp(command);
     }
 
-    let indexStr = command.arguments[0];
-    let targetUser = command.arguments[1] || user;
+    let {task, index} = cmdGetTask(user, command);
+    if (!task) {
+        return;
+    }
+
+    let targetUser = command.arguments[0] || user;
     targetUser = targetUser.replace(/^@/, "");
 
     if (targetUser == "") {
         return printCommandHelp(command);
     }
 
-    index = parseInt(indexStr);
-    if (isNaN(index)) {
-        return sendStatus(`${indexStr} is not a number!`, false, user);
-    }
-
-    let task = reassignTask(index - 1, targetUser);
-    if (!task) {
-        return sendStatus(`Task ${index} does not exist!`, false, user);
-    }
+    reassignTask(index, targetUser);
     renderDOM();
 
-    return sendStatus(`Task ${index}'s user is now: ${targetUser}`, true, user);
+    return sendStatus(`Task ${index + 1}'s user is now: ${targetUser}`, true, user);
 }
 
 function commandShow(user, command, flags, extra) {
-    if (command.arguments.length != 1) {
+    if (command.arguments.length < 1 || command.arguments.length > 2) {
         return printCommandHelp(command);
     }
 
-    let index = parseInt(command.arguments[0]);
-    if (isNaN(index)) {
-        return sendStatus(`${index} is not a number!`, false, user);
-    }
-
-    let task = getTask(index - 1);
+    let {task, index} = cmdGetTask(user, command);
     if (!task) {
-        return sendStatus(`Task ${index} does not exist!`, false, user);
+        return;
     }
 
     return ComfyJS.Say(`${task.task}, started by ${task.user}, ${task.completed ? '' : 'not'} finished`);
