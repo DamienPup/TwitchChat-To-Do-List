@@ -136,7 +136,7 @@ body {
 
     position: relative;
 
-    margin-top: 6px;
+    margin-top: 2px;
     margin-left: 2px;
     margin-right: 2px;
 }
@@ -176,6 +176,7 @@ input[type="checkbox"]:checked + label:after {
 }
 
 .task-username {
+    padding: 5px;
     font-family: var(--username-font);
     font-weight: bold;
     color: var(--task-username-color);
