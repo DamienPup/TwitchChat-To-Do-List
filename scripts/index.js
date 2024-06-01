@@ -359,12 +359,12 @@ function printCommandHelp(command) {
     } else {
         message += ` (${permMessages[commandPerms.self]} can edit tasks they own, ${permMessages[commandPerms.others]} can tasks others own)`;
     }
-    return ComfyJS.Say(message);
+    ComfyJS.Say(message);
 }
 
 function sendStatus(msg, successful, user) {
     symbol = successful ? "✅" : "❌";
-    return ComfyJS.Say(`${user} ${symbol} ${msg}`);
+    ComfyJS.Say(`${user} ${symbol} ${msg}`);
 }
 
 function sendPermissionError(user, required) {
@@ -547,13 +547,13 @@ function commandHelp(user, command, flags, extra) {
 }
 
 function commandCredits(user, command, flags, extra) {
-    return ComfyJS.Say(
+    ComfyJS.Say(
         "Bot made by DamienPup for LadyWynter_Author's stream. Inspired by https://github.com/liyunze-coding/Chat-Task-Tic-Overlay-Infinity. Get the bot yourself at https://github.com/DamienPup/TwitchChat-To-Do-List."
     );
 }
 
 function commandGithub(user, command, flags, extra) {
-    return ComfyJS.Say(
+    ComfyJS.Say(
         "Github Repo: https://github.com/DamienPup/TwitchChat-To-Do-List"
     );
 }
