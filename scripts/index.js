@@ -6,6 +6,22 @@ let scrolling = false;
 let animationStartTime = null;
 let nextCycleCommand = 0;
 
+// UTIL
+function ordinal(i) {
+    let j = i % 10,
+        k = i % 100;
+    if (j === 1 && k !== 11) {
+        return i + "st";
+    }
+    if (j === 2 && k !== 12) {
+        return i + "nd";
+    }
+    if (j === 3 && k !== 13) {
+        return i + "rd";
+    }
+    return i + "th";
+}
+
 // FONTS
 function loadGoogleFont(font) {
     WebFont.load({
@@ -66,7 +82,7 @@ function finishTask(index) {
     tasks[index].completed = true;
     saveTasksDB();
 
-    return tasks[index].task;
+    return tasks[index];
 }
 
 function removeTask(index) {
@@ -75,7 +91,7 @@ function removeTask(index) {
     let removed = tasks.splice(index, 1);
     saveTasksDB();
 
-    return removed[0].task;
+    return removed[0];
 }
 
 function removeTaskByRef(task) {
@@ -95,7 +111,7 @@ function replaceTask(index, task) {
     tasks[index].task = task;
     saveTasksDB();
 
-    return tasks[index].task;
+    return tasks[index];
 }
 
 function reassignTask(index, user) {
@@ -104,7 +120,7 @@ function reassignTask(index, user) {
     tasks[index].user = user;
     saveTasksDB();
 
-    return tasks[index].task;
+    return tasks[index];
 }
 
 function clearAllTasks() {
@@ -470,7 +486,7 @@ function commandRemove(user, command, flags, extra) {
     task = removeTask(index);
     renderDOM();
 
-    return sendStatus(`Removed task: ${task}`, true, user);
+    return sendStatus(`Removed task: ${task.task}`, true, user);
 }
 
 function commandClear(user, command, flags, extra) {
@@ -512,10 +528,22 @@ function commandEdit(user, command, flags, extra) {
         return printCommandHelp(command);
     }
 
+    let userIndex = null;
+    if (config.userGroupingEnabled) {
+        userIndex = tasks
+            .filter((t) => t.user == task.user)
+            .map((t, i) => { return { task: t, index: i } })
+            .filter((t) => t.task == task)[0].index;
+    }
+
     task = replaceTask(index, new_content);
     renderDOM();
 
-    return sendStatus(`Task ${index + 1} is now: ${task}`, true, user);
+    if (config.userGroupingEnabled) {
+        return sendStatus(`${task.user}'s ${ordinal(userIndex + 1)} task is now: ${task.task}`, true, user);
+    } else {
+        return sendStatus(`Task #${index + 1} is now: ${task.task}`, true, user);
+    }
 }
 
 function commandHelp(user, command, flags, extra) {
@@ -574,6 +602,7 @@ function commandReassign(user, command, flags, extra) {
         return;
     }
 
+    let prev_user = task.user;
     let targetUser = command.arguments[0] || user;
     targetUser = targetUser.replace(/^@/, "");
 
@@ -581,10 +610,22 @@ function commandReassign(user, command, flags, extra) {
         return printCommandHelp(command);
     }
 
+    let userIndex = null;
+    if (config.userGroupingEnabled) {
+        userIndex = tasks
+            .filter((t) => t.user == prev_user)
+            .map((t, i) => { return { task: t, index: i } })
+            .filter((t) => t.task == task)[0].index;
+    }
+
     reassignTask(index, targetUser);
     renderDOM();
-
-    return sendStatus(`Task ${index + 1}'s user is now: ${targetUser}`, true, user);
+    
+    if (config.userGroupingEnabled) {
+        return sendStatus(`${prev_user}'s ${ordinal(userIndex + 1)} task is now owned by: ${targetUser}`, true, user);
+    } else {
+        return sendStatus(`Task #${index + 1} is now owned by: ${targetUser}`, true, user);
+    }
 }
 
 function commandShow(user, command, flags, extra) {
