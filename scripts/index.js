@@ -870,6 +870,7 @@ async function reloadAuthJS() {
     script.src = "auth.js"
     script.onload = function() {
         if (auth.oauth !== lastToken) {
+            // got a new token, try again
             ComfyJS.Init(auth.username, `oauth:${auth.oauth}`, [auth.channel]);
         }
         else {
