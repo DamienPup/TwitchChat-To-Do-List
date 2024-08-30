@@ -17,13 +17,13 @@ Inspired by [liyunze-coding/Chat-Task-Tic-Overlay](https://github.com/liyunze-co
 ## Latest changes
 
 The last few changes made to the overlay (oldest first):
+- Added support for automatically reloading the overlay if it fails to sign in. **Important:** `auth.js` needs to be updated for this to work, however, the bot will function without this update.
 - Added a feature to have the commands of the bot show in the title. See `settings.js` for details and config.
 - **MAJOR**: Added a new feature to group tasks by username. This is a **breaking change**!
   - Tasks are now grouped by username *by default*.
   - Task numbers now only target your own tasks, and you can target other users tasks by adding their names before the number. (e.g. `!task done 1` finishes your first task, while `!task done User123 1` finishes User123's first task)
   - There are some new style settings to control the look of the new username headers.
   - The old behavior can be restored by disabling `enableUsernameGrouping` in `settings.js`. This disables ALL of this features changes. At least for now, the ungrouped (old) behavior will continue to be maintained and updated.
-- `!task show` can now show all commands for you or another user; the task number is no longer required. 
 
 ## List of commands
 
@@ -87,7 +87,7 @@ By default everyone can use `help`, `credits` and `github`, `show` and `add` tas
 >
 > `auth.js`:
 >  - Last **major** update: Commit b807cf3 on Oct 18th, 2023.
->  - Last *minor* update: None since the last major update.
+>  - Last *minor* update: Commit f852dbf on Aug 29th 2024.
 >
 > `CLIENT_ID.txt` has not been updated. Updates that don't change functionality are not counted.
 
@@ -128,6 +128,17 @@ const OAUTH_TOKEN = "YOUR_TOKEN_HERE";
 ```
 
 ### Minor Updates
+
+`auth.js`:
+  1. Commit f852dbf made a small refactor to `auth.js` to make automatic reload possible. Here are all the changes:
+      - Delete line 1 (with ```const OAUTH_TOKEN = "<your token here>";```). Save your oauth token!
+         - You can also delete the blank line following it.
+      - On line 3 (old file) or 1 (new file), change:
+          - From: ```const auth =``` 
+          - To: ```window.auth =```
+      - On line 7 (old file) or 5 (new file), change:
+          - From: ```const oauth = OAUTH_TOKEN;```
+          - To: ```const oauth = "<your token here>"```
 
 `settings.js`:
   1. Commit 6c19327 made a small change to `settings.js`. If updating from commit a9191c9 or later, simply change line 120 of `settings.js`:
