@@ -723,14 +723,29 @@ ComfyJS.onCommand = (user, command, message, flags, extra) => {
 
 function criticalError(error) {
     // show error
-    let errorP = document.createElement("p");
+    let errorP = document.querySelector("p.critical-error");
+    if (!errorP) {
+        errorP = document.createElement("p");    
+        errorP.classList.add("critical-error");
+        document.querySelector(".main-content").append(errorP);
+    }
     errorP.innerText = error;
-    errorP.classList.add("critical-error");
-    document.querySelector(".main-content").append(errorP);
 
     // hide task list
     document.querySelector(".header").style.display = "none";
     document.querySelector(".task-wrapper").style.display = "none";
+}
+
+function clearCriticalError() {
+    // remove error
+    let errorP = document.querySelector("p.critical-error");
+    if (errorP) {
+        errorP.remove();
+    }
+
+    // show task list
+    document.querySelector(".header").style.display = "";
+    document.querySelector(".task-wrapper").style.display = "";
 }
 
 function showErrorNotification(error) {
@@ -823,23 +838,47 @@ window.onload = function () {
 ComfyJS.onError = function(error) {
     if (typeof error === 'string') {
         if (error.toLowerCase().includes("login") ||
-            error.toLowerCase().includes("logging in")) {
+            error.toLowerCase().includes("logging in") ||
+            error.toLowerCase().includes("auth")) {
             // failed to login, oauth token likely incorrect
             criticalError(error + "\nTry logging in again.");
+            setTimeout(reloadAuthJS, 5000); // Try again in 5 seconds.
             return;
-        } else if (error.toLowerCase().includes("NICK")) {
+        } else if (error.toLowerCase().includes("nick")) {
             // bad NICK, chat username was wrong
-            criticalError(error + "\nEnsure you typed your account/bot username correctly.")
-            return;
-        } else if (error.toLowerCase().includes("auth")) {
-            // improper auth flow, should never happen
-            // if this happens likely a Comfy.js or TMI.js issue, or Twitch is having a bad time
-            criticalError(error + "\nTry again later or ask the developer for help.")
+            criticalError(error + "\nEnsure you typed your account/bot username correctly.");
+            setTimeout(reloadAuthJS, 5000); // Try again in 5 seconds.
             return;
         }
     }
     // Something else went wrong
     showErrorNotification(error);
 };
+
+ComfyJS.onConnected = function(_, _, _) {
+    clearCriticalError();
+}
+
+/// Magic to reload auth.js on failure
+async function reloadAuthJS() {
+    const lastToken = auth.oauth;
+
+    const existingScript = document.querySelector('script[src="auth.js"]');
+    if (existingScript) existingScript.remove();
+
+    const script = document.createElement("script");
+    script.src = "auth.js"
+    script.onload = function() {
+        if (auth.oauth !== lastToken) {
+            // got a new token, try again
+            ComfyJS.Init(auth.username, `oauth:${auth.oauth}`, [auth.channel]);
+        }
+        else {
+            setTimeout(reloadAuthJS, 5000); // Try again in 5 seconds.
+        }
+    }
+    document.head.appendChild(script);
+}
+/// ====
 
 ComfyJS.Init(auth.username, `oauth:${auth.oauth}`, [auth.channel]);

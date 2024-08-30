@@ -3,6 +3,7 @@ import threading
 import time
 from urllib.parse import urlparse, parse_qs
 import webbrowser
+import re
 
 SERVER: HTTPServer | None = None
 GOT_TOKEN = False
@@ -37,7 +38,7 @@ class SimpleRequestHandler(BaseHTTPRequestHandler):
         with open("auth.js") as fp:
             lines = fp.readlines()
 
-        lines[0] = f"const OAUTH_TOKEN = \"{token[0]}\"; // View the README to fill this out!\n"
+        lines[4] = re.sub(r'oauth = ".*?"', f'oauth = "{token[0]}"', lines[4])
 
         with open("auth.js", "w") as fp:
             fp.writelines(lines)
