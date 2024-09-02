@@ -1,6 +1,7 @@
 // If you're looking for settings, they are located in settings.js! Try looking there first!
 
 // STATE VARS
+let fatalLoadError = false;
 let tasks = [];
 let scrolling = false;
 let animationStartTime = null;
@@ -423,7 +424,7 @@ function cmdGetTask(user, command) {
         if (!task) {
             return sendStatus(`Task ${index} does not exist!`, false, user);
         }
-        return { task: task, index: index - 1}; // compat with getTaskGrouped API
+        return { task: task, index: index - 1}; // convert task to object to match API of getTaskGrouped
     }
 }
 
@@ -798,10 +799,12 @@ window.onload = function () {
             const missingCommands = knownCommands.filter(cmd => !commands.includes(cmd));
             const unknownCommands = commands.filter(cmd => !knownCommands.includes(cmd));
             if (missingCommands.length > 0) {
-                domError(`command(s) ${missingCommands.join(', ')} not found in ${name}`);
+                fatalLoadError = true;
+                criticalError(`command(s) ${missingCommands.join(', ')} not found in ${name}`);
             }
             if (unknownCommands.length > 0) {
-                domError(`unknown command(s) ${unknownCommands.join(', ')} found in ${name}`);
+                fatalLoadError = true;
+                criticalError(`unknown command(s) ${unknownCommands.join(', ')} found in ${name}`);
             }
         }
 
@@ -836,6 +839,10 @@ window.onload = function () {
 };
 
 ComfyJS.onError = function(error) {
+    if (fatalLoadError) {
+        showErrorNotification(error);
+        return;
+    }
     if (typeof error === 'string') {
         if (error.toLowerCase().includes("login") ||
             error.toLowerCase().includes("logging in") ||
@@ -856,6 +863,9 @@ ComfyJS.onError = function(error) {
 };
 
 ComfyJS.onConnected = function(_, _, _) {
+    if (fatalLoadError) {
+        return;
+    }
     clearCriticalError();
 }
 
