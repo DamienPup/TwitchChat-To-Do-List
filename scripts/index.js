@@ -368,13 +368,13 @@ function printCommandHelp(command) {
     if (commandDesc) {
         message += ` - ${commandDesc}`;
     }
-    if (commandNames.length > 1) {
+    if (config.showAliases && commandNames.length > 1) {
         message += ` (aliases: ${commandNames.slice(1).map(name => "!" + name).join(", ")})`;
     }
     if (typeof commandPerms === "string") {
         message += ` (${permMessages[commandPerms]})`;
     } else {
-        message += ` (${permMessages[commandPerms.self]} can edit tasks they own, ${permMessages[commandPerms.others]} can tasks others own)`;
+        message += ` (${permMessages[commandPerms.self]} can edit tasks they own, ${permMessages[commandPerms.others]} can edit tasks others own)`;
     }
     ComfyJS.Say(message);
 }

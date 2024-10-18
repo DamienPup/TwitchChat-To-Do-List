@@ -74,6 +74,7 @@ const config = (() => {
         // Show the bots gh repo
         github: ["task github", "tasks:github"],
     };
+    const showAliases = true; // If disabled, only the first name of a command will be shown.
     // Note on how the above segment is formatted:
     // The part to the left of the colon is the command to be run. Don't change this.
     // The part to right is a list of possible names you can type in chat.
@@ -147,7 +148,7 @@ const config = (() => {
 
     // !!! End of settings. DO NOT TOUCH THIS SECTION UNLESS MANUALLY UPDATING FROM A PREVIOUS VERSION. !!!
     return {
-        taskLimit, scrollingEnabled, scrollPxPerSecond, scrollPxGap, scrollLoopDelaySec, commandNames,
+        taskLimit, scrollingEnabled, scrollPxPerSecond, scrollPxGap, scrollLoopDelaySec, commandNames, showAliases,
         autoDeleteDelay, autoDeleteCompletedTasks,
         commandSyntaxes, commandDescriptions, commandPermissions,
         staticTitle, cycleTitle, cycleCommands, holdTime, fadeTime, commandsToCycle,
