@@ -7,7 +7,6 @@ Inspired by [liyunze-coding/Chat-Task-Tic-Overlay](https://github.com/liyunze-co
 
 ## Table of Contents
 
-- [Table of Contents](#table-of-contents)
 - [Latest changes](#latest-changes)
 - [List of commands](#list-of-commands)
 - [Settings Files](#settings-files)
