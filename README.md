@@ -7,23 +7,19 @@ Inspired by [liyunze-coding/Chat-Task-Tic-Overlay](https://github.com/liyunze-co
 
 ## Table of Contents
 
-1. [Latest changes](#latest-changes)
-2. [List of Commands](#list-of-commands)
-3. [Settings Files](#settings-files)
-4. [Install Instructions](#install-instructions)
-    - [Manually Generating an OAuth Token](#manually-generating-an-oauth-token)
-    - [Minor Updates](#minor-updates)
+- [Latest changes](#latest-changes)
+- [List of commands](#list-of-commands)
+- [Settings Files](#settings-files)
+- [Install Instructions](#install-instructions)
+  - [Manually Generating an OAuth Token](#manually-generating-an-oauth-token)
+  - [Minor Updates](#minor-updates)
 
 ## Latest changes
 
 The last few changes made to the overlay (oldest first):
+- Added an option to hide the aliases of commands from help messages, and added the ability to play a sound effect when a task is checked off the list.
 - Added support for automatically reloading the overlay if it fails to sign in. **Important:** `auth.js` needs to be updated for this to work, however, the bot will function without this update.
 - Added a feature to have the commands of the bot show in the title. See `settings.js` for details and config.
-- **MAJOR**: Added a new feature to group tasks by username. This is a **breaking change**!
-  - Tasks are now grouped by username *by default*.
-  - Task numbers now only target your own tasks, and you can target other users tasks by adding their names before the number. (e.g. `!task done 1` finishes your first task, while `!task done User123 1` finishes User123's first task)
-  - There are some new style settings to control the look of the new username headers.
-  - The old behavior can be restored by disabling `enableUsernameGrouping` in `settings.js`. This disables ALL of this features changes. At least for now, the ungrouped (old) behavior will continue to be maintained and updated.
 
 ## List of commands
 
@@ -79,7 +75,7 @@ By default everyone can use `help`, `credits` and `github`, `show` and `add` tas
 >
 > `settings.js`:
 >  - Last **major** update: Commit be34444 on May 30th, 2024.
->  - Last *minor* update: Commit c5f5b03 on May 30th, 2024.
+>  - Last *minor* update: Commit 67fd672 on Oct 18th, 2024.
 >
 > `style_settings.css`:
 >  - Last **major** update: Commit be34444 on May 30th, 2024.
@@ -144,3 +140,24 @@ const OAUTH_TOKEN = "YOUR_TOKEN_HERE";
   1. Commit 6c19327 made a small change to `settings.js`. If updating from commit a9191c9 or later, simply change line 120 of `settings.js`:
       - From: ```show: `${taskSyntax}`,```
       - To: ```show: `[username] [number]`,```
+
+  2. Commit 6234f72 added a new setting to `settings.js`.
+      - Simply add this line into `settings.js`:
+          - `const showAliases = true; // If disabled, only the first name of a command will be shown.`
+      - And add `showAliases` into the return block:
+          - `return { /* whatever is already there... */, showAliases };`
+
+  3. Commit 67fd672 added a new settings to `settings.js`.
+      - Add this code into `settings.js`:
+          ```js
+          // Controls the sound when checking an item off the task list.
+          // null or undefined: disable the task list
+          // "path/to/file": The path to any sound file, relative to index.html.
+          // Default: null (disabled)
+          // Examples:
+          // const checkSound = "my_sound.mp3"; // Play my_sound.mp3, sitting in the same folder as index.html.
+          // const checkSound = "media/check.riff"; // Play check.riff, sitting in the media folder. (you'd have to make that folder yourself)
+          const checkSound = null;
+          ```
+      - Then add `checkSound` into the return block: 
+          - `return { /* whatever is already there... */, checkSound };`

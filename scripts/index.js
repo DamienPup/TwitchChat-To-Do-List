@@ -7,6 +7,10 @@ let scrolling = false;
 let animationStartTime = null;
 let nextCycleCommand = 0;
 
+// AUDIO
+const checkSound = config.checkSound ? new Audio("./" + config.checkSound) : null;
+if (checkSound) checkSound.volume = 0.8;
+
 // UTIL
 function ordinal(i) {
     let j = i % 10,
@@ -368,13 +372,13 @@ function printCommandHelp(command) {
     if (commandDesc) {
         message += ` - ${commandDesc}`;
     }
-    if (commandNames.length > 1) {
+    if (config.showAliases && commandNames.length > 1) {
         message += ` (aliases: ${commandNames.slice(1).map(name => "!" + name).join(", ")})`;
     }
     if (typeof commandPerms === "string") {
         message += ` (${permMessages[commandPerms]})`;
     } else {
-        message += ` (${permMessages[commandPerms.self]} can edit tasks they own, ${permMessages[commandPerms.others]} can tasks others own)`;
+        message += ` (${permMessages[commandPerms.self]} can edit tasks they own, ${permMessages[commandPerms.others]} can edit tasks others own)`;
     }
     ComfyJS.Say(message);
 }
@@ -456,6 +460,7 @@ function commandDone(user, command, flags, extra) {
     }
 
     finishTask(index);
+    if (checkSound) checkSound.play();
     if (config.autoDeleteCompletedTasks) {
         if (config.autoDeleteDelay > 0) {
             window.setTimeout(task => {

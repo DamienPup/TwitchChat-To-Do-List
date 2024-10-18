@@ -74,6 +74,7 @@ const config = (() => {
         // Show the bots gh repo
         github: ["task github", "tasks:github"],
     };
+    const showAliases = true; // If disabled, only the first name of a command will be shown.
     // Note on how the above segment is formatted:
     // The part to the left of the colon is the command to be run. Don't change this.
     // The part to right is a list of possible names you can type in chat.
@@ -108,6 +109,15 @@ const config = (() => {
     // Everyone can add tasks, view help and credits, and finish/delete/edit their own tasks.
     // Mods can clear finished or all tasks, and finish/delete/edit all tasks, as well as reassign tasks
     // Only the broadcaster can reload the bot+overlay.
+
+    // Controls the sound when checking an item off the task list.
+    // null or undefined: disable the task list
+    // "path/to/file": The path to any sound file, relative to index.html.
+    // Default: null (disabled)
+    // Examples:
+    // const checkSound = "my_sound.mp3"; // Play my_sound.mp3, sitting in the same folder as index.html.
+    // const checkSound = "media/check.riff"; // Play check.riff, sitting in the media folder. (you'd have to make that folder yourself)
+    const checkSound = null;
 
     // The syntax format of each command.
     // The default shows required parameters in <> and optional ones in ().
@@ -147,10 +157,11 @@ const config = (() => {
 
     // !!! End of settings. DO NOT TOUCH THIS SECTION UNLESS MANUALLY UPDATING FROM A PREVIOUS VERSION. !!!
     return {
-        taskLimit, scrollingEnabled, scrollPxPerSecond, scrollPxGap, scrollLoopDelaySec, commandNames,
+        taskLimit, scrollingEnabled, scrollPxPerSecond, scrollPxGap, scrollLoopDelaySec, commandNames, showAliases,
         autoDeleteDelay, autoDeleteCompletedTasks,
         commandSyntaxes, commandDescriptions, commandPermissions,
         staticTitle, cycleTitle, cycleCommands, holdTime, fadeTime, commandsToCycle,
         userGroupingEnabled,
+        checkSound,
     };
 })();
