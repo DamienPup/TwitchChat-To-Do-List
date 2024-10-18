@@ -110,6 +110,15 @@ const config = (() => {
     // Mods can clear finished or all tasks, and finish/delete/edit all tasks, as well as reassign tasks
     // Only the broadcaster can reload the bot+overlay.
 
+    // Controls the sound when checking an item off the task list.
+    // null or undefined: disable the task list
+    // "path/to/file": The path to any sound file, relative to index.html.
+    // Default: null (disabled)
+    // Examples:
+    // const checkSound = "my_sound.mp3"; // Play my_sound.mp3, sitting in the same folder as index.html.
+    // const checkSound = "media/check.riff"; // Play check.riff, sitting in the media folder. (you'd have to make that folder yourself)
+    const checkSound = null;
+
     // The syntax format of each command.
     // The default shows required parameters in <> and optional ones in ().
     // Options are shown using |.
@@ -153,5 +162,6 @@ const config = (() => {
         commandSyntaxes, commandDescriptions, commandPermissions,
         staticTitle, cycleTitle, cycleCommands, holdTime, fadeTime, commandsToCycle,
         userGroupingEnabled,
+        checkSound,
     };
 })();

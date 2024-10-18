@@ -7,6 +7,10 @@ let scrolling = false;
 let animationStartTime = null;
 let nextCycleCommand = 0;
 
+// AUDIO
+const checkSound = config.checkSound ? new Audio("./" + config.checkSound) : null;
+if (checkSound) checkSound.volume = 0.8;
+
 // UTIL
 function ordinal(i) {
     let j = i % 10,
@@ -456,6 +460,7 @@ function commandDone(user, command, flags, extra) {
     }
 
     finishTask(index);
+    if (checkSound) checkSound.play();
     if (config.autoDeleteCompletedTasks) {
         if (config.autoDeleteDelay > 0) {
             window.setTimeout(task => {
