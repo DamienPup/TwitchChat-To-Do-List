@@ -17,6 +17,7 @@ Inspired by [liyunze-coding/Chat-Task-Tic-Overlay](https://github.com/liyunze-co
 ## Latest changes
 
 The last few changes made to the overlay (oldest first):
+- Fixed some crashes and usability issues see Commit f70f608 and Commit a63f42c
 - Added an option to hide the aliases of commands from help messages, and added the ability to play a sound effect when a task is checked off the list.
 - Added support for automatically reloading the overlay if it fails to sign in. **Important:** `auth.js` needs to be updated for this to work, however, the bot will function without this update.
 - Added a feature to have the commands of the bot show in the title. See `settings.js` for details and config.
