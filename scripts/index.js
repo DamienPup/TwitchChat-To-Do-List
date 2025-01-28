@@ -455,7 +455,7 @@ function commandDone(user, command, flags, extra) {
     if (!res) { return; }
     let {task, index} = res;
 
-    if (!hasPermission(command.permission_level, flags, task.user == user)) {
+    if (!hasPermission(command.permission_level, flags, task.user.toLowerCase() == user.toLowerCase())) {
         return sendStatus(`You are not allowed to finish this task.`, false, user);
     }
 
@@ -485,7 +485,7 @@ function commandRemove(user, command, flags, extra) {
     if (!res) { return; }
     let {task, index} = res;
 
-    if (!hasPermission(command.permission_level, flags, task.user == user)) {
+    if (!hasPermission(command.permission_level, flags, task.user.toLowerCase() == user.toLowerCase())) {
         return sendStatus(`You are not allowed to remove this task.`, false, user);
     }
 
@@ -525,7 +525,7 @@ function commandEdit(user, command, flags, extra) {
     if (!res) { return; }
     let {task, index} = res;
 
-    if (!hasPermission(command.permission_level, flags, task.user == user)) {
+    if (!hasPermission(command.permission_level, flags, task.user.toLowerCase() == user.toLowerCase())) {
         return sendStatus(`You are not allowed to edit this task.`, false, user);
     }
 
@@ -537,7 +537,7 @@ function commandEdit(user, command, flags, extra) {
     let userIndex = null;
     if (config.userGroupingEnabled) {
         userIndex = tasks
-            .filter((t) => t.user == task.user)
+            .filter((t) => t.user.toLowerCase() == task.user.toLowerCase())
             .map((t, i) => { return { task: t, index: i } })
             .filter((t) => t.task == task)[0].index;
     }
@@ -618,7 +618,7 @@ function commandReassign(user, command, flags, extra) {
     let userIndex = null;
     if (config.userGroupingEnabled) {
         userIndex = tasks
-            .filter((t) => t.user == prev_user)
+            .filter((t) => t.user.toLowerCase() == prev_user.toLowerCase())
             .map((t, i) => { return { task: t, index: i } })
             .filter((t) => t.task == task)[0].index;
     }
@@ -642,7 +642,7 @@ function commandShow(user, command, flags, extra) {
         case 0: // show all user tasks
             let userTasks = [];
             tasks.forEach(task => {
-                if (task.user != user) return;
+                if (task.user.toLowerCase() != user.toLowerCase()) return;
 
                 let userTask = task.task;
                 if (task.completed) {
@@ -656,7 +656,7 @@ function commandShow(user, command, flags, extra) {
             if (isNaN(parseInt(username))) { // show <username>
                 let userTasks = [];
                 tasks.forEach(task => {
-                    if (task.user != username) return;
+                    if (task.user.toLowerCase() != username.toLowerCase()) return;
 
                     let userTask = task.task;
                     if (task.completed) {
