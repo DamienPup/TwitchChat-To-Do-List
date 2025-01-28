@@ -143,7 +143,7 @@ function getTaskGrouped(username, number) {
     let result = null;
 
     tasks.forEach((task, index) => {
-        if (task.user == username) {
+        if (task.user.toLowerCase() == username.toLowerCase()) {
             if (matchIndex == number) {
                 result = { task: task, index: index };
             }
@@ -173,8 +173,8 @@ function renderDOM() {
         taskElement.querySelector(".task-text").classList.toggle("crossed", task.completed);
 
         if (config.userGroupingEnabled) {
-            if (!(task.user in userDivs)) {
-                userDivs[task.user] = {
+            if (!(task.user.toLowerCase() in userDivs)) {
+                userDivs[task.user.toLowerCase()] = {
                     div: document.createElement("div"),
                     count: 1,
                 };
@@ -182,13 +182,13 @@ function renderDOM() {
                 let header = document.createElement("p");
                 header.innerText = task.user;
                 header.classList.add("task-username");
-                userDivs[task.user].div.appendChild(header);
+                userDivs[task.user.toLowerCase()].div.appendChild(header);
             }
             
-            taskElement.querySelector(".task-text").textContent = `${userDivs[task.user].count}. ${task.task}`;
-            userDivs[task.user].count += 1;
+            taskElement.querySelector(".task-text").textContent = `${userDivs[task.user.toLowerCase()].count}. ${task.task}`;
+            userDivs[task.user.toLowerCase()].count += 1;
 
-            userDivs[task.user].div.appendChild(taskElement);
+            userDivs[task.user.toLowerCase()].div.appendChild(taskElement);
         } else {
             taskElement.querySelector(".task-text").textContent = `${index + 1}. ${task.user}: ${task.task}`;
 
@@ -414,7 +414,7 @@ function cmdGetTask(user, command) {
 
         let task = getTaskGrouped(username, index - 1);
         if (!task) {
-            return sendStatus(`Task ${index} does not exist!`, false, user);
+            return sendStatus(`Task ${index} does not exist for ${username}!`, false, user);
         }
         return task;
     } else {
@@ -451,10 +451,10 @@ function commandDone(user, command, flags, extra) {
         return printCommandHelp(command);
     }
 
-    let {task, index} = cmdGetTask(user, command);
-    if (!task) {
-        return;
-    }
+    let res = cmdGetTask(user, command);
+    if (!res) { return; }
+    let {task, index} = res;
+
     if (!hasPermission(command.permission_level, flags, task.user == user)) {
         return sendStatus(`You are not allowed to finish this task.`, false, user);
     }
@@ -481,10 +481,10 @@ function commandRemove(user, command, flags, extra) {
         return printCommandHelp(command);
     }
 
-    let {task, index} = cmdGetTask(user, command);
-    if (!task) {
-        return;
-    }
+    let res = cmdGetTask(user, command);
+    if (!res) { return; }
+    let {task, index} = res;
+
     if (!hasPermission(command.permission_level, flags, task.user == user)) {
         return sendStatus(`You are not allowed to remove this task.`, false, user);
     }
@@ -521,10 +521,10 @@ function commandEdit(user, command, flags, extra) {
         return printCommandHelp(command);
     }
 
-    let {task, index} = cmdGetTask(user, command);
-    if (!task) {
-        return;
-    }
+    let res = cmdGetTask(user, command);
+    if (!res) { return; }
+    let {task, index} = res;
+
     if (!hasPermission(command.permission_level, flags, task.user == user)) {
         return sendStatus(`You are not allowed to edit this task.`, false, user);
     }
@@ -603,10 +603,9 @@ function commandReassign(user, command, flags, extra) {
         return printCommandHelp(command);
     }
 
-    let {task, index} = cmdGetTask(user, command);
-    if (!task) {
-        return;
-    }
+    let res = cmdGetTask(user, command);
+    if (!res) { return; }
+    let {task, index} = res;
 
     let prev_user = task.user;
     let targetUser = command.arguments[0] || user;
@@ -668,10 +667,10 @@ function commandShow(user, command, flags, extra) {
                 return ComfyJS.Say(`${username}'s tasks: ${userTasks.join(", ")}`);
             }
         case 2: // show <username> <index> OR (via fallthrough) show <index>
-            let {task, _} = cmdGetTask(user, command);
-            if (!task) {
-                return;
-            }
+            let res = cmdGetTask(user, command);
+            if (!res) { return; }
+            let {task, _} = res;
+
             return ComfyJS.Say(`${task.task}, started by ${task.user}, ${task.completed ? '' : 'not'} finished`);
     }
 }
