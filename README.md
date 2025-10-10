@@ -44,7 +44,7 @@ The last few changes made to the overlay (oldest first):
     - `!task done DamienPup 5` - Finish `DamienPup`'s 5th task.
     - `!task reassign 2 JohnDoe` - Give your second task to `JohnDoe`.
     - `!task reassign DamienPup 2 JohnDoe` - Give `DamienPup`'s second task to `JohnDoe`.
-- If username grupising is disabled: `<number>`.  Examples:
+- If username grouping is disabled: `<number>`.  Examples:
     - `!task remove 3` - Delete the third task on the list.
 
 By default everyone can use `help`, `credits` and `github`, `show` and `add` tasks, as well as finish (`done`), `remove`, and `edit` tasks they started. Mods can use `clear` and `reassign`, as well as finish (`done`), `remove`, and `edit` all tasks. Only the broadcaster can `reload` the bot. All of these permissions can be changed in `settings.js`.
@@ -58,7 +58,7 @@ By default everyone can use `help`, `credits` and `github`, `show` and `add` tas
   - Holds login settings: your oauth token, the chatbot's username, and your channel name.
 - `settings.js`:
   - Holds the main settings for the overlay.
-  - Includes the active task limit, scrolling settings, auto-delete settings, title settings, command names, alisies, and permissions, and more.
+  - Includes the active task limit, scrolling settings, auto-delete settings, title settings, command names, aliases, and permissions, and more.
 - `style_settings.css`:
   - Holds the visual settings for the overlay.
   - Includes fonts, font sizes, various color options, and more.
@@ -118,7 +118,7 @@ https://id.twitch.tv/oauth2/authorize
 &scope=chat:read+chat:edit+channel:read:redemptions+user:read:email
 ```
 2. Replace `CLIENT_ID_HERE` with your apps Client ID.
-3. Paste this url into a brower, authorize the app, and wait for the browser to time out.
+3. Paste this url into a browser, authorize the app, and wait for the browser to time out.
 4. Copy the part after `access_token=` and before the next `&` (if any) from the URL bar. Remove any `oauth:` prefix if present.
 5. Open `auth.js`, and paste your token into the quotes on the first line, after `OAUTH_TOKEN`. It should look like this:
 ```js
