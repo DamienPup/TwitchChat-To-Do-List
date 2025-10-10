@@ -893,6 +893,53 @@ async function reloadAuthJS() {
     }
     document.head.appendChild(script);
 }
-/// ====
+// ====
 
 ComfyJS.Init(auth.username, `oauth:${auth.oauth}`, [auth.channel]);
+
+// ==============================================================================================
+
+function showMenu() {
+    document.getElementsByClassName("main-content")[0].style.display = "none";
+    document.getElementsByClassName("menu")[0].style.display = "block";
+}
+
+function closeMenu() {
+    document.getElementsByClassName("main-content")[0].style.display = "block";
+    document.getElementsByClassName("menu")[0].style.display = "none";
+}
+
+function exportTaskList() {
+    saveTasksDB();
+    copyToClipboard(localStorage.tasks);
+}
+
+function importTaskList() {
+    const textarea = document.getElementById("tlimport");
+    let imported = JSON.parse(textarea.value);
+    clearTasksDB();
+    tasks = imported;
+    saveTasksDB();
+    location.reload();
+}
+
+function copyToClipboard(text) {
+  const textarea = document.createElement("textarea");
+  textarea.value = text;
+  // Make it invisible but still selectable
+  textarea.style.position = "fixed";
+  textarea.style.opacity = "0";
+  textarea.style.pointerEvents = "none";
+  document.body.appendChild(textarea);
+  textarea.focus();
+  textarea.select();
+
+  try {
+    const successful = document.execCommand("copy");
+    showErrorNotification(successful ? "Copied task list to clipboard!" : "Failed to export");
+  } catch (err) {
+    showErrorNotification(`Failed to export: ${err}`);
+  }
+
+  document.body.removeChild(textarea);
+}

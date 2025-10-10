@@ -13,14 +13,15 @@ Inspired by [liyunze-coding/Chat-Task-Tic-Overlay](https://github.com/liyunze-co
 - [Install Instructions](#install-instructions)
   - [Manually Generating an OAuth Token](#manually-generating-an-oauth-token)
   - [Minor Updates](#minor-updates)
+- [Exporting & Importing Tasks](#exporting--importing-tasks)
 
 ## Latest changes
 
 The last few changes made to the overlay (oldest first):
-- Fixed some crashes and usability issues see Commit f70f608 and Commit a63f42c
 - Added an option to hide the aliases of commands from help messages, and added the ability to play a sound effect when a task is checked off the list.
 - Added support for automatically reloading the overlay if it fails to sign in. **Important:** `auth.js` needs to be updated for this to work, however, the bot will function without this update.
 - Added a feature to have the commands of the bot show in the title. See `settings.js` for details and config.
+- Added a way to export and import tasks. See [Exporting & Importing Tasks](#exporting--importing-tasks) for details.
 
 ## List of commands
 
@@ -162,3 +163,12 @@ const OAUTH_TOKEN = "YOUR_TOKEN_HERE";
           ```
       - Then add `checkSound` into the return block: 
           - `return { /* whatever is already there... */, checkSound };`
+
+## Exporting & Importing Tasks
+
+Tasks can be now exported from the task list to make backups or move them to different computers.
+
+1. To access the export and import menu, you'll need to interact with the overlay. In OBS or Streamlabs, you can right click on your browser source then press "Interact"
+2. Press `Tab` then `Enter` or `Space`. This will open the export/import menu
+3. Select `Export Task List`. This will copy the task list to your clipboard. **Save this in safe location and do not modify it.**
+4. To import tasks, paste the list you exported in step 3 into the text box and select `Import Task List`. **This will replace ALL TASKS ON THE LIST**. The overlay will reload after importing.

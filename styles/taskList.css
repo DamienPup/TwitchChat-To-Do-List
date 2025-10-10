@@ -142,10 +142,7 @@ body {
 }
 
 input[type="checkbox"] {
-    display: none;
-}
-
-input[type="checkbox"] + label {
+    all: unset;
     display: inline-block;
     position: relative;
 
@@ -159,7 +156,7 @@ input[type="checkbox"] + label {
     height: var(--task-item-font-size);
 }
 
-input[type="checkbox"]:checked + label:after {
+input[type="checkbox"]:checked::after {
     content: "✓";
 
     display: flex;
@@ -168,7 +165,7 @@ input[type="checkbox"]:checked + label:after {
     font-size: calc(var(--task-item-font-size) * 0.9);
     color: white;
 
-    transform: translateY(-4px);
+    transform: translateY(-3px);
 }
 
 .task-text {
