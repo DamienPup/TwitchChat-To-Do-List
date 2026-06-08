@@ -829,7 +829,7 @@ window.onload = function () {
         for (let task of tasks) {
             task.task = task.task || "<unknown task>";
             task.user = task.user || "<no user>";
-            task.complete = task.complete || false;
+            task.completed = task.completed || false;
         }
 
         saveTasksDB();
